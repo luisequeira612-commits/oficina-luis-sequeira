@@ -11,7 +11,7 @@ test("resting employees no longer leave their desks",()=>{
 });
 test("seated workers keep the monitor fixed while their body animates",()=>{
  assert.ok(renderer.includes("for(let i=worker.monitorStart;i<worker.monitorEnd;i+=3)"));
- assert.match(renderer,/scene.basePositions[i]/);
+ assert.ok(renderer.includes("scene.basePositions[i]"));
  assert.match(renderer,/monitorShift/);
  assert.match(renderer,/worker.renderX=worker.x;worker.renderZ=worker.z/);
 });
