@@ -553,3 +553,17 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Archivos de implementación: assets/office-3d.js, assets/office-view.css; pruebas: verify-rest-routes.test.mjs, verify-3d-worker-activity.test.mjs, verify-3d-idle-walk.test.mjs, verify-3d-human-worker-details.test.mjs, verify-3d-portrait-camera.test.mjs, verify-nine-worker-open-plan.test.mjs, verify-behavior.test.mjs.
 - No se modificó el esquema local ni se inició la fase JSON editable/GitHub Actions en tiempo real.
 - Fuente: repositorio y workflow 42884600411, 2026-11-10.
+
+
+## Corrección de orientación de trabajadores hacia sus monitores — 10 de noviembre de 2026
+
+- Luis observó en el Tecno Pova 4 que la mayoría de los personajes parecían mirar hacia atrás y no hacia sus monitores.
+- Causa geométrica: los puestos y las caras se habían construido en lados opuestos; además, invertir solo las caras habría dejado la cámara en el lado incorrecto de la sala abierta. La solución final refleja cada conjunto de puesto completo sobre el eje Z hacia el lado abierto de la oficina, manteniendo la cámara en su ángulo de casa y haciendo que la cara del personaje, las manos, el teclado y la pantalla queden alineados.
+- La reflexión actualiza posiciones y normales, e invierte el orden de vértices por triángulo para conservar el descarte de caras y la iluminación WebGL. Se conserva la geometría procedural y no se agregan librerías ni assets.
+- Se desplazan el punto de descanso y la máquina de café al pasillo frontal correspondiente; los metadatos de empleados, las rutas de descanso, el foco de retrato y las etiquetas flotantes usan las nuevas coordenadas reflejadas.
+- Se conserva el monitor como geometría fija al escritorio; la pantalla queda orientada hacia la persona y el ángulo de cámara sigue mostrando la escena abierta. La selección de empleado y el encuadre del nombre se ajustan al nuevo lado de la cabeza.
+- Pruebas de regresión actualizadas en `verify-3d-human-worker-details.test.mjs`, `verify-rest-routes.test.mjs`, `verify-3d-portrait-camera.test.mjs` y `verify-3d-worker-activity.test.mjs`. El workflow [42887271922](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42887271922) terminó con validate y deploy en success para el head final.
+- Commit final de código y pruebas: [585137dc](https://github.com/luisequeira612-commits/oficina-luis-sequeira/commit/585137dc1e8c4562b4799273b6c37ff48128f77c). El cambio de caché del motor está incluido en el head publicado [806c3550](https://github.com/luisequeira612-commits/oficina-luis-sequeira/commit/806c3550cd621f195a108b9dc8c4dcde75ae9234); commits posteriores de regresión conservan ese motor.
+- Límite de verificación: CI confirma sintaxis, pruebas de invariantes y despliegue, pero no sustituye la revisión visual real en el Tecno Pova 4. Falta que Luis confirme en el teléfono que los nueve personajes se ven mirando al monitor, con caras visibles en el ángulo de casa. No se midió FPS ni se inspeccionó la consola del navegador móvil.
+- No se modificó el esquema de almacenamiento, ni se inició la siguiente fase de JSON editables o nuevos datos en tiempo real.
+- Fuente: reporte visual del usuario, `assets/office-3d.js`, pruebas de regresión y workflow GitHub Actions, 2026-11-10.
