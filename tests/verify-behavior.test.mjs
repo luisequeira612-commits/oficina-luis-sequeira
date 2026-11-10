@@ -148,5 +148,6 @@ test("real 3D room prototype uses WebGL2 locally and preserves the CSS fallback"
   assert.ok(renderer.includes("box(x,1.65,z-.36,1.12,.78,.14,metal)"), "scene geometry includes visible computer monitors");
   assert.ok(officeScript.includes("window.Office3D.open"), "room dialog opens the 3D scene");
   assert.ok(officeScript.includes("room-scene-fallback-hidden"), "keeps the CSS room as a fallback");
+  assert.ok(officeScript.includes("threeD._office3dCleanup()"), "stops the WebGL render loop when the room closes");
   assert.doesNotMatch(renderer, /https?:\/\//, "3D renderer has no external runtime requests");
 });

@@ -13,7 +13,6 @@ const hair=[0.12,0.085,0.07],shirts=[[0.18,0.34,0.52],[0.72,0.31,0.28],[0.20,0.4
 function mat4(){return new Float32Array(16)}
 function perspective(out,fovy,aspect,near,far){const f=1/Math.tan(fovy/2),nf=1/(near-far);out.fill(0);out[0]=f/aspect;out[5]=f;out[10]=(far+near)*nf;out[11]=-1;out[14]=2*far*near*nf;return out}
 function lookAt(out,eye,target,up){let zx=eye[0]-target[0],zy=eye[1]-target[1],zz=eye[2]-target[2];let l=Math.hypot(zx,zy,zz)||1;zx/=l;zy/=l;zz/=l;let xx=up[1]*zz-up[2]*zy,xy=up[2]*zx-up[0]*zz,xz=up[0]*zy-up[1]*zx;l=Math.hypot(xx,xy,xz)||1;xx/=l;xy/=l;xz/=l;let yx=zy*xz-zz*xy,yy=zz*xx-zx*xz,yz=zx*xy-zy*xx;out[0]=xx;out[1]=yx;out[2]=zx;out[3]=0;out[4]=xy;out[5]=yy;out[6]=zy;out[7]=0;out[8]=xz;out[9]=yz;out[10]=zz;out[11]=0;out[12]=-(xx*eye[0]+xy*eye[1]+xz*eye[2]);out[13]=-(yx*eye[0]+yy*eye[1]+yz*eye[2]);out[14]=-(zx*eye[0]+zy*eye[1]+zz*eye[2]);out[15]=1;return out}
-function multiply(a,b){const o=mat4();for(let c=0;c<4;c++)for(let r=0;r<4;r++)o[c*4+r]=a[r]*b[c*4]+a[4+r]*b[c*4+1]+a[8+r]*b[c*4+2]+a[12+r]*b[c*4+3];return o}
 function shader(gl,type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(s)||"Shader error");return s}
 function program(gl){const p=gl.createProgram();gl.attachShader(p,shader(gl,gl.VERTEX_SHADER,VERT));gl.attachShader(p,shader(gl,gl.FRAGMENT_SHADER,FRAG));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(p)||"Program error");return p}
 function buildScene(workers){
@@ -33,7 +32,7 @@ function buildScene(workers){
  // Floor planks and rugs.
  for(let i=-5;i<6;i++)box(i*.98,-.005,0,.018,.012,9.6,[0.72,0.65,0.55]);
  box(0,.025,1.7,9,.05,3.2,[0.31,0.38,0.43]);
- const count=Math.max(1,workers.length),cols=count>3?2:count,rows=Math.ceil(count/cols);
+ const count=Math.max(1,workers.length),cols=count>3?2:count;
  workers.forEach((worker,index)=>{
   const col=index%cols,row=Math.floor(index/cols),x=(col-(cols-1)/2)*4.1,z=-1.55+row*3.3;
   // desk, legs, monitor, illuminated display, stand, keyboard, mouse and desktop tower.
@@ -56,6 +55,10 @@ function buildScene(workers){
   const skin=tone[worker.tone]||tone.medium,shirt=shirts[index%shirts.length];
   box(x,1.27,z+1.0,.62,.78,.36,shirt);sphere(x,1.98,z+.98,.34,.38,.32,skin,10,7);
   sphere(x,2.22,z+.96,.35,.17,.34,hair,9,5);
+  if(worker.hair==="long"||worker.hair==="tied"){sphere(x-.29,1.86,z+.97,.11,.42,.13,hair,7,5);sphere(x+.29,1.86,z+.97,.11,.42,.13,hair,7,5)}
+  if(worker.hair==="curly"){for(let curl=0;curl<5;curl++){const angle=curl*Math.PI*2/5;sphere(x+Math.cos(angle)*.25,2.28,z+.96+Math.sin(angle)*.24,.13,.13,.13,hair,6,4)}}
+  sphere(x-.11,2.03,z+1.265,.035,.045,.025,[0.10,0.09,0.09],6,4);sphere(x+.11,2.03,z+1.265,.035,.045,.025,[0.10,0.09,0.09],6,4);
+  sphere(x,1.91,z+1.285,.035,.025,.025,[0.43,0.22,0.18],6,4);
   sphere(x-.36,1.48,z+.78,.14,.34,.14,skin,8,5);sphere(x+.36,1.48,z+.78,.14,.34,.14,skin,8,5);
   box(x-.2,.74,z+.72,.18,.58,.18,shirt);box(x+.2,.74,z+.72,.18,.58,.18,shirt);
   box(x-.2,.43,z+.62,.22,.14,.3,metal);box(x+.2,.43,z+.62,.22,.14,.3,metal);

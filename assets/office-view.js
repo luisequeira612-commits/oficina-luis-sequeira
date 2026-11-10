@@ -81,6 +81,7 @@ function renderMap(){
 }
 close.addEventListener("click",()=>dialog.close());
 dialog.addEventListener("click",event=>{if(event.target===dialog)dialog.close()});
+dialog.addEventListener("close",()=>{const threeD=document.getElementById("office-3d");if(threeD&&typeof threeD._office3dCleanup==="function")threeD._office3dCleanup();if(threeD)threeD.classList.remove("is-active");scene.classList.remove("room-scene-fallback-hidden")});
 go.addEventListener("click",()=>{
  if(!selectedCard)return;
  dialog.close();
