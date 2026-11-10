@@ -71,3 +71,14 @@ test("3D renderer pauses while the document is hidden and resumes when visible",
  assert.match(renderer,/document\.addEventListener\("visibilitychange",onVisibilityChange\)/);
  assert.match(renderer,/document\.removeEventListener\("visibilitychange",onVisibilityChange\)/);
 });
+
+test("WebGL context loss shows a safe recovery message and stops rendering",()=>{
+ assert.match(renderer,/const onContextLost=event=>\{event\.preventDefault\(\);contextLost=true/);
+ assert.match(renderer,/Tus proyectos siguen guardados/);
+ assert.match(renderer,/Cierra esta escena y vuelve a entrar/);
+ assert.match(renderer,/webglcontextlost/);
+ assert.match(renderer,/webglcontextrestored/);
+ assert.match(renderer,/canvas\.removeEventListener\("webglcontextlost",onContextLost\)/);
+ assert.match(renderer,/canvas\.removeEventListener\("webglcontextrestored",onContextRestored\)/);
+ assert.match(renderer,/if\(!contextLost\)gl\.getExtension\("WEBGL_lose_context"\)/);
+});
