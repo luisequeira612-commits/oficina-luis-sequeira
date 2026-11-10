@@ -79,3 +79,10 @@
 - El avatar se clona desde el personaje ya renderizado en la tarjeta, conservando tono de piel, peinado, ropa y estado animado; no se crean identidades ni datos duplicados.
 - Cambio exclusivamente visual: sin cambios de almacenamiento, roles, agentes, proyectos, APIs o dependencias.
 - Rama: `feat/human-workers-in-room-scenes`; pendiente de CI y revisión.
+
+ 
+## Corrección PR #11 — animación de trabajadores en interiores — 10 de noviembre de 2026
+- Se detectó que los avatares clonados dentro de las habitaciones conservaban su apariencia, pero no recibían las clases de estado del contenedor original; por ello, las animaciones CSS de las tarjetas no se aplicaban en la escena.
+- La corrección copia únicamente la clase efímera de estado (`st-w`, `st-t`, `st-a`, `st-r`) al puesto y aplica las mismas animaciones humanas dentro de la habitación.
+- La escena sigue leyendo el estado actual del DOM al abrirse; no añade persistencia ni telemetría. Respeta movimiento reducido.
+- Rama: `fix/room-worker-state-animations`; pendiente CI y revisión.
