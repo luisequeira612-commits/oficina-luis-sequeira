@@ -17,8 +17,8 @@ test("worker animation separates head arms and typing hands",()=>{
  assert.match(renderer,/const handsStart=positions.length/);
  assert.match(renderer,/headStart,headEnd,armsStart,armsEnd,handsStart,handsEnd/);
  assert.ok(renderer.includes("Math.abs(Math.sin(seconds*16+worker.index))*.055"));
- assert.match(renderer,/worker.headStart+1/);
- assert.match(renderer,/worker.handsStart+1/);
+ assert.ok(renderer.includes("worker.headStart+1"));
+ assert.ok(renderer.includes("worker.handsStart+1"));
  assert.match(renderer,/prefers-reduced-motion/);
  assert.match(renderer,/worker.state==="st-s"/);
  assert.match(renderer,/worker.state==="st-f"/);
@@ -37,7 +37,7 @@ test("camera remains bounded and deliberate",()=>{
 test("minifigures keep face prints hands and glossy finish",()=>{
  assert.match(renderer,/faceCanvas.width=64;faceCanvas.height=48/);
  assert.ok(renderer.includes("const printFaceCanvas=(x,z,index,skin)=>"));
- assert.match(renderer,/const segment=(a,b,r,color,seg=8)/);
+ assert.ok(renderer.includes("const segment=(a,b,r,color,seg=8)=>"));
  assert.match(renderer,/pow(max(dot(reflect(-keyLight,n),viewDir),0.0),48.0)*0.28/);
 });
 test("3D worker activity is seated and route-free",()=>{
