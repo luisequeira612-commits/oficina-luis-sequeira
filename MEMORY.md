@@ -429,3 +429,12 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - No se pudo confirmar la publicación de GitHub Pages: los checks combinados consultados están vacíos y el wrapper de workflows solo expone ejecuciones de PR. El despliegue debe comprobarse en Actions/Pages; no afirmar que el arreglo ya está visible en producción.
 - Instrucción de comprobación para el usuario cuando la publicación termine: recargar sin caché / abrir en pestaña privada. Si persiste, el mensaje nuevo distinguirá descarga del archivo frente a fallo de ejecución.
 - Fuente: index.html, assets/office-3d.js y estado consultable del commit, 2026-11-10.
+
+
+## Segunda corrección de carga 3D — 10 de noviembre de 2026
+
+- Luis confirmó que el mensaje antiguo persistía después del commit 5c8ae1b8; por tanto, no se dio por resuelta la publicación anterior.
+- Nueva hipótesis técnica a corregir: evitar cualquier ambigüedad de orden/caché entre scripts diferidos. `index.html` ahora carga `human-workers.js`, `office-3d.js` y `office-view.js` de forma síncrona y en ese orden al final del documento; referencias cache-busted a human-workers v41, engine v48 y office-view v46. El motor muestra un mensaje propio si falla la descarga.
+- Commit de implementación: ede29ecf. Se añadió `tests/verify-3d-script-loading.test.mjs` para proteger el orden y el diagnóstico; commit: 1474e8d3.
+- No se pudo consultar un identificador de ejecución push ni confirmar Pages con las acciones disponibles. No afirmar que el sitio publicado ya contiene el arreglo. Comprobar el deployment de `main` en Actions y la publicación de Pages antes de pedir una nueva prueba al usuario.
+- Fuente: `index.html`, `tests/verify-3d-script-loading.test.mjs`, 2026-11-10. La causa exacta del comportamiento del navegador sigue sin confirmarse.
