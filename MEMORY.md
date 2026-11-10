@@ -538,3 +538,18 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - El run [42879234529](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42879234529) terminó con validate y deploy en `success`; Pages publicó el head de código y pruebas. No se hizo una prueba visual/táctil real en el Tecno Pova 4, no se midió FPS y no se inspeccionó la consola de un navegador móvil.
 - Esta pasada no implementa todavía JSON editables ni modifica el sondeo de GitHub Actions; quedan expresamente fuera de alcance hasta la confirmación del usuario.
 - Fuente: código, pruebas y logs de GitHub Actions, 2026-11-10.
+
+
+## Corrección del comportamiento de descanso y acabado plástico — 10 de noviembre de 2026
+
+- Se separó el movimiento del empleado del equipo de su escritorio: el monitor y sus líneas de código permanecen en el puesto cuando la persona se aleja. La animación de código del monitor solo se ejecuta en estado de trabajo.
+- Los empleados en estado de descanso recorren rutas deterministas: salen lateralmente del puesto, usan uno de los tres pasillos entre columnas, llegan a un punto de pausa con máquina de café y regresan por el mismo pasillo. La pausa dura 3,8 segundos; los recorridos se escalonan por empleado.
+- Se añadió una transición de postura: al alejarse, piernas, cadera, torso, brazos y cabeza se elevan de forma interpolada para simular levantarse; al regresar, la figura vuelve a su altura de espera en el escritorio. La marcha anima las piernas y reduce la apertura lateral de brazos/manos para ajustarse a los pasillos.
+- El foco de la ficha de empleado ahora apunta más bajo para situar la figura más arriba y dejar espacio a la ficha inferior.
+- El renderer sigue siendo WebGL2 propio. Se añadió iluminación especular dependiente de la vista para plástico más brillante, pero no se migró a Three.js ni se implementaron MeshStandardMaterial o CanvasTexture.
+- Las rutas son pasillos fijos diseñados para la distribución actual de tres columnas; no hay un motor general de colisiones. Si cambia la distribución de muebles, las rutas necesitan revisión. No se midieron FPS ni se hizo prueba táctil/visual en el Tecno Pova 4; no declarar 30+ FPS ni ausencia de errores de consola móvil como verificados.
+- Pruebas actualizadas para postura, ruta, monitor fijo, foco y shader: 92/92 pasaron.
+- Commit de código y pruebas: [6e78128d](https://github.com/luisequeira612-commits/oficina-luis-sequeira/commit/6e78128d08fc872e20926397203b9348199a7a6c). GitHub Actions [42884600411](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42884600411): validate y deploy terminaron en success; Pages publicó el head.
+- Archivos de implementación: assets/office-3d.js, assets/office-view.css; pruebas: verify-rest-routes.test.mjs, verify-3d-worker-activity.test.mjs, verify-3d-idle-walk.test.mjs, verify-3d-human-worker-details.test.mjs, verify-3d-portrait-camera.test.mjs, verify-nine-worker-open-plan.test.mjs, verify-behavior.test.mjs.
+- No se modificó el esquema local ni se inició la fase JSON editable/GitHub Actions en tiempo real.
+- Fuente: repositorio y workflow 42884600411, 2026-11-10.
