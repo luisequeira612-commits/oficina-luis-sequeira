@@ -337,3 +337,13 @@
 - Sin dependencias, modelos/texturas externas, APIs, backend ni servicios de pago. Renderer procedural WebGL 2, fallback CSS y controles móviles preservados.
 - Añade comprobaciones de regresión para migración, plantilla, renderizado abierto y barra de empleados.
 - Fuente: petición explícita del usuario y referencia visual suministrada, 2026-11-10.
+
+
+## PR — etiquetas flotantes y selección directa de empleados — 10 de noviembre de 2026
+
+- Añade placas flotantes con nombre visible para cada minifigura en la oficina abierta. Su posición se proyecta cada fotograma desde las coordenadas 3D usando la misma cámara, por lo que acompañan la rotación, el desplazamiento y el zoom; se ocultan al salir del encuadre.
+- El indicador de color representa el estado real disponible en la interfaz (trabajando, espera, éxito o fallo), sin inventar actividad.
+- Tocar una placa abre el proyecto correspondiente y resalta el puesto/avatar de la persona seleccionada. Los botones mantienen tamaño táctil y foco accesible.
+- La lista inferior permanece como alternativa accesible. No se cambian datos guardados, estados GitHub Actions, renderer, APIs ni dependencias.
+- Añade prueba de regresión para proyección, selección y resaltado.
+- Fuente: petición explícita del usuario, 2026-11-10.
