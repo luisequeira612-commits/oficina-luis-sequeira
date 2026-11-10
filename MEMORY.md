@@ -785,5 +785,5 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - El total se calcula a partir de los trabajadores de las habitaciones presentes en la escena; no se fija un número y sigue reflejando proyectos/personajes añadidos o retirados.
 - Añade `tests/verify-tycoon-hud-count.test.mjs` para comprobar la etiqueta y evitar que reaparezca el texto anterior.
 - Cambio de interfaz y prueba solamente: sin cambios de datos, persistencia, cámara, renderer, dependencias, APIs, backend ni servicios de pago.
-- Rama: `fix/lego-worker-count-hud`; CI y revisión pendientes.
+- PR [#52](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/52) fusionado mediante squash en `7aa6c93b2b88437a79bae32875a00fa8682631ad`. CI del head exacto `2e0885ece1623f51236327f668fb2ee2c3fab41e` terminó en success en el run [42915154978](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42915154978); deploy se omitió correctamente en el evento pull_request. La publicación de Pages posterior al merge queda pendiente de verificación.
 - Fuente: inspección de `assets/office-view.js` en main y corrección de la incoherencia visual, 2026-11-10.
