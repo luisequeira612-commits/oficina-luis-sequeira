@@ -90,7 +90,7 @@ footer{max-width:1040px;margin:0 auto;padding:0 16px 24px;color:var(--muted);fon
 <div class="rooms" id="rooms" aria-live="polite"></div>
 </section>
 </main>
-<footer>Simulación. En la versión real, los estados vendrán de GitHub.</footer>
+<footer>Los personajes son una simulación; GitHub Actions muestra ejecuciones reales.</footer>
 <script>
 (function(){
 "use strict";
@@ -300,7 +300,7 @@ const CHARACTER_SVG = {
 };
 function makeId(){return (typeof crypto!=="undefined"&&crypto.randomUUID)?crypto.randomUUID():"id-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,9)}
 function initialRooms(){return [
-{id:makeId(),name:"App Guardi",repository:"luisequeira612-commits/bahasa-studio",agents:["Desarrollo","Revisión","Diseño"].map(role=>({id:makeId(),role,source:null}))},
+{id:makeId(),name:"App Guardi",repository:null,agents:["Desarrollo","Revisión","Diseño"].map(role=>({id:makeId(),role,source:null}))},
 {id:makeId(),name:"Canal de YouTube",repository:"luisequeira612-commits/capi-aventuras",agents:["Escritor","Diseño"].map(role=>({id:makeId(),role,source:null}))},
 {id:makeId(),name:"Tema Nova Launcher",repository:"luisequeira612-commits/jennie-ruby",agents:["Diseño"].map(role=>({id:makeId(),role,source:null}))}
 ]}
