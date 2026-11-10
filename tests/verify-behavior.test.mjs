@@ -91,8 +91,8 @@ test("BABYMONSTER Chart appears in required published project content", () => {
 });
 
 test("isometric office overview explores existing projects without changing persisted data", () => {
-  mustContain('href="assets/office-view.css"', "isometric office styles");
-  mustContain('src="assets/office-view.js?v=27" defer', "isometric office interaction");
+  assert.match(html, /href="assets\/office-view\.css(?:\?v=\d+)?"/, "isometric office styles");
+  assert.match(html, /src="assets\/office-view\.js\?v=\d+" defer/, "isometric office interaction");
   mustContain('id="office-map"', "office map container");
   mustContain('id="office-3d-overview"', "connected 3D office overview container");
   mustContain('card.dataset.roomId=room.id', "stable room identity for map");
@@ -119,14 +119,14 @@ test("public GitHub Actions integration keeps project links local and configurab
   assert.match(githubLiveScript, /run\.conclusion==="failure"/);
 });
 
-test("explorable room stations show the same human workers as the project cards", () => {
+test("explorable room stations show the same minifigures as the project cards", () => {
   assert.ok(officeScript.includes('card.querySelectorAll(".ag")'), "room scene reads the existing worker nodes");
   assert.ok(officeScript.includes('querySelector(".human-worker")'), "room scene reuses the human avatar");
   assert.ok(officeScript.includes('person.classList.add("room-worker-avatar")'), "room scene marks the decorative avatar");
   assert.ok(officeScript.includes("station.appendChild(person)"), "worker is placed at its desk");
 });
 
-test("room workers inherit the current card state and its matching human animation", () => {
+test("room workers inherit the current card state and matching minifigure animation", () => {
   assert.ok(officeScript.includes('agent.classList.contains("is-success")'), "room station copies real success state");
   assert.ok(officeScript.includes('agent.classList.contains("is-failure")'), "room station copies real failure state");
   assert.ok(officeScript.includes('station.classList.add(stateClass)'), "room station exposes the copied state class");
@@ -158,6 +158,9 @@ test("real 3D room prototype uses WebGL2 locally and preserves the CSS fallback"
   assert.ok(officeScript.includes("window.Office3D.openOverview"), "office overview opens the connected 3D building");
   assert.ok(officeScript.includes("roomData=cards.map"), "overview uses every current project room");
   assert.ok(officeScript.includes("room-scene-fallback-hidden"), "keeps the CSS room as a fallback");
+  assert.ok(officeScript.includes("office-game-active"), "activates immersive Tycoon mode");
+  const viewCss = readFileSync(new URL("../assets/office-view.css", import.meta.url), "utf8");
+  assert.ok(viewCss.includes("100dvh") && viewCss.includes("position:fixed"), "fills the viewport with the playable office");
   assert.ok(officeScript.includes("threeD._office3dCleanup()"), "stops the WebGL render loop when the room closes");
   assert.doesNotMatch(renderer, /https?:\/\//, "3D renderer has no external runtime requests");
   assert.ok(renderer.includes("workerRanges") && renderer.includes("bufferSubData"), "animates 3D worker poses in the WebGL buffer");
