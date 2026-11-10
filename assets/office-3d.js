@@ -238,9 +238,15 @@ function buildScene(workers,roomName=""){
    stationProjectKey.includes("capi")||stationProjectKey.includes("youtube")?[0.82,0.22,0.25]:
    stationProjectKey.includes("nova")||stationProjectKey.includes("launcher")?[0.37,0.48,0.76]:
    stationProjectKey.includes("babymonster")||stationProjectKey.includes("monstie")||stationProjectKey.includes("chart")?[0.70,0.38,0.66]:[0.12,0.62,0.66];
+  // The top strip reflects the live GitHub-linked worker state; project identity stays on the side rail.
+  const monitorStatusColor=worker.state==="st-w"?[0.12,0.62,0.46]:
+   worker.state==="st-t"?[0.20,0.49,0.74]:
+   worker.state==="st-a"?[0.91,0.67,0.18]:
+   worker.state==="st-s"?[0.14,0.68,0.42]:
+   worker.state==="st-f"?[0.78,0.18,0.22]:[0.40,0.46,0.52];
   // Compact editor chrome makes each animated display read as a real work interface.
   const monitorStart=positions.length;
-  box(x,1.92,z-.245,.76,.028,.012,[0.16,0.23,0.30]);
+  box(x,1.92,z-.245,.76,.028,.012,monitorStatusColor);
   box(x-.405,1.63,z-.245,.07,.43,.012,stationAccent);
   // Animated code rows live inside the monitor surface; they scroll without textures or external assets.
   for(let codeRow=0;codeRow<7;codeRow++){

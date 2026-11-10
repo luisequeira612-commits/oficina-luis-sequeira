@@ -48,7 +48,7 @@ test("3D worker activity is seated and route-free",()=>{
 });
 test("workstation monitors have compact editor chrome above animated code rows",()=>{
  assert.ok(renderer.includes("Compact editor chrome makes each animated display read as a real work interface."));
- assert.ok(renderer.includes("box(x,1.92,z-.245,.76,.028,.012,[0.16,0.23,0.30])"));
+ assert.ok(renderer.includes("box(x,1.92,z-.245,.76,.028,.012,monitorStatusColor)"));
  assert.ok(renderer.includes("box(x-.405,1.63,z-.245,.07,.43,.012,stationAccent)"));
  assert.ok(renderer.includes("x-.27+codeWidth/2"));
 });
@@ -62,5 +62,5 @@ test("FPS meter remains measured and cache versions are current",()=>{
  assert.ok(renderer.includes("fpsFrames*1000/Math.max(1,timestamp-fpsWindowStart)"));
  assert.match(styles,/\.office-3d-fps\{[^}]*z-index:10/);
  assert.match(page,/office-view\.css\?v=50/);
- assert.match(page,/office-3d\.js\?v=71/);
+ assert.match(page,/office-3d\.js\?v=72/);
 });
