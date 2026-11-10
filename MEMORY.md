@@ -711,3 +711,10 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Caché del renderer actualizada a `office-3d.js?v=70`; pruebas de monitores, teclado, ratón y reloj actualizadas.
 - Cambio añadido al PR #47. La CI de este nuevo head debe pasar antes de cualquier merge. La legibilidad y los FPS aún requieren confirmación física en el Tecno Pova 4.
 - Fuente: renderer y pruebas del PR #47, 2026-11-10.
+
+
+### Corrección de expectativa de caché de monitores — 10 de noviembre de 2026
+
+- La primera CI de la interfaz compacta de monitores [42903400038](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42903400038) pasó la comprobación de sintaxis JavaScript y falló en una aserción heredada que todavía esperaba `office-3d.js?v=69`.
+- Se actualizó esa expresión regular en `tests/verify-3d-human-worker-details.test.mjs` para exigir v70. No se revirtió el código del renderer.
+- Se debe revisar el resultado de la nueva CI del head corregido antes de fusionar.
