@@ -19,6 +19,31 @@ function buildScene(workers,roomName=""){
  const positions=[],normals=[],colors=[];
  const addTri=(a,b,c,color)=>{const ux=b[0]-a[0],uy=b[1]-a[1],uz=b[2]-a[2],vx=c[0]-a[0],vy=c[1]-a[1],vz=c[2]-a[2];let nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx,l=Math.hypot(nx,ny,nz)||1;nx/=l;ny/=l;nz/=l;for(const p of [a,b,c]){positions.push(...p);normals.push(nx,ny,nz);colors.push(...color)}};
  const quad=(a,b,c,d,color)=>{addTri(a,b,c,color);addTri(a,c,d,color)};
+ // Generate each printed face on a tiny in-memory canvas, then bake visible pixels into the shared WebGL vertex buffer.
+ const faceCanvas=document.createElement("canvas");faceCanvas.width=64;faceCanvas.height=48;
+ const faceContext=faceCanvas.getContext("2d",{willReadFrequently:true});
+ const printFaceCanvas=(x,z,index,skin)=>{
+  if(!faceContext)return;
+  const ctx=faceContext;ctx.clearRect(0,0,64,48);ctx.strokeStyle="#241914";ctx.fillStyle="#241914";ctx.lineWidth=3.2;ctx.lineCap="round";ctx.lineJoin="round";
+  const eye=(cx,cy)=>{ctx.beginPath();ctx.arc(cx,cy,2.8,0,Math.PI*2);ctx.fill()};
+  if(index%5===1){eye(19,16);ctx.beginPath();ctx.moveTo(42,16);ctx.lineTo(48,16);ctx.stroke()}else{eye(19,16);eye(45,16)}
+  if(index%5===2){ctx.beginPath();ctx.moveTo(13,10);ctx.lineTo(22,8);ctx.moveTo(41,8);ctx.lineTo(50,10);ctx.stroke()}
+  if(index===1||index===5){ctx.lineWidth=2.2;ctx.strokeRect(11,11,15,11);ctx.strokeRect(38,11,15,11);ctx.beginPath();ctx.moveTo(26,16);ctx.lineTo(38,16);ctx.stroke()}
+  ctx.beginPath();
+  if(index%5===3){ctx.moveTo(27,35);ctx.lineTo(37,35)}
+  else if(index%5===4){ctx.arc(32,33,4,0,Math.PI*2)}
+  else{ctx.moveTo(21,31);ctx.quadraticCurveTo(32,42,43,31)}
+  ctx.stroke();
+  const pixels=ctx.getImageData(0,0,64,48).data,zFace=z+.637;
+  for(let sy=0;sy<48;sy+=2)for(let sx=0;sx<64;sx+=2){
+   let alpha=0,red=0,green=0,blue=0;
+   for(let oy=0;oy<2;oy++)for(let ox=0;ox<2;ox++){const p=((sy+oy)*64+sx+ox)*4;alpha+=pixels[p+3];red+=pixels[p];green+=pixels[p+1];blue+=pixels[p+2]}
+   const a=alpha/(4*255);if(a<.035)continue;
+   const ink=[red/Math.max(1,alpha),green/Math.max(1,alpha),blue/Math.max(1,alpha)],color=skin.map((tone,i)=>tone*(1-a)+ink[i]*a);
+   const x0=x+(sx/64-.5)*.31,x1=x+((sx+2)/64-.5)*.31,yTop=2.14-sy/48*.25,yBottom=2.14-(sy+2)/48*.25;
+   quad([x0,yTop,zFace],[x1,yTop,zFace],[x1,yBottom,zFace],[x0,yBottom,zFace],color);
+  }
+ };
  const box=(x,y,z,w,h,d,color)=>{const x0=x-w/2,x1=x+w/2,y0=y-h/2,y1=y+h/2,z0=z-d/2,z1=z+d/2;quad([x0,y1,z1],[x1,y1,z1],[x1,y1,z0],[x0,y1,z0],color);quad([x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1],color);quad([x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1],color);quad([x1,y0,z0],[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],color);quad([x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0],color);quad([x1,y0,z1],[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],color)};
   const taperBox=(x,y,z,wt,wb,h,d,c)=>{const a=wt/2,b=wb/2,y0=y-h/2,y1=y+h/2,z0=z-d/2,z1=z+d/2;quad([x-b,y0,z1],[x+b,y0,z1],[x+a,y1,z1],[x-a,y1,z1],c);quad([x+b,y0,z0],[x-b,y0,z0],[x-a,y1,z0],[x+a,y1,z0],c);quad([x-b,y0,z0],[x-b,y0,z1],[x-a,y1,z1],[x-a,y1,z0],c);quad([x+b,y0,z1],[x+b,y0,z0],[x+a,y1,z0],[x+a,y1,z1],c);quad([x-a,y1,z1],[x+a,y1,z1],[x+a,y1,z0],[x-a,y1,z0],c);quad([x-b,y0,z0],[x+b,y0,z0],[x+b,y0,z1],[x-b,y0,z1],c)};
  const sphere=(cx,cy,cz,rx,ry,rz,color,segments=9,rings=6)=>{for(let r=0;r<rings;r++){const p0=-Math.PI/2+Math.PI*r/rings,p1=-Math.PI/2+Math.PI*(r+1)/rings;for(let s=0;s<segments;s++){const t0=2*Math.PI*s/segments,t1=2*Math.PI*(s+1)/segments;const pt=(p,t)=>[cx+rx*Math.cos(p)*Math.cos(t),cy+ry*Math.sin(p),cz+rz*Math.cos(p)*Math.sin(t)];const a=pt(p0,t0),b=pt(p0,t1),c=pt(p1,t1),d=pt(p1,t0);quad(a,d,c,b,color)}}};
@@ -245,19 +270,8 @@ function buildScene(workers,roomName=""){
   if(index===2){sphere(x-.24,2.18,z+.98,.075,.075,.075,[.94,.72,.22],9,6);sphere(x+.24,2.18,z+.98,.075,.075,.075,[.94,.72,.22],9,6)}
   if(index===4){segment([x-.36,2.02,z+.99],[x-.40,2.28,z+.98],.035,[.22,.25,.29],8);sphere(x-.40,2.28,z+.98,.075,.075,.075,[.22,.25,.29],9,6)}
   if(index===6){sphere(x+.32,2.12,z+.98,.085,.12,.08,[.82,.28,.43],9,6);sphere(x+.32,2.12,z+1.06,.045,.055,.025,[.98,.76,.78],8,5)}
-  // Printed face: individual expressions are built from tiny molded ink-like geometry on the curved front.
-  const ink=[.075,.055,.045],faceZ=z+.625,eyeY=2.055;
-  sphere(x-.12,eyeY,faceZ,.046,.052,.024,ink,12,7);sphere(x+.12,eyeY,faceZ,.046,.052,.024,ink,12,7);
-  if(index%5===1){segment([x+.075,eyeY,faceZ+.012],[x+.165,eyeY,faceZ+.012],.014,skin,7)}
-  if(index%5===2){segment([x-.18,2.13,faceZ],[x-.07,2.15,faceZ],.014,ink,7);segment([x+.07,2.15,faceZ],[x+.18,2.13,faceZ],.014,ink,7)}
-  if(index%5===4){sphere(x,1.925,faceZ,.038,.052,.016,ink,10,6)}
-  else if(index%5===3){segment([x-.075,1.925,faceZ],[x+.075,1.925,faceZ],.014,[.42,.13,.12],7)}
-  else{
-   const smile=[];
-   for(let k=0;k<=4;k++){const px=-.095+k*.0475,py=1.925+.032*Math.pow(Math.abs(px)/.095,2);smile.push([x+px,py,faceZ])}
-   for(let k=0;k<smile.length-1;k++)segment(smile[k],smile[k+1],.020,[.42,.13,.12],8);
-  }
-  if(index===1||index===5){box(x-.12,eyeY,faceZ+.025,.15,.065,.025,[.12,.20,.26]);box(x+.12,eyeY,faceZ+.025,.15,.065,.025,[.12,.20,.26]);box(x,eyeY,faceZ+.025,.10,.025,.025,[.12,.20,.26])}
+  // Canvas-generated facial print is baked onto the head as a lightweight color decal.
+  printFaceCanvas(x,z,index,skin);
   const headEnd=positions.length,armsStart=positions.length;
   for(const side of [-1,1]){
    const shoulder=[x+side*.48,1.49,z+.99],elbow=[x+side*.58,1.30,z+.82],wrist=[x+side*.53,1.16,z+.66];
