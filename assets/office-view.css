@@ -1,3 +1,4 @@
+@import url("./office-3d-atmosphere.css");
 .office-overview{margin:0 0 22px;padding:14px 12px 16px;border:1px solid var(--border);border-radius:16px;background:linear-gradient(145deg,#F8FAFC,#EEF3F8);overflow:hidden}
 .office-overview h2{margin:0 0 3px}
 .office-hint{margin:0 0 10px;color:var(--muted);font-size:12px}

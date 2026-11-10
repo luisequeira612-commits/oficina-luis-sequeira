@@ -32,6 +32,8 @@ La vista general ahora reúne las habitaciones de los proyectos en una planta 3D
 
 Las salas 3D se dibujan localmente con WebGL 2 y geometría procedural propia: escritorio, monitor encendido, teclado, ratón, torre, silla, lámpara, accesorios y trabajadores low-poly. La cámara admite rotación táctil, desplazamiento, zoom por botones/gesto y rueda. No descarga modelos ni bibliotecas externas. Si WebGL 2 no está disponible, conserva la vista CSS anterior como alternativa. El rendimiento y la compatibilidad real deben comprobarse en el teléfono objetivo. Los trabajadores 3D reutilizan los tonos de piel, peinados y colores de ropa de sus avatares humanos, y actualizan sus movimientos low-poly cuando cambia el estado simulado (trabajo, pensamiento, espera y descanso), con soporte de movimiento reducido. El render se limita aproximadamente a 30 FPS para moderar el uso de recursos móviles. La animación es visual y no representa actividad real de agentes.
 
+La vista general incorpora una capa de presentación CSS de bajo coste: retícula ambiental tenue, etiqueta de orientación y navegación de habitaciones numerada con acentos visuales. No añade geometría, efectos de iluminación física ni trabajo extra al renderizador WebGL; mantiene controles accesibles, adaptación móvil y respeto por movimiento reducido.
+
 ## Fases
 
 - **Fase A:** simulación visual local y gestión de proyectos/personajes.
