@@ -332,6 +332,8 @@ function loadRooms(){
  catch(_){return initialRooms()}
 }
 let rooms=loadRooms();
+let loadedFromLocalStorage=false;
+try{loadedFromLocalStorage=localStorage.getItem(STORAGE_KEY)!==null}catch(_){loadedFromLocalStorage=false}
 applyMigrations();
 const states=new Map();
 
@@ -371,6 +373,19 @@ function applyMigrations(){
    save();localStorage.setItem(MIGRATION_KEY+"-employees","nine-named-employees-v1");
   }
  }catch(_){/* A failed migration can be retried on the next page load. */}
+}
+async function hydrateFromEditableData(){
+ if(loadedFromLocalStorage)return;
+ try{
+  const [agentsResponse,projectsResponse]=await Promise.all([fetch("data/agentes.json",{cache:"no-store"}),fetch("data/proyectos.json",{cache:"no-store"})]);
+  if(!agentsResponse.ok||!projectsResponse.ok)return;
+  const agentsData=await agentsResponse.json(),projectsData=await projectsResponse.json();
+  if(agentsData.version!==1||projectsData.version!==1||!Array.isArray(agentsData.employees)||!Array.isArray(projectsData.projects))return;
+  const byId=new Map(agentsData.employees.map(agent=>[agent.id,agent]));
+  const hydrated=projectsData.projects.map(project=>({id:project.id,name:project.name,repository:project.repository||null,agents:(project.employeeIds||[]).map(id=>byId.get(id)).filter(Boolean).map(agent=>({id:agent.id,role:agent.role,name:agent.name,gender:agent.gender,skinTone:agent.skinTone,hair:agent.hair,shirt:agent.shirt,source:"data"}))}));
+  if(!validData({version:1,rooms:hydrated}))return;
+  rooms=hydrated;save();render();
+ }catch(_){/* Static Pages may be offline; built-in defaults remain usable. */}
 }
 function stateFor(id){if(!states.has(id))states.set(id,"r");return states.get(id)}
 function updateSummary(){if(window.OfficeGitHubLive)window.OfficeGitHubLive.paintSummary()}
@@ -459,6 +474,7 @@ form.addEventListener("submit",event=>{
 });
 nameInput.addEventListener("input",()=>{if(nameInput.value.length>0)errorEl.textContent=""});
 render();
+hydrateFromEditableData();
 window.OfficeGitHubLive.start(rooms);
 })();
 </script>
