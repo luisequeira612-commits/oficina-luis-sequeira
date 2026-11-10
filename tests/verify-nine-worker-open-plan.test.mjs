@@ -61,7 +61,7 @@ test("direct employee selection highlights the worker in the actual WebGL scene"
 
 
 test("the deployed HTML requests the fresh stylesheet that positions floating 3D nameplates", () => {
-  assert.match(html, /office-view\.css\?v=44/);
+  assert.match(html, /office-view\.css\?v=45/);
   assert.match(css, /\.office-worker-tags\{position:absolute/);
   assert.match(css, /\.office-worker-tag\{position:absolute/);
   assert.match(renderer, /container\.appendChild\(workerTags\)/);
@@ -71,4 +71,4 @@ test("the deployed HTML requests the fresh stylesheet that positions floating 3D
 test("employee labels fit the camera viewport and the three status colors have distinct meanings",()=>{assert.match(renderer,/is-your-turn/);assert.match(renderer,/placed\.some/);assert.match(renderer,/button\.textContent="Entrar · "\+room\.name/);assert.match(css,/office-worker-tag\.is-your-turn/)});
 
 
-test("mobile office HUD exposes the project sheet, employee selection and legend",()=>{assert.match(view,/office-project-sheet/);assert.match(view,/office-employee-card/);assert.match(view,/office-state-legend/);assert.match(css,/office-tycoon-top/);assert.match(css,/office-roster-avatar/);assert.match(html,/office-view\.css\?v=44/);assert.match(renderer,/const taperBox=/)});
+test("mobile office HUD exposes the project sheet, employee selection and legend",()=>{assert.match(view,/office-project-sheet/);assert.match(view,/office-employee-card/);assert.match(view,/office-state-legend/);assert.match(css,/office-tycoon-top/);assert.match(css,/office-roster-avatar/);assert.match(html,/office-view\.css\?v=45/);assert.match(renderer,/const taperBox=/)});
