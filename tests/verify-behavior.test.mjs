@@ -49,3 +49,19 @@ test("accessibility and user-input protections remain wired", () => {
   mustContain("title.textContent=room.name", "literal project rendering");
   assert.doesNotMatch(html, /innerHTML\\s*=\\s*name/);
 });
+
+test("public GitHub Actions integration keeps project links local and configurable", () => {
+  mustContain('repository:"luisequeira612-commits/bahasa-studio"', "Bahasa Studio mapping");
+  mustContain('repository:"luisequeira612-commits/capi-aventuras"', "Capi Aventuras mapping");
+  mustContain('repository:"luisequeira612-commits/jennie-ruby"', "Nova Launcher mapping");
+  mustContain('https://api.github.com/repos/"+requestedRepository+"/actions/runs?per_page=1', "public Actions endpoint");
+  mustContain('response.status===403||response.status===429', "GitHub rate-limit handling");
+  mustContain('response.status===404', "missing/private repository handling");
+  mustContain('function migrateRooms(savedRooms)', "legacy localStorage migration");
+  mustContain('room.repository===undefined', "migration preserves explicit disconnections");
+  mustContain('textContent=result.message', "safe status rendering");
+  mustContain('textContent="Actualizar"', "manual refresh control");
+  mustContain('room.repository=value||null', "disconnect support");
+  mustContain('run.conclusion==="success"', "successful workflow state");
+  mustContain('run.conclusion==="failure"', "failed workflow state");
+});
