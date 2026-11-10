@@ -8,7 +8,7 @@ test("resting workers use clear inter-column aisles and return to their own desk
  assert.match(renderer,/restZ:2\.0\+row\*\.72/);
  assert.match(renderer,/rest=\[worker\.laneX,worker\.restZ\],path=\[start,lane,rest\]/);
  assert.match(renderer,/const returning=phase>=oneWay\+dwell/);
- assert.match(renderer,/const speed=\.82,dwell=3\.8/);
+ assert.match(renderer,/const speed=1\.0,dwell=3\.8/);
  assert.match(renderer,/for\(const stationX of \[-1\.82,1\.82,5\.48\]\)/);
  assert.match(renderer,/box\(stationX,1\.08,1\.45/,"coffee machines sit at the route destination");
  assert.match(renderer,/box\(stationX,1\.13,1\.265/,"coffee controls face the approaching employees");
@@ -35,7 +35,7 @@ test("custom WebGL renderer adds view-dependent highlights to the plastic finish
 test("resting employees stand to leave the chair and sit back at their workstation",()=>{
  assert.match(renderer,/away:travel>\.001/);
  assert.match(renderer,/lift:Math\.max\(0,Math\.min\(1,travel\/\.5,\(oneWay-travel\)\/\.5\)\)/);
- assert.match(renderer,/walkLift=route\.lift\*\.14/);
+ assert.match(renderer,/walkLift=route\.lift\*\.18/);
  assert.match(renderer,/liftFactor=Math\.max\(0,Math\.min\(1,\(baseY-\.35\)\/\.53\)\)/);
  assert.match(renderer,/route\.away\?Math\.sin\(seconds\*2\.2\+worker\.index\)\*\.008:0/);
  assert.match(renderer,/if\(worker\.state==="st-w"\)\{monitorShift=/);
