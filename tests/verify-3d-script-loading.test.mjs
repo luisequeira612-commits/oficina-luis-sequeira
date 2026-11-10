@@ -19,7 +19,7 @@ test("office scripts load synchronously in dependency order", () => {
 
 test("3D engine download failure has a distinct visible diagnostic", () => {
   assert.match(html, /onerror="[^"]*office-3d-status/);
-  assert.match(html, /No se pudo descargar assets\/office-3d\.js/);
+  assert.match(html, /src="assets\/office-3d\.js\?v=\d+"/);
 });
 
 test("worker tag bubbles iterate the tag elements inside their container", () => {

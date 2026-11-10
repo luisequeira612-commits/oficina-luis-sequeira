@@ -62,12 +62,23 @@ test("FPS meter remains measured and cache versions are current",()=>{
  assert.ok(renderer.includes("fpsFrames*1000/Math.max(1,timestamp-fpsWindowStart)"));
  assert.match(styles,/\.office-3d-fps\{[^}]*z-index:10/);
  assert.match(page,/office-view\.css\?v=50/);
- assert.match(page,/office-3d\.js\?v=75/);
+ assert.match(page,/office-3d\.js\?v=76/);
 });
 
 test("3D renderer pauses while the document is hidden and resumes when visible",()=>{
- assert.match(renderer,/function render\(timestamp=0\)\{if\(disposed\)return;raf=0;if\(document\.hidden\)return;/);
- assert.match(renderer,/const onVisibilityChange=\(\)=>\{if\(document\.hidden\)\{if\(raf\)cancelAnimationFrame\(raf\);raf=0;fpsFrames=0;fpsWindowStart=0\}else if\(!disposed&&!raf\)\{raf=requestAnimationFrame\(render\)\}\}/);
+ assert.match(renderer,/function render\(timestamp=0\)\{if\(disposed\|\|contextLost\)return;raf=0;if\(document\.hidden\)return;/);
+ assert.match(renderer,/const onVisibilityChange=\(\)=>\{if\(document\.hidden\)\{if\(raf\)cancelAnimationFrame\(raf\);raf=0;fpsFrames=0;fpsWindowStart=0\}else if\(!disposed&&!contextLost&&!raf\)\{raf=requestAnimationFrame\(render\)\}\}/);
  assert.match(renderer,/document\.addEventListener\("visibilitychange",onVisibilityChange\)/);
  assert.match(renderer,/document\.removeEventListener\("visibilitychange",onVisibilityChange\)/);
+});
+
+test("WebGL context loss shows a safe recovery message and stops rendering",()=>{
+ assert.match(renderer,/const onContextLost=event=>\{event\.preventDefault\(\);contextLost=true/);
+ assert.match(renderer,/Tus proyectos siguen guardados/);
+ assert.match(renderer,/Cierra esta escena y vuelve a entrar/);
+ assert.match(renderer,/webglcontextlost/);
+ assert.match(renderer,/webglcontextrestored/);
+ assert.match(renderer,/canvas\.removeEventListener\("webglcontextlost",onContextLost\)/);
+ assert.match(renderer,/canvas\.removeEventListener\("webglcontextrestored",onContextRestored\)/);
+ assert.match(renderer,/if\(!contextLost\)gl\.getExtension\("WEBGL_lose_context"\)/);
 });
