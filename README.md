@@ -95,3 +95,10 @@ The live UI keeps two timestamps per repository: `checkedAt` controls freshness 
 ### Distinción entre ejecuciones en cola y en curso
 
 Una ejecución `queued` se muestra como «En cola» y usa la pose de espera; solo una ejecución `in_progress` activa «Trabajando». Ambos estados conservan la prioridad de sondeo rápido. Esto evita representar como trabajo ya iniciado una ejecución que GitHub todavía no ha puesto en marcha.
+
+
+## LEGO Office Tycoon 3D — primera etapa visual
+
+La dirección visual aprobada sustituye los avatares humanos low-poly por personajes originales de estilo minifigura: cabeza cilíndrica con pieza superior, torso y extremidades geométricos, rasgos faciales impresos, tonos de piel variados y diversidad de peinados/ropa. La distribución de género se mantiene aproximadamente equilibrada. No se usan modelos, texturas ni recursos de terceros.
+
+La vista general conectada pasa a ser un modo de juego a pantalla completa en móvil y escritorio. Arrastrar desplaza la cámara dentro de límites, pellizcar ajusta el zoom y los controles discretos permiten una rotación limitada o recentrar la oficina. El HUD queda superpuesto al área jugable. La geometría procedural, WebGL 2, la alternativa CSS y la integración real de GitHub Actions se mantienen; no se altera el almacenamiento ni su esquema.
