@@ -797,3 +797,13 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Sin cambios de persistencia, esquema, renderer, cámara, dependencias, APIs, backend ni servicios de pago.
 - PR [#53](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/53) fusionado mediante squash en `76b540f75e01b3197c9193f887201a61e49b61fb`. CI del head exacto `fd156dd6580453dc82c60dcdbc8fbc5b11263ab9` terminó en success en el run [42915356933](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42915356933); deploy se omitió correctamente en el evento pull_request. La publicación de Pages posterior al merge queda pendiente de verificación.
 - Fuente: revisión de `mountTycoonControls(data)` tras PR #52, 2026-11-10.
+
+
+## PR #54 — contador LEGO correcto en la cabecera normal (10 de noviembre de 2026)
+
+- Extiende las correcciones de PR #52/#53 a la cabecera de la página fuera del modo inmersivo: sustituye el texto fijo «10 empleados · 0 humanos» por un total calculado desde las habitaciones y «minifiguras LEGO».
+- El HTML incluye un texto de reserva coherente antes de que cargue JavaScript; el módulo de vista actualiza el total en cada renderizado.
+- Añade `tests/verify-office-header-worker-count.test.mjs` para comprobar el cálculo dinámico, el texto de reserva y la ausencia de la etiqueta antigua.
+- Solo cambia presentación y prueba; no modifica datos, persistencia, renderer, cámara, dependencias, APIs, backend ni servicios de pago.
+- Rama: `fix/office-header-worker-count`. La primera CI [42915575007](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42915575007) pasó sintaxis y 101/102 pruebas; falló únicamente una aserción heredada en `tests/verify-nine-worker-open-plan.test.mjs` que aún exigía «0 humanos». Se actualizó esa expectativa al nuevo texto LEGO; CI del head corregido pendiente.
+- Fuente: inspección del encabezado HTML y de `renderMap()`, 2026-11-10.

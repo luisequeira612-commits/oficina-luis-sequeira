@@ -102,7 +102,7 @@ test("control buttons retain zoom, rotation, home, drag and pinch",()=>{
 
 test("the office title and employee count remain visible above the scene",()=>{
  assert.ok(html.includes("<h1>Oficina de Luis Sequeira</h1>"));
- assert.ok(html.includes('<p class="office-header-subtitle">10 empleados · 0 humanos</p>'));
+ assert.ok(html.includes('<p class="office-header-subtitle">10 empleados · minifiguras LEGO</p>'));
 });
 test("the compact help button explains touch controls and closes itself",()=>{
  assert.match(view,/help\.textContent="\?"/);

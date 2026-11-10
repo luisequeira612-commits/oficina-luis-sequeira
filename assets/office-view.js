@@ -69,6 +69,7 @@ function renderMap(){
  if(dialog.open)return;
  const cards=Array.from(rooms.querySelectorAll(".room[data-room-id]"));
  const roomData=cards.map(card=>({id:card.dataset.roomId,name:card.querySelector(".room-title")?.textContent?.trim()||"Proyecto",workers:Array.from(card.querySelectorAll(".ag"),agent=>({...workerDataFor(agent),roomId:card.dataset.roomId}))}));
+ const totalWorkers=roomData.reduce((n,room)=>n+room.workers.length,0);const headerSubtitle=document.querySelector(".office-header-subtitle");if(headerSubtitle)headerSubtitle.textContent=totalWorkers+" empleados · minifiguras LEGO";
  const renderedOverview=Boolean(overview&&window.Office3D&&roomData.length&&window.Office3D.openOverview({container:overview,rooms:roomData,onSelectRoom:id=>{const card=cards.find(item=>item.dataset.roomId===id);if(card)openRoom(card)},onSelectWorker:worker=>selectEmployee(worker)}));
  if(renderedOverview){
   const roster=document.createElement("div");roster.className="office-employee-roster";roster.setAttribute("aria-label","Barra de equipo");
