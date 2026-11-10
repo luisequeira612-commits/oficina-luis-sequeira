@@ -72,6 +72,11 @@ test("3D renderer pauses while the document is hidden and resumes when visible",
  assert.match(renderer,/document\.removeEventListener\("visibilitychange",onVisibilityChange\)/);
 });
 
+test("worker nameplate layout is throttled independently from the 30 FPS renderer",()=>{
+ assert.match(renderer,/lastFrame=0,lastTagUpdate=0/);
+ assert.match(renderer,/if\(workerTags&&timestamp-lastTagUpdate>=100\)\{lastTagUpdate=timestamp;/);
+});
+
 test("WebGL context loss shows a safe recovery message and stops rendering",()=>{
  assert.match(renderer,/const onContextLost=event=>\{event\.preventDefault\(\);contextLost=true/);
  assert.match(renderer,/Tus proyectos siguen guardados/);
