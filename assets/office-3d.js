@@ -121,11 +121,25 @@ function buildScene(workers,roomName=""){
   if(hairStyle==="long"||hairStyle==="tied"){sphere(x-.29,1.86,z+.97,.11,.42,.13,hairColor,7,5);sphere(x+.29,1.86,z+.97,.11,.42,.13,hairColor,7,5)}
   if(hairStyle==="curly"){for(let curl=0;curl<7;curl++){const angle=curl*Math.PI*2/7;sphere(x+Math.cos(angle)*.25,2.28,z+.96+Math.sin(angle)*.24,.13,.13,.13,hairColor,6,4)}}
   if(hairStyle==="tied")sphere(x,2.32,z+.69,.13,.15,.13,hairColor,7,5);
-  sphere(x-.11,2.03,z+1.265,.035,.045,.025,[0.10,0.09,0.09],6,4);sphere(x+.11,2.03,z+1.265,.035,.045,.025,[0.10,0.09,0.09],6,4);
-  sphere(x,1.91,z+1.285,.035,.025,.025,[0.43,0.22,0.18],6,4);
+  // Facial features are deliberately simple, readable at mobile scale, and face the room.
+  sphere(x-.11,2.03,z+1.265,.052,.055,.025,[0.94,0.91,0.84],7,4);sphere(x+.11,2.03,z+1.265,.052,.055,.025,[0.94,0.91,0.84],7,4);
+  sphere(x-.11,2.03,z+1.289,.023,.031,.014,[0.10,0.09,0.09],6,4);sphere(x+.11,2.03,z+1.289,.023,.031,.014,[0.10,0.09,0.09],6,4);
+  box(x-.11,2.13,z+1.265,.12,.035,.035,hairColor);box(x+.11,2.13,z+1.265,.12,.035,.035,hairColor);
+  sphere(x,1.96,z+1.30,.045,.075,.045,skin,7,5);
+  box(x,1.86,z+1.285,.10,.018,.025,[0.38,0.15,0.14]);
+  sphere(x-.35,1.98,z+.98,.075,.11,.065,skin,7,5);sphere(x+.35,1.98,z+.98,.075,.11,.065,skin,7,5);
+  // Alternating subtle glasses and a small ear stud make silhouettes less uniform.
+  if(index%4===1){box(x-.11,2.03,z+1.315,.16,.025,.025,metal);box(x+.11,2.03,z+1.315,.16,.025,.025,metal);box(x,2.03,z+1.32,.07,.018,.025,metal)}
+  if(index%5===2)sphere(x+.39,1.93,z+1.04,.035,.035,.025,[0.86,0.70,0.38],6,4);
+  // Shirt collar, placket and a restrained role badge add tailored clothing detail.
+  box(x-.13,1.61,z+1.19,.18,.13,.045,[0.88,0.91,0.92]);box(x+.13,1.61,z+1.19,.18,.13,.045,[0.88,0.91,0.92]);
+  box(x,1.28,z+1.19,.045,.43,.035,[0.82,0.85,0.86]);
+  sphere(x+.22,1.42,z+1.195,.055,.055,.035,[0.88,0.72,0.40],7,5);
   const armsStart=positions.length;
   sphere(x-.36,1.48,z+.78,.14,.34,.14,skin,8,5);sphere(x+.36,1.48,z+.78,.14,.34,.14,skin,8,5);
   const armsEnd=positions.length;
+  // Cuffs and articulated forearms remain within the existing animated arm range.
+  box(x-.36,1.28,z+.78,.17,.10,.17,shirt);box(x+.36,1.28,z+.78,.17,.10,.17,shirt);
   box(x-.2,.74,z+.72,.18,.58,.18,shirt);box(x+.2,.74,z+.72,.18,.58,.18,shirt);
   box(x-.2,.43,z+.62,.22,.14,.3,metal);box(x+.2,.43,z+.62,.22,.14,.3,metal);
   // Subtle task-state accents; animations remain clearly labelled as simulated elsewhere.
