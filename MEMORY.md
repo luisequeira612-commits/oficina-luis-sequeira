@@ -635,3 +635,12 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Validación final [42895621448](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42895621448): validate y deploy success. La suite completa de Node pasó en validate; GitHub Pages publicó el commit de código/pruebas `b6fd0791da547eede61a083cb21fd0dc32802add`.
 - El cambio de movimiento queda desplegado, pero la nueva ruta y el giro aún necesitan confirmación visual de Luis en el Tecno Pova 4. Los 30 FPS confirmados corresponden a la versión anterior; no atribuir esa medición a esta nueva versión hasta que se vuelva a comprobar en el dispositivo.
 - Fuente: GitHub Actions run 42895621448 y confirmación del usuario sobre 30 FPS en la versión anterior, 2026-11-10.
+
+
+## Detalle de reloj mural en la oficina 3D — 10 de noviembre de 2026
+
+- Se añade un reloj analógico decorativo a la pared del fondo, construido con la geometría compartida del renderer WebGL2. Incluye marco, esfera, doce marcas y manecillas fijas a las 10:10.
+- La hora es solo un elemento decorativo fijo; no se presenta como hora local ni como dato en vivo.
+- Se mantiene el buffer compartido; no se añaden texturas, dependencias, animaciones, APIs, almacenamiento ni servicios de pago.
+- Se invalida la caché de office-3d.js a v68 y se añade tests/verify-3d-office-wall-clock.test.mjs.
+- Fuente: cambio del renderer y prueba de regresión, 2026-11-10. Requiere CI y comprobación visual en el Tecno Pova 4.
