@@ -165,18 +165,18 @@ function buildScene(workers,roomName=""){
  if(count>=7){
   // Break points are mounted on the back wall and reached via the gaps between desk columns.
   for(const stationX of [-1.82,1.82,5.48]){
-   box(stationX,1.08,-1.45,.34,.92,.30,[.23,.32,.39]);
+   box(stationX,1.08,1.45,.34,.92,.30,[.23,.32,.39]);
    box(stationX,1.13,-1.265,.25,.48,.035,[.12,.22,.29]);
    box(stationX,1.28,-1.245,.15,.055,.018,[.18,.83,.74]);
    box(stationX-.085,.87,-1.245,.06,.12,.018,[.78,.85,.89]);
    box(stationX+.085,.87,-1.245,.06,.12,.018,[.78,.85,.89]);
-   box(stationX,1.58,-1.45,.18,.055,.24,[.88,.70,.38]);
+   box(stationX,1.58,1.45,.18,.055,.24,[.88,.70,.38]);
   }
  }
  workers.forEach((worker,index)=>{
   const col=index%cols,row=Math.floor(index/cols),x=(col-(cols-1)/2)*(count>=7?3.65:4.1),z=rows===1?-1.55:count>=7?-3.0+row*2.75:-2.8+row*2.4;
   // Subtle layered contact shadows ground the workstation and chair on the floor.
-  shadow(x,z+.18,1.78,1.12);shadow(x,z+1.55,.78,.72);if(worker.selected)sphere(x,.045,z+.84,1.12,.035,.82,[1,.76,.24],14,3);
+  const workstationStart=positions.length;shadow(x,z+.18,1.78,1.12);shadow(x,z+1.55,.78,.72);if(worker.selected)sphere(x,.045,z+.84,1.12,.035,.82,[1,.76,.24],14,3);
   // desk, legs, monitor, illuminated display, stand, keyboard, mouse and desktop tower.
   sphere(x,.012,z+.28,1.5,.008,.72,[0.24,0.25,0.25],12,3);
   box(x,.92,z,2.65,.18,1.15,woodTop);for(const dx of [-1.12,1.12])for(const dz of [-.42,.42])box(x+dx,.47,z+dz,.11,.82,.11,wood);
@@ -194,12 +194,12 @@ function buildScene(workers,roomName=""){
   for(let vent=0;vent<4;vent++)box(x-.12+vent*.08,.12,z+.665,.025,.18,.018,[0.62,0.70,0.75]);
   sphere(x+.14,.30,z+.665,.035,.035,.018,[0.24,0.82,0.72],6,4);
   box(x+.12,.20,z+.665,.06,.035,.018,[0.76,0.82,0.86]);
-  box(x,1.65,z-.36,1.12,.78,.14,metal);box(x,1.65,z-.455,.98,.62,.025,screen);
+  box(x,1.65,z-.36,1.12,.78,.14,metal);box(x,1.65,z-.265,.98,.62,.025,screen);
   // Animated code rows live inside the monitor surface; they scroll without textures or external assets.
   const monitorStart=positions.length;
   for(let codeRow=0;codeRow<7;codeRow++){
    const codeWidth=[.18,.31,.24,.38,.16,.28,.22][codeRow],codeY=1.86-codeRow*.075;
-   box(x-.39+codeWidth/2,codeY,z-.48,codeWidth,.025,.012,codeRow%3===0?[0.12,0.95,0.82]:[0.63,0.91,1]);
+   box(x-.39+codeWidth/2,codeY,z-.24,codeWidth,.025,.012,codeRow%3===0?[0.12,0.95,0.82]:[0.63,0.91,1]);
   }
   const monitorEnd=positions.length;
   box(x,1.23,z-.36,.14,.12,.14,metal);box(x,.99,z-.36,.68,.08,.35,metal);
@@ -280,8 +280,10 @@ function buildScene(workers,roomName=""){
   else if(worker.state==="st-s"){sphere(x-.34,2.62,z+.96,.08,.08,.08,[.98,.78,.22],7,5);sphere(x+.34,2.62,z+.96,.08,.08,.08,[.98,.78,.22],7,5)}
   else if(worker.state==="st-f"){box(x-.38,2.55,z+.96,.1,.3,.1,[.86,.16,.22]);sphere(x-.38,2.32,z+.96,.07,.07,.07,[.86,.16,.22],7,5)}
   const bodyEnd=positions.length;
+  // Mirror each complete workstation toward the open viewing side. Reverse triangle winding and normals to preserve WebGL culling and lighting.
+  for(let i=workstationStart;i<positions.length;i+=9){for(let v=0;v<9;v+=3){positions[i+v+2]=-positions[i+v+2];normals[i+v+2]=-normals[i+v+2]}for(const array of [positions,normals,colors])for(let k=0;k<3;k++){const a=i+3+k,b=i+6+k,temp=array[a];array[a]=array[b];array[b]=temp}}
   const laneX=col===0?-1.82:col===1?1.82:5.48;
-  workerRanges.push({start:workerStart,end:positions.length,legsStart,legsEnd,bodyStart:legsEnd,bodyEnd,headStart,headEnd,armsStart,armsEnd,handsStart,handsEnd,monitorStart,monitorEnd,state:worker.state,index,employeeId:worker.id||"",name:worker.name||worker.role||"Agente",role:worker.role||"Puesto",roomId:worker.roomId||"",x,z,laneX,restZ:-3.2});
+  workerRanges.push({start:workerStart,end:positions.length,legsStart,legsEnd,bodyStart:legsEnd,bodyEnd,headStart,headEnd,armsStart,armsEnd,handsStart,handsEnd,monitorStart,monitorEnd,state:worker.state,index,employeeId:worker.id||"",name:worker.name||worker.role||"Agente",role:worker.role||"Puesto",roomId:worker.roomId||"",x,z:-z,laneX,restZ:3.2});
  });
  // Layered ceiling fixtures: recessed rails and three pendant lamps with bright diffusers.
  box(0,3.72,-.5,4.8,.08,.7,[0.34,0.41,0.47]);
@@ -339,13 +341,13 @@ function open({container,roomName,workers=[],rooms=null,onSelectRoom=null,onSele
   const hint=document.createElement("span");hint.className="office-3d-hint";hint.textContent="Arrastra para moverte · Pellizca para acercar · Usa ↶ ↷ para girar";
   const group=document.createElement("div");group.style.display="flex";group.style.gap="5px";
   const makeButton=(label,aria,fn)=>{const b=document.createElement("button");b.type="button";b.textContent=label;b.setAttribute("aria-label",aria);b.addEventListener("click",fn);group.appendChild(b);return b};
-  const overviewMode=Boolean(rooms&&rooms.length),baseRadius=overviewMode?12.2:13,minRadius=5.5;let initialRadius=baseRadius,maxRadius=overviewMode?baseRadius*1.65:23,theta=2.42,phi=1.08,radius=baseRadius,target=[0,1.65,0],cameraFitDone=false;
+  const overviewMode=Boolean(rooms&&rooms.length),baseRadius=overviewMode?12.2:13,minRadius=5.5;let initialRadius=baseRadius,maxRadius=overviewMode?baseRadius*1.65:23,theta=.72,phi=1.08,radius=baseRadius,target=[0,1.65,0],cameraFitDone=false;
   const workerTags=overviewMode?document.createElement("div"):null;if(workerTags){workerTags.className="office-worker-tags";workerTags.setAttribute("aria-label","Empleados de la oficina");scene.workerRanges.forEach(worker=>{const tag=document.createElement("button");tag.type="button";tag.className="office-worker-tag";tag.setAttribute("aria-label","Seleccionar a "+worker.name+", "+worker.role);tag.title=worker.name+" · "+worker.role;const dot=document.createElement("span");dot.className="office-worker-tag-state";const name=document.createElement("span");name.className="office-worker-tag-name";name.textContent=worker.name;tag.append(dot,name);tag.addEventListener("click",()=>{if(typeof onSelectWorker==="function")onSelectWorker(worker);else if(typeof onSelectRoom==="function"&&worker.roomId)onSelectRoom(worker.roomId,worker.employeeId)});workerTags.appendChild(tag);worker.tag=tag;worker.tagDot=dot})}
   if(workerTags)mountWorkerStateBubbles(container,workerTags);
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   makeButton("−","Alejar cámara",()=>{radius=clamp(radius+1,minRadius,maxRadius)});
   makeButton("+","Acercar cámara",()=>{radius=clamp(radius-1,minRadius,maxRadius)});
-  makeButton("↶","Girar a la izquierda",()=>{theta=clamp(theta-.14,1.35,3.49)});makeButton("↷","Girar a la derecha",()=>{theta=clamp(theta+.14,1.35,3.49)});makeButton("⌂","Centrar oficina",()=>{theta=2.42;phi=1.08;radius=initialRadius;target=[0,1.65,0]});
+  makeButton("↶","Girar a la izquierda",()=>{theta=clamp(theta-.14,-.35,1.78)});makeButton("↷","Girar a la derecha",()=>{theta=clamp(theta+.14,-.35,1.78)});makeButton("⌂","Centrar oficina",()=>{theta=.72;phi=1.08;radius=initialRadius;target=[0,1.65,0]});
   controls.append(hint,group);container.append(canvas);if(roomNav)container.appendChild(roomNav);if(workerTags)container.appendChild(workerTags);container.appendChild(controls);container.classList.add("is-active");
   const projection=mat4(),view=mat4();let raf=0,disposed=false,lastFrame=0,cameraAspect=0;const reducedMotion=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   container._office3dUpdateStates=states=>{scene.workerRanges.forEach((worker,index)=>{if(states[index])worker.state=states[index]})};container._office3dFocusWorker=id=>{const worker=scene.workerRanges.find(item=>item.employeeId===id);if(worker){target=[worker.x,1.12,worker.z+1.05];radius=clamp(5.6,minRadius,maxRadius)}};
