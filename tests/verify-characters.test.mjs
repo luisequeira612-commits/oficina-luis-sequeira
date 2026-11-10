@@ -50,7 +50,16 @@ const approvedTemplate = `<svg viewBox="0 0 64 70" width="64" height="70" aria-h
 </svg>`;
 
 test("the five role SVGs match the approved 64x70 template exactly", () => {
-  const svgs = [...html.matchAll(/<svg viewBox="0 0 64 70"[\s\S]*?<\/svg>/g)].map(match => match[0]);
+  const svgs = [];
+  let cursor = 0;
+  while (true) {
+    const start = html.indexOf('<svg viewBox="0 0 64 70"', cursor);
+    if (start === -1) break;
+    const end = html.indexOf("</svg>", start);
+    assert.notEqual(end, -1, "character SVG must close");
+    svgs.push(html.slice(start, end + "</svg>".length));
+    cursor = end + "</svg>".length;
+  }
   assert.equal(svgs.length, 5, "expected one character template for each role");
   for (const [index, svg] of svgs.entries()) {
     assert.ok(svg.startsWith("<svg") && svg.endsWith("</svg>"));
