@@ -517,3 +517,5 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - La barra de equipo se compacta a avatares circulares con inicial, color de camisa real y punto de estado verde/amarillo/rojo. La ficha del empleado y el comportamiento de selección permanecen intactos.
 - Se mantiene el botón «Proyectos» que abre la hoja inferior existente con los detalles y la acción ENTRAR; no se cambia la persistencia ni el esquema local.
 - Fuente: `assets/office-3d.js`, `assets/office-view.css`, `assets/office-view.js`, 2026-11-10.
+
+- Ajuste de regresión y caché: el test de vista abierta todavía exigía el texto antiguo «Entrar · nombre» en los botones de proyecto. Se actualizó para comprobar chips compactos y su etiqueta abreviada. La hoja `office-view.css` recibió una nueva clave de caché para que los avatares circulares y el carril de chips se actualicen en móvil.
