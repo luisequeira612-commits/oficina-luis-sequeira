@@ -164,5 +164,5 @@
 - Guardi recibe un accesorio tipo insignia; YouTube, una claqueta/línea de edición; Nova Launcher, un teléfono en miniatura; BABYMONSTER Chart, barras de ranking; proyectos personalizados, un objeto modular neutro.
 - La geometría se añade al constructor de la sala WebGL 2 existente y se repite solo por puesto real; no introduce texturas, modelos externos, dependencias ni nuevas APIs.
 - No cambia datos, trabajadores, cámara, `localStorage` ni esquema persistente. Aún falta probar compatibilidad y rendimiento físico en el Tecno Pova 4.
-- Prueba de regresión: `tests/verify-themed-workstations.test.mjs`; rama `feat/project-themed-workstations`, pendiente PR/CI.
+- Prueba de regresión: `tests/verify-themed-workstations.test.mjs`; PR [#20](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/20), fusionado mediante squash en `17fdba83c5961587d70bcc4c2345d1a8a5454b94`; CI [42783629251](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42783629251): validate success.
 - Fuente: cambios del renderer y pruebas del repositorio, 2026-11-10.
