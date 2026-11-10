@@ -27,6 +27,8 @@ jobs:
           Path("/tmp/oficina-app.js").write_text(scripts[0], encoding="utf-8")
           PY
           node --check /tmp/oficina-app.js
+      - name: Verify approved character SVGs and UI invariants
+        run: node --test tests/*.test.mjs
       - name: Check required page content
         run: |
           python3 - <<'PY'
