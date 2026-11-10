@@ -22,42 +22,37 @@
     const hair = hairStyles[(Math.floor(index / 2) + (gender === "woman" ? 1 : 0)) % hairStyles.length];
     const shirt = shirts[Math.floor(index / 3) % shirts.length];
     const svg = shape("svg", {
-      viewBox: "0 0 64 70",
-      width: "64",
-      height: "70",
-      class: "human-worker",
-      "aria-hidden": "true",
-      focusable: "false",
-      "data-gender": gender,
-      "data-skin-tone": tone,
-      "data-hair": hair,
-      "data-shirt": shirt
+      viewBox: "0 0 64 70", width: "64", height: "70", class: "human-worker",
+      "aria-hidden": "true", focusable: "false", "data-gender": gender,
+      "data-skin-tone": tone, "data-hair": hair, "data-shirt": shirt
     });
-
-    // Back hair and neck.
+    // Original minifigure silhouette: block torso, round head, top stud and separated legs.
     if (hair === "long" || hair === "tied") {
-      shape("path", { d: hair === "long" ? "M18 18 Q12 34 17 46 L23 43 L23 24 Z M46 18 Q52 34 47 46 L41 43 L41 24 Z" : "M18 17 Q13 27 18 39 L23 35 L23 22 Z M46 17 Q51 27 46 39 L41 35 L41 22 Z", class: "hw-hair" }, svg);
+      shape("rect", { x: 17, y: 19, width: 8, height: 25, rx: 3, class: "hw-hair" }, svg);
+      shape("rect", { x: 39, y: 19, width: 8, height: 25, rx: 3, class: "hw-hair" }, svg);
     }
-    shape("rect", { x: 27, y: 34, width: 10, height: 10, rx: 4, class: "hw-skin" }, svg);
-    // Torso, jacket/shirt and arms.
-    shape("path", { d: "M18 48 Q20 41 27 40 L37 40 Q44 41 46 48 L50 65 L14 65 Z", class: "hw-shirt" }, svg);
-    shape("path", { d: "M20 45 Q15 48 14 57 L12 62 Q13 65 17 63 L24 51 Z M44 45 Q49 48 50 57 L52 62 Q51 65 47 63 L40 51 Z", class: "hw-shirt hw-arms" }, svg);
-    shape("path", { d: "M27 41 L32 47 L37 41", fill: "none", stroke: "#FFFFFF", "stroke-width": "2", "stroke-linecap": "round" }, svg);
-    // Face.
-    shape("ellipse", { cx: 32, cy: 25, rx: 14, ry: 16, class: "hw-skin hw-head" }, svg);
-    // Hairline and hairstyle variation.
-    const hairPaths = {
-      short: "M18 25 Q16 8 32 9 Q48 8 46 25 L42 20 Q36 15 31 17 Q25 15 21 22 Z",
-      long: "M18 26 Q15 8 32 9 Q49 8 46 26 L42 21 Q36 15 31 17 Q25 15 21 22 L21 39 L17 40 Z",
-      curly: "M18 24 Q12 19 17 14 Q16 7 24 10 Q28 4 34 9 Q43 5 45 14 Q51 19 46 26 L42 20 Q36 15 31 17 Q25 15 21 22 Z",
-      tied: "M18 25 Q16 8 32 9 Q48 8 46 25 L42 20 Q36 15 31 17 Q25 15 21 22 Z M43 14 Q54 11 51 22 Q49 27 45 25 Z"
+    shape("rect", { x: 17, y: 42, width: 13, height: 22, rx: 2, class: "hw-shirt" }, svg);
+    shape("rect", { x: 34, y: 42, width: 13, height: 22, rx: 2, class: "hw-shirt" }, svg);
+    shape("rect", { x: 15, y: 27, width: 34, height: 20, rx: 4, class: "hw-shirt" }, svg);
+    shape("rect", { x: 8, y: 29, width: 9, height: 21, rx: 4, class: "hw-shirt hw-arms" }, svg);
+    shape("rect", { x: 47, y: 29, width: 9, height: 21, rx: 4, class: "hw-shirt hw-arms" }, svg);
+    shape("circle", { cx: 12.5, cy: 51, r: 4, class: "hw-skin" }, svg);
+    shape("circle", { cx: 51.5, cy: 51, r: 4, class: "hw-skin" }, svg);
+    shape("rect", { x: 18, y: 7, width: 28, height: 30, rx: 10, class: "hw-skin hw-head" }, svg);
+    shape("circle", { cx: 32, cy: 6.5, r: 4, class: "hw-skin" }, svg);
+    const hairCaps = {
+      short: "M18 17 Q17 7 32 8 Q47 7 46 17 L42 14 L22 14 Z",
+      long: "M18 17 Q17 7 32 8 Q47 7 46 17 L43 15 L21 15 Z",
+      curly: "M18 17 Q13 13 18 9 Q18 3 25 7 Q31 1 36 7 Q45 3 46 11 Q52 14 46 19 L42 15 L22 15 Z",
+      tied: "M18 17 Q17 7 32 8 Q47 7 46 17 L43 15 L21 15 Z"
     };
-    shape("path", { d: hairPaths[hair], class: "hw-hair" }, svg);
-    shape("path", { d: "M25 26 Q27 24 29 26 M35 26 Q37 24 39 26", fill: "none", stroke: "#342B2B", "stroke-width": "1.7", "stroke-linecap": "round" }, svg);
-    shape("path", { d: "M29 33 Q32 35 35 33", fill: "none", stroke: "#713F37", "stroke-width": "1.5", "stroke-linecap": "round" }, svg);
-    // Simple shoes anchor the figure on the desk scene.
-    shape("ellipse", { cx: 24, cy: 66, rx: 7, ry: 2.5, class: "hw-shoes" }, svg);
-    shape("ellipse", { cx: 40, cy: 66, rx: 7, ry: 2.5, class: "hw-shoes" }, svg);
+    shape("path", { d: hairCaps[hair], class: "hw-hair" }, svg);
+    if (hair === "tied") shape("circle", { cx: 48, cy: 13, r: 4, class: "hw-hair" }, svg);
+    shape("circle", { cx: 26, cy: 22, r: 1.8, fill: "#342B2B" }, svg);
+    shape("circle", { cx: 38, cy: 22, r: 1.8, fill: "#342B2B" }, svg);
+    shape("path", { d: "M27 29 Q32 32 37 29", fill: "none", stroke: "#713F37", "stroke-width": "1.6", "stroke-linecap": "round" }, svg);
+    shape("rect", { x: 29, y: 33, width: 6, height: 3, rx: 1, fill: "#FFFFFF" }, svg);
+    shape("rect", { x: 21, y: 47, width: 22, height: 2, rx: 1, fill: "#FFFFFF99" }, svg);
     return svg;
   }
 
