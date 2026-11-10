@@ -805,5 +805,5 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - El HTML incluye un texto de reserva coherente antes de que cargue JavaScript; el módulo de vista actualiza el total en cada renderizado.
 - Añade `tests/verify-office-header-worker-count.test.mjs` para comprobar el cálculo dinámico, el texto de reserva y la ausencia de la etiqueta antigua.
 - Solo cambia presentación y prueba; no modifica datos, persistencia, renderer, cámara, dependencias, APIs, backend ni servicios de pago.
-- Rama: `fix/office-header-worker-count`; CI pendiente.
+- Rama: `fix/office-header-worker-count`. La primera CI [42915575007](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42915575007) pasó sintaxis y 101/102 pruebas; falló únicamente una aserción heredada en `tests/verify-nine-worker-open-plan.test.mjs` que aún exigía «0 humanos». Se actualizó esa expectativa al nuevo texto LEGO; CI del head corregido pendiente.
 - Fuente: inspección del encabezado HTML y de `renderMap()`, 2026-11-10.
