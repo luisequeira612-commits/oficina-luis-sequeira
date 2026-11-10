@@ -194,12 +194,12 @@ function buildScene(workers,roomName=""){
   for(let vent=0;vent<4;vent++)box(x-.12+vent*.08,.12,z+.665,.025,.18,.018,[0.62,0.70,0.75]);
   sphere(x+.14,.30,z+.665,.035,.035,.018,[0.24,0.82,0.72],6,4);
   box(x+.12,.20,z+.665,.06,.035,.018,[0.76,0.82,0.86]);
-  box(x,1.65,z-.36,1.12,.78,.14,metal);box(x,1.65,z-.265,.98,.62,.025,screen);
+  box(x,1.65,z-.36,1.12,.78,.14,metal);box(x,1.65,z-.455,.98,.62,.025,screen);
   // Animated code rows live inside the monitor surface; they scroll without textures or external assets.
   const monitorStart=positions.length;
   for(let codeRow=0;codeRow<7;codeRow++){
    const codeWidth=[.18,.31,.24,.38,.16,.28,.22][codeRow],codeY=1.86-codeRow*.075;
-   box(x-.39+codeWidth/2,codeY,z-.24,codeWidth,.025,.012,codeRow%3===0?[0.12,0.95,0.82]:[0.63,0.91,1]);
+   box(x-.39+codeWidth/2,codeY,z-.48,codeWidth,.025,.012,codeRow%3===0?[0.12,0.95,0.82]:[0.63,0.91,1]);
   }
   const monitorEnd=positions.length;
   box(x,1.23,z-.36,.14,.12,.14,metal);box(x,.99,z-.36,.68,.08,.35,metal);
@@ -339,13 +339,13 @@ function open({container,roomName,workers=[],rooms=null,onSelectRoom=null,onSele
   const hint=document.createElement("span");hint.className="office-3d-hint";hint.textContent="Arrastra para moverte · Pellizca para acercar · Usa ↶ ↷ para girar";
   const group=document.createElement("div");group.style.display="flex";group.style.gap="5px";
   const makeButton=(label,aria,fn)=>{const b=document.createElement("button");b.type="button";b.textContent=label;b.setAttribute("aria-label",aria);b.addEventListener("click",fn);group.appendChild(b);return b};
-  const overviewMode=Boolean(rooms&&rooms.length),baseRadius=overviewMode?12.2:13,minRadius=5.5;let initialRadius=baseRadius,maxRadius=overviewMode?baseRadius*1.65:23,theta=.72,phi=1.08,radius=baseRadius,target=[0,1.65,0],cameraFitDone=false;
+  const overviewMode=Boolean(rooms&&rooms.length),baseRadius=overviewMode?12.2:13,minRadius=5.5;let initialRadius=baseRadius,maxRadius=overviewMode?baseRadius*1.65:23,theta=2.42,phi=1.08,radius=baseRadius,target=[0,1.65,0],cameraFitDone=false;
   const workerTags=overviewMode?document.createElement("div"):null;if(workerTags){workerTags.className="office-worker-tags";workerTags.setAttribute("aria-label","Empleados de la oficina");scene.workerRanges.forEach(worker=>{const tag=document.createElement("button");tag.type="button";tag.className="office-worker-tag";tag.setAttribute("aria-label","Seleccionar a "+worker.name+", "+worker.role);tag.title=worker.name+" · "+worker.role;const dot=document.createElement("span");dot.className="office-worker-tag-state";const name=document.createElement("span");name.className="office-worker-tag-name";name.textContent=worker.name;tag.append(dot,name);tag.addEventListener("click",()=>{if(typeof onSelectWorker==="function")onSelectWorker(worker);else if(typeof onSelectRoom==="function"&&worker.roomId)onSelectRoom(worker.roomId,worker.employeeId)});workerTags.appendChild(tag);worker.tag=tag;worker.tagDot=dot})}
   if(workerTags)mountWorkerStateBubbles(container,workerTags);
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   makeButton("−","Alejar cámara",()=>{radius=clamp(radius+1,minRadius,maxRadius)});
   makeButton("+","Acercar cámara",()=>{radius=clamp(radius-1,minRadius,maxRadius)});
-  makeButton("↶","Girar a la izquierda",()=>{theta=clamp(theta-.14,-.35,1.78)});makeButton("↷","Girar a la derecha",()=>{theta=clamp(theta+.14,-.35,1.78)});makeButton("⌂","Centrar oficina",()=>{theta=.72;phi=1.08;radius=initialRadius;target=[0,1.65,0]});
+  makeButton("↶","Girar a la izquierda",()=>{theta=clamp(theta-.14,1.35,3.49)});makeButton("↷","Girar a la derecha",()=>{theta=clamp(theta+.14,1.35,3.49)});makeButton("⌂","Centrar oficina",()=>{theta=2.42;phi=1.08;radius=initialRadius;target=[0,1.65,0]});
   controls.append(hint,group);container.append(canvas);if(roomNav)container.appendChild(roomNav);if(workerTags)container.appendChild(workerTags);container.appendChild(controls);container.classList.add("is-active");
   const projection=mat4(),view=mat4();let raf=0,disposed=false,lastFrame=0,cameraAspect=0;const reducedMotion=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   container._office3dUpdateStates=states=>{scene.workerRanges.forEach((worker,index)=>{if(states[index])worker.state=states[index]})};container._office3dFocusWorker=id=>{const worker=scene.workerRanges.find(item=>item.employeeId===id);if(worker){target=[worker.x,1.12,worker.z+1.05];radius=clamp(5.6,minRadius,maxRadius)}};
