@@ -718,3 +718,20 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - La primera CI de la interfaz compacta de monitores [42903400038](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42903400038) pasó la comprobación de sintaxis JavaScript y falló en una aserción heredada que todavía esperaba `office-3d.js?v=69`.
 - Se actualizó esa expresión regular en `tests/verify-3d-human-worker-details.test.mjs` para exigir v70. No se revirtió el código del renderer.
 - Se debe revisar el resultado de la nueva CI del head corregido antes de fusionar.
+
+
+## Identidad de proyecto en los monitores de la vista general — 10 de noviembre de 2026
+
+- Nueva mejora en la rama `feat/project-colored-workstation-monitors`: cada puesto usa el nombre del proyecto que ya acompaña al empleado en `buildOfficeScene` para colorear la barra lateral y algunas líneas de código del monitor.
+- Paletas deterministas: Guardi azul; Capi/YouTube rojo; Nova/Launcher azul violáceo; BABYMONSTER/Monstie/Charts violeta; proyectos no reconocidos turquesa neutro.
+- No se añaden geometrías, materiales, draw calls, animaciones, texturas, dependencias, almacenamiento ni cambios de esquema; solo cambia el color de primitivas existentes.
+- Renderer actualizado a `office-3d.js?v=71`; se añade una prueba de identidad por proyecto y se actualizan las expectativas de caché.
+- Se prepara PR separado sobre main; requiere CI y no está fusionado. La comprobación visual en Tecno Pova 4 sigue pendiente.
+- Fuente: código de `buildOfficeScene`, renderer y pruebas del repositorio, 2026-11-10.
+
+
+### Ajuste de prueba para acento dinámico de monitores — 10 de noviembre de 2026
+
+- La primera CI del PR #48 [42904037810](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42904037810) pasó sintaxis y 96 de 97 pruebas. La única falla fue una expectativa heredada que todavía exigía el color turquesa fijo en la barra lateral.
+- Se actualizó `tests/verify-3d-human-worker-details.test.mjs` para exigir el uso de `stationAccent`, que es la salida de la paleta determinista por proyecto. La prueba nueva dedicada conserva las verificaciones de cada mapeo de color.
+- PR #48 permanece abierto; revisar la siguiente CI antes de considerar el merge.
