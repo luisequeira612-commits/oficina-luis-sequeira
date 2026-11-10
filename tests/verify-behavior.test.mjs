@@ -51,7 +51,7 @@ test("accessibility and user-input protections remain wired", () => {
 });
 
 test("public GitHub Actions integration keeps project links local and configurable", () => {
-  mustContain('repository:"luisequeira612-commits/bahasa-studio"', "Bahasa Studio mapping");
+  mustContain('name:"App Guardi",repository:null', "unknown project remains unlinked");
   mustContain('repository:"luisequeira612-commits/capi-aventuras"', "Capi Aventuras mapping");
   mustContain('repository:"luisequeira612-commits/jennie-ruby"', "Nova Launcher mapping");
   mustContain('https://api.github.com/repos/"+requestedRepository+"/actions/runs?per_page=1', "public Actions endpoint");
