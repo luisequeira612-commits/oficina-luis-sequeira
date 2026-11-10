@@ -685,3 +685,10 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Se añadió `tests/verify-3d-office-atmosphere.test.mjs` para comprobar capas ambientales, caché y ausencia de keyframes.
 - Estado: añadido al PR #47; la nueva CI debe validar el conjunto completo. No afirmar mejora visual ni impacto FPS hasta revisar en Tecno Pova 4.
 - Fuente: código, prueba añadida y commits de la rama `feat/office-seated-clock-main`, 2026-11-10.
+
+
+### Corrección de pruebas de caché del ajuste ambiental — 10 de noviembre de 2026
+
+- La primera CI posterior al ajuste ambiental [42902144982](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42902144982) detectó aserciones heredadas que todavía esperaban `office-view.css?v=49` y la importación ambiental sin versión. La sintaxis JavaScript pasó; falló el conjunto de invariantes por esas expectativas antiguas.
+- Se actualizaron las pruebas `verify-3d-atmosphere`, `verify-3d-human-worker-details` y `verify-nine-worker-open-plan` para exigir las nuevas referencias versionadas (`office-view.css?v=50` y `office-3d-atmosphere.css?v=2`).
+- No se revirtió el cambio CSS ni se alteró el motor WebGL. La nueva CI debe confirmar el resultado final.
