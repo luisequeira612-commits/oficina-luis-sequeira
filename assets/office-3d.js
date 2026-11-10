@@ -41,9 +41,11 @@ function buildScene(workers,roomName=""){
    addTri([cx,y,cz],[cx+Math.cos(b)*rx*.38,y,cz+Math.sin(b)*rz*.38],[cx+Math.cos(a)*rx*.38,y,cz+Math.sin(a)*rz*.38],[0.41,0.38,0.34]);
   }
  };
- const wood=[0.43,0.25,0.14],woodTop=[0.64,0.42,0.25],metal=[0.22,0.28,0.34],wall=[0.76,0.81,0.85],wallDark=[0.48,0.57,0.66],floor=[0.62,0.56,0.46],screen=[0.18,0.66,0.88],chair=[0.17,0.29,0.42],plant=[0.17,0.43,0.27];
+ const wood=[0.43,0.25,0.14],woodTop=[0.64,0.42,0.25],metal=[0.22,0.28,0.34],wall=[0.76,0.81,0.85],wallDark=[0.48,0.57,0.66],floor=[0.45,0.49,0.54],screen=[0.18,0.66,0.88],chair=[0.17,0.29,0.42],plant=[0.17,0.43,0.27];
  // Room shell: open front and right for a clear game-like cutaway.
  box(0,-0.18,0,12,.36,10,floor);box(0,2,-5,12,4,.22,wall);box(-6,2,0,.22,4,10,wallDark);
+ // Visible low studs give the grey baseplate a brick-built identity; all geometry stays in the shared buffer.
+ for(let sx=-5;sx<=5;sx+=1.25)for(let sz=-4;sz<=4;sz+=1.25)cyl(sx,.055,sz,.065,.10,[.57,.62,.68],8);
  // Wall trim, windows and architectural light bands.
  box(0,3.88,-4.82,12,.12,.12,[0.88,0.91,0.94]);box(-5.82,2,0,.12,4,10,[0.60,0.68,0.74]);
  // Structural corner piers, plinths and capitals give the cutaway room real architectural scale.
