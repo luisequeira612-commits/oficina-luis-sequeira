@@ -7,7 +7,7 @@ out vec3 vColor; out vec3 vNormal;
 void main(){vColor=aColor;vNormal=aNormal;gl_Position=uProjection*uView*vec4(aPosition,1.0);}`;
 const FRAG=`#version 300 es
 precision mediump float; in vec3 vColor; in vec3 vNormal; out vec4 outColor;
-void main(){vec3 n=normalize(vNormal);vec3 light=normalize(vec3(-0.45,0.85,0.55));float diffuse=max(dot(n,light),0.0);float shade=0.48+diffuse*0.58;outColor=vec4(vColor*shade,1.0);}`;
+void main(){vec3 n=normalize(vNormal);vec3 keyLight=normalize(vec3(-0.45,0.85,0.55));vec3 fillLight=normalize(vec3(0.72,0.42,-0.38));float keyDiffuse=max(dot(n,keyLight),0.0);float fillDiffuse=max(dot(n,fillLight),0.0);float hemisphere=0.5+0.5*n.y;float shade=0.50+keyDiffuse*0.36+fillDiffuse*0.18+hemisphere*0.08;outColor=vec4(vColor*shade,1.0);}`;
 const tone={light:[0.94,0.72,0.57],medium:[0.72,0.46,0.32],deep:[0.43,0.25,0.18]};
 const hair=[0.12,0.085,0.07],hairColors=[[0.09,0.065,0.055],[0.19,0.12,0.08],[0.30,0.20,0.13]],shirts=[[0.18,0.34,0.52],[0.72,0.31,0.28],[0.20,0.43,0.39],[0.65,0.48,0.19],[0.39,0.29,0.43]],shirtByName={blue:shirts[0],coral:shirts[1],teal:shirts[2],mustard:shirts[3],plum:shirts[4]};
 function mat4(){return new Float32Array(16)}
@@ -29,6 +29,11 @@ function buildScene(workers,roomName=""){
  box(0,3.88,-4.82,12,.12,.12,[0.88,0.91,0.94]);box(-5.82,2,0,.12,4,10,[0.60,0.68,0.74]);
  box(-2.6,2.25,-4.84,2.6,1.8,.08,[0.22,0.49,0.64]);box(-2.6,2.25,-4.77,2.38,1.58,.06,[0.43,0.72,0.82]);
  box(-2.6,2.25,-4.70,.08,1.7,.08,[0.86,0.91,0.94]);box(-2.6,2.25,-4.69,2.5,.08,.08,[0.86,0.91,0.94]);
+ // Window sill, divided glass panes and a slim inner frame add architectural depth.
+ box(-2.6,1.32,-4.62,2.68,.12,.30,[0.42,0.53,0.61]);
+ box(-3.42,2.25,-4.64,.055,1.52,.06,[0.88,0.92,0.95]);box(-1.78,2.25,-4.64,.055,1.52,.06,[0.88,0.92,0.95]);
+ box(-2.6,2.25,-4.63,.055,1.52,.06,[0.88,0.92,0.95]);box(-2.6,2.25,-4.62,2.42,.055,.06,[0.88,0.92,0.95]);
+ box(-2.6,3.10,-4.61,2.42,.055,.06,[0.88,0.92,0.95]);box(-2.6,1.40,-4.61,2.42,.055,.06,[0.88,0.92,0.95]);
  // A project-specific wall installation makes each room recognizable without external textures.
  const projectKey=String(roomName||"").toLowerCase();
  const projectTheme=projectKey.includes("guardi")?"guardi":projectKey.includes("youtube")?"video":projectKey.includes("nova")?"launcher":projectKey.includes("babymonster")||projectKey.includes("chart")?"charts":"studio";
@@ -69,6 +74,14 @@ function buildScene(workers,roomName=""){
  for(let i=-5;i<6;i++)box(i*.98,-.005,0,.018,.012,9.6,[0.72,0.65,0.55]);
  box(0,.025,1.7,9,.05,3.2,[0.31,0.38,0.43]);
  box(0,.056,1.7,8.8,.018,.10,themeColor);
+ // A compact lounge corner gives the room a readable non-work zone.
+ box(4.45,.58,1.92,2.55,.34,.82,[0.23,0.34,0.43]);
+ box(4.45,.92,2.27,2.55,.72,.20,[0.18,0.28,0.37]);
+ box(3.25,.72,1.92,.22,.58,.92,[0.28,0.40,0.48]);box(5.65,.72,1.92,.22,.58,.92,[0.28,0.40,0.48]);
+ for(let seat=0;seat<3;seat++)box(3.65+seat*.80,.78,1.86,.72,.10,.68,[0.34,0.47,0.55]);
+ box(4.45,.38,.88,1.72,.12,.82,woodTop);for(const dx of [-.68,.68])for(const dz of [-.28,.28])box(4.45+dx,.20,.88+dz,.08,.32,.08,wood);
+ box(4.45,.46,.88,.52,.035,.34,[0.78,.84,.88]);
+ cyl(5.55,.32,.58,.28,.52,[0.42,.25,.16]);for(let leaf=0;leaf<5;leaf++)sphere(5.55+Math.cos(leaf*1.26)*.18,.78+(leaf%2)*.10,.58+Math.sin(leaf*1.26)*.18,.16,.32,.13,plant,7,5);
  const count=Math.max(1,workers.length),cols=count>3?2:count,rows=Math.ceil(count/cols),workerRanges=[];
  workers.forEach((worker,index)=>{
   const col=index%cols,row=Math.floor(index/cols),x=(col-(cols-1)/2)*4.1,z=rows===1?-1.55:-2.8+row*2.4;
@@ -121,8 +134,16 @@ function buildScene(workers,roomName=""){
   else if(worker.state==="st-a"){sphere(x,2.52,z+.96,.11,.11,.11,[0.24,.78,.88],7,5)}
   workerRanges.push({start:workerStart,end:positions.length,armsStart,armsEnd,state:worker.state,index});
  });
- // Shared ceiling lights, wall art, bookcase and a plant at the room entrance.
- box(0,3.72,-.5,4.8,.08,.7,[0.88,0.79,0.55]);box(0,3.62,-.5,3.8,.08,.16,[1,.9,.65]);
+ // Layered ceiling fixtures: recessed rails and three pendant lamps with bright diffusers.
+ box(0,3.72,-.5,4.8,.08,.7,[0.34,0.41,0.47]);
+ box(0,3.64,-.5,4.35,.08,.12,[0.82,0.87,0.91]);
+ for(const lx of [-3.4,0,3.4]){
+  box(lx,3.42,.95,.08,.42,.08,metal);cyl(lx,3.18,.95,.16,.10,[0.34,0.42,0.49]);
+  sphere(lx,3.10,.95,.28,.10,.28,[1,.88,.57],9,5);
+  box(lx,3.02,.95,.34,.035,.34,[1,.94,.74]);
+ }
+ // A warm wall wash and the original ceiling light remain subtle in the cutaway view.
+ box(0,3.62,-.5,3.8,.08,.16,[1,.9,.65]);
  box(4.9,1.8,-4.82,1.2,2.8,.32,wood);for(let i=0;i<4;i++)box(4.9,1.0+i*.5,-4.6,1.0,.06,.42,[0.72,.76,.79]);
  for(let i=0;i<3;i++)box(4.9,1.25+i*.5,-4.36,.42,.35,.18,[.38,.54,.68]);
  const basePositions=new Float32Array(positions);

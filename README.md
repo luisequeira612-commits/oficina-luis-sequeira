@@ -36,6 +36,9 @@ La vista general incorpora una capa de presentación CSS de bajo coste: retícul
 
 Cada habitación del edificio conectado tiene ahora una entrada física orientada al pasillo central, con marco, dintel, placa de proyecto y alfombra de acceso generados como geometría procedural en WebGL 2. Los acentos ayudan a distinguir visualmente los espacios sin descargar modelos ni texturas. Además, cada sala genera una instalación mural propia a partir del nombre del proyecto: escudo abstracto para Guardi, reproducción/línea de edición para YouTube, teléfono y órbitas para Nova Launcher, y barras de ranking con motivo musical para BABYMONSTER Chart. Los proyectos nuevos reciben una composición modular neutra. Son formas originales creadas con geometría del renderer, no logotipos oficiales ni imágenes externas. La misma identidad continúa en el suelo y los escritorios: cada puesto recibe una franja de color y un accesorio pequeño acorde con el proyecto (insignia, claqueta, teléfono o barras de ranking), con un objeto modular neutro para proyectos personalizados.
 
+
+La sala 3D incorpora iluminación de relleno direccional y ambiental más equilibrada, tres lámparas colgantes con difusores, una ventana trasera dividida en paneles con marco y alféizar, y una pequeña zona de descanso con sofá, mesa y planta. Son primitivas geométricas locales; no son luces físicas con sombras dinámicas ni recursos descargados. El renderizador conserva su alternativa CSS y no modifica el almacenamiento. La compatibilidad y el rendimiento en el Tecno Pova 4 siguen pendientes de prueba física.
+
 ## Fases
 
 - **Fase A:** simulación visual local y gestión de proyectos/personajes.
