@@ -236,3 +236,14 @@
 - Se conserva la preferencia de movimiento reducido; no se añade persistencia, telemetría, dependencias, APIs ni servicios externos. Las animaciones siguen siendo simulación visual local.
 - Prueba de regresión añadida a `tests/verify-3d-human-worker-details.test.mjs`.
 - Fuente: revisión de `assets/office-3d.js` y decisión de estilo Tycoon del usuario, 2026-11-10. PR #28 pendiente de CI.
+
+
+## PR en curso — integración adaptativa de GitHub Actions — 10 de noviembre de 2026
+
+- Decisión del usuario: mantener la Oficina estática, móvil, sin servidor, tokens ni dependencias pesadas; una consulta por repositorio a `actions/runs?per_page=5`, serial y escalonada.
+- Cada proyecto conserva su `owner/repo` en la configuración existente. La última respuesta (hasta cinco ejecuciones), ETag y hora de consulta se guardan en una clave independiente `oficina-luis-sequeira-github-cache-v1`; no se modifica `oficina-luis-sequeira-v1` ni su esquema.
+- Sondeo adaptativo: ciclo inactivo aproximado de cuatro minutos repartido entre repositorios (mínimo 60 s entre solicitudes globales); repos con ejecuciones `queued`/`in_progress` se priorizan a 60 s, siempre serial. Se deduplican repositorios repetidos. Pausa al ocultar pestaña; al volver, prioriza datos con más de dos minutos. Botón manual con enfriamiento de 15 s.
+- Se guardan ETag, `X-RateLimit-Remaining`, `X-RateLimit-Reset`, y estado de pausa/retroceso; menos de diez solicitudes pausa hasta reset, 403/429 usan retroceso exponencial, 404 se consulta con menor frecuencia. Respuesta 304 conserva los datos y actualiza la hora de validación; la cuota se decide por los encabezados reales, no por una suposición de consumo cero.
+- Los estados visibles Trabajando/Éxito/Falló/Descansando proceden de los workflow runs. Las animaciones ambientales son decoración y no representan ejecución real. Panel de actividad reciente muestra workflow y hora relativa. Se retira la consulta independiente de PR del panel para cumplir una sola petición de datos por repositorio.
+- Precisión documental importante: la guía oficial de GitHub especifica que la exención de cuota para 304 condicional requiere solicitud correctamente autenticada con Authorization. Como la implementación no usa token, no se afirma que un 304 anónimo sea gratuito. Fuente: https://docs.github.com/en/rest/using-the-rest-api/best-practices-for-using-the-rest-api y https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api (consultadas 2026-11-10).
+- Rama: `feat/github-actions-live-adaptive`; PR aún por abrir y validar.
