@@ -509,3 +509,11 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Se conserva el renderer WebGL2 propio, sin Three.js, CDN, assets ni dependencias nuevas. Las piezas siguen siendo geometría procedural estática que reutiliza el buffer de escena; no se cambia la estructura de localStorage ni el esquema de datos.
 - Cache-bust a `office-3d.js?v=55` y regresión para cabeza biselada, cuello, piernas y suelas. Pendiente: textura facial CanvasTexture y migración a Three.js si se decide asumir su coste de descarga/ejecución; no se afirma que la especificación literal de Three.js esté completada.
 - Fuente: `assets/office-3d.js`, `index.html`, `tests/verify-3d-human-worker-details.test.mjs`, 2026-11-10.
+
+
+## Navegación compacta de proyectos y barra circular de equipo — 10 de noviembre de 2026
+
+- La navegación de proyectos en la vista Tycoon pasa a una tira horizontal de chips con desplazamiento táctil, etiquetas breves sin el prefijo repetido «Entrar ·» y altura máxima de 40 px. Cada chip conserva la acción de abrir la habitación/proyecto.
+- La barra de equipo se compacta a avatares circulares con inicial, color de camisa real y punto de estado verde/amarillo/rojo. La ficha del empleado y el comportamiento de selección permanecen intactos.
+- Se mantiene el botón «Proyectos» que abre la hoja inferior existente con los detalles y la acción ENTRAR; no se cambia la persistencia ni el esquema local.
+- Fuente: `assets/office-3d.js`, `assets/office-view.css`, `assets/office-view.js`, 2026-11-10.

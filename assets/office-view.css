@@ -107,8 +107,8 @@ body.office-game-active .office-3d-controls .office-3d-hint{max-width:55%}
 .office-employee-roster{position:absolute;z-index:4;left:10px;right:10px;bottom:62px;padding:8px 9px 9px;border:1px solid #FFFFFF36;border-radius:13px;background:linear-gradient(180deg,#14283DB8,#0B1728E8);color:#F7FAFC;backdrop-filter:blur(10px);pointer-events:auto}
 .office-roster-heading{margin:0 0 6px;color:#D5E2EF;font-size:9px;font-weight:900;letter-spacing:.13em}
 .office-roster-list{display:flex;gap:7px;overflow-x:auto;padding:0 0 3px;scrollbar-width:thin}
-.office-roster-person{display:grid;grid-template-columns:27px auto;grid-template-rows:16px 13px;column-gap:6px;align-items:center;flex:0 0 104px;min-height:43px;padding:4px 6px;border:1px solid #FFFFFF30;border-bottom:2px solid #00000044;border-radius:9px;background:#FFFFFF12;color:#fff;text-align:left}
-.office-roster-avatar{grid-row:1/3;display:grid;place-items:center;width:27px;height:27px;border-radius:8px;background:linear-gradient(145deg,#E5C68D,#A97846);color:#30251B;font-size:12px;font-weight:900}
+.office-roster-person{position:relative;display:grid;place-items:center;flex:0 0 46px;width:46px;min-height:46px;padding:4px;border:1px solid #FFFFFF35;border-bottom:2px solid #00000044;border-radius:50%;background:#FFFFFF12;color:#fff;text-align:center}
+.office-roster-avatar{position:relative;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--shirt,#2879C7);color:#fff;font-size:13px;font-weight:900;box-shadow:inset 0 2px 3px #FFFFFF55,inset 0 -3px 4px #00000035}
 .office-roster-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;font-weight:900;line-height:1.1}
 .office-roster-role{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#B9C9D9;font-size:8px;line-height:1.1}
 .office-roster-person:focus-visible{outline:2px solid #F5D58B;outline-offset:2px}
@@ -156,3 +156,15 @@ body.office-game-active .office-3d-room-nav{top:68px;left:10px;right:10px;gap:6p
 .office-turn-count{display:block;min-height:36px;margin:0 0 5px auto;padding:5px 10px;border:1px solid #F04452;border-bottom:2px solid #B91C2C;border-radius:999px;background:#8E1725;color:#fff;font-size:10px;font-weight:900}.office-turn-item{display:block;width:100%;margin:5px 0;text-align:left;background:#FFF;border-color:#E1A7AE;border-bottom-color:#D58B95;color:#7D1B2A}
 
 .office-worker-typing-bubble{position:absolute;left:50%;bottom:100%;transform:translate(-50%,-2px);padding:2px 7px;border-radius:999px;background:#fff;color:#24364A;border:1px solid #B7C4D1;font-weight:900;font-size:11px;box-shadow:0 2px 6px #0004}.office-worker-typing-bubble[hidden]{display:none!important}
+
+
+/* Project navigation becomes a compact, finger-scrollable chip rail. */
+.office-3d-room-nav.office-project-chip-strip{align-items:center;gap:7px;padding:2px 2px 6px;scrollbar-width:none}
+.office-3d-room-nav.office-project-chip-strip::-webkit-scrollbar{display:none}
+.office-3d-room-nav .office-project-chip{flex:0 0 auto;min-height:38px;max-height:40px;max-width:180px;padding:6px 12px;border:1px solid #FFFFFF55;border-bottom:2px solid #00000044;border-radius:999px;background:#14283DEB;color:#fff;font-size:11px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.office-3d-room-nav .office-project-chip:active{background:#24527A}
+.office-roster-person{min-height:46px;min-width:46px}
+.office-roster-avatar .office-roster-dot{position:absolute;right:-2px;bottom:-1px;width:10px;height:10px;border:2px solid #14283D;border-radius:50%;background:#D69E2E}
+.office-roster-avatar .office-roster-dot.is-working{background:#16A34A}
+.office-roster-avatar .office-roster-dot.is-your-turn{background:#DC2626}
+@media(max-width:420px){.office-3d-room-nav.office-project-chip-strip{top:66px;left:6px;right:6px}.office-3d-room-nav .office-project-chip{min-height:36px;max-height:38px;padding:5px 10px;font-size:10px}}

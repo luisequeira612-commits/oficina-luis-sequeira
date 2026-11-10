@@ -323,7 +323,7 @@ function open({container,roomName,workers=[],rooms=null,onSelectRoom=null,onSele
   gl.enableVertexAttribArray(ac);gl.vertexAttribPointer(ac,3,gl.FLOAT,false,stride,(scene.positionLength+scene.normalLength)*4);
   const up=gl.getUniformLocation(p,"uProjection"),uv=gl.getUniformLocation(p,"uView");
   gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);gl.cullFace(gl.BACK);gl.clearColor(.075,.12,.18,1);
-  const roomNav=rooms&&rooms.length?document.createElement("div"):null;if(roomNav){roomNav.className="office-3d-room-nav";rooms.forEach(room=>{const button=document.createElement("button");button.type="button";button.textContent="Entrar · "+room.name;button.setAttribute("aria-label","Entrar en la habitación "+room.name);button.addEventListener("click",()=>{if(typeof onSelectRoom==="function")onSelectRoom(room.id)});roomNav.appendChild(button)})}
+  const roomNav=rooms&&rooms.length?document.createElement("div"):null;if(roomNav){roomNav.className="office-3d-room-nav";rooms.forEach(room=>{const button=document.createElement("button");button.type="button";button.className="office-project-chip";button.textContent=room.name;button.setAttribute("aria-label","Abrir proyecto "+room.name);button.addEventListener("click",()=>{if(typeof onSelectRoom==="function")onSelectRoom(room.id)});roomNav.appendChild(button)})}
   const controls=document.createElement("div");controls.className="office-3d-controls";
   const hint=document.createElement("span");hint.className="office-3d-hint";hint.textContent="Arrastra para moverte · Pellizca para acercar · Usa ↶ ↷ para girar";
   const group=document.createElement("div");group.style.display="flex";group.style.gap="5px";
