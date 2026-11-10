@@ -27,6 +27,13 @@ test("the separate cache preserves project storage and ETags",()=>{
  assert.match(js,/mins\(e\.fetchedAt\|\|e\.checkedAt\)/);
  assert.match(html,/oficina-luis-sequeira-v1/);
 });
+test("queued runs are shown as waiting and never as working",()=>{
+ assert.match(js,/function running\(e\).*status==="in_progress"/);
+ assert.match(js,/function queued\(e\).*status==="queued"/);
+ assert.match(js,/if\(q\)status\.textContent="En cola/);
+ assert.match(js,/s==="queued"\?"En cola"/);
+ assert.match(js,/queuedCount=states\.filter\(x=>x==="queued"\)/);
+});
 test("only GitHub run data controls labels; decoration is disclosed",()=>{
  assert.match(html,/github-activity-list/);
  assert.match(html,/datos reales de ejecuciones públicas/i);
