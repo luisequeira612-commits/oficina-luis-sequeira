@@ -699,6 +699,6 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Se refinó el teclado de cada estación: las diez teclas que antes se representaban como barras largas ahora forman dos filas compactas de cinco teclas. Se añadió una pequeña rueda central visible en el ratón.
 - Se reutiliza el mismo número de cajas de teclas por puesto (10); el único incremento geométrico es una pieza pequeña por ratón. No hay texturas, nuevos materiales, animaciones, draw calls, dependencias, APIs, backend ni cambios de almacenamiento.
 - Renderer actualizado a `assets/office-3d.js?v=69`. Pruebas actualizadas para el teclado, rueda del ratón y versión de caché; prueba del reloj también exige v69.
-- Cambio en PR #47, rama `feat/office-seated-clock-main`. La nueva CI de este head aún debe confirmar el conjunto completo.
+- Cambio en PR #47, rama `feat/office-seated-clock-main`. La ejecución [42902848275](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42902848275) terminó con validate success y chequeo de contenido success; deploy se omitió correctamente en pull_request.
 - La inspección en el Tecno Pova 4 sigue pendiente; no afirmar impacto FPS ni legibilidad visual definitiva sin la prueba en dispositivo.
 - Fuente: renderer, HTML, pruebas y commits de la rama, 2026-11-10.
