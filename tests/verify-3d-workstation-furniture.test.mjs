@@ -2,7 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
-const renderer = readFileSync(new URL("../assets/office-3d.js", import.meta.url), "utf8");
+const read = path => readFileSync(new URL("../" + path, import.meta.url), "utf8");
+const renderer = read("assets/office-3d.js");
 
 test("3D workstations include finished furniture and office planning details", () => {
   assert.match(renderer, /Two-drawer pedestal/, "adds a drawer pedestal to each desk");
