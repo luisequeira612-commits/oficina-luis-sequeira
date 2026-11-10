@@ -15,6 +15,15 @@ test("Phase A footer and Guardi mark placement match the approved specification"
   mustContain("<footer>Simulación. En la versión real, los estados vendrán de GitHub.</footer>", "exact Phase A footer");
 });
 
+test("BABYMONSTER Chart is added once through a versioned local migration", () => {
+  mustContain('const MIGRATION_KEY="oficina-luis-sequeira-migrations-v1"', "separate migration marker");
+  mustContain('localStorage.getItem(MIGRATION_KEY)==="babymonster-chart-v1"', "idempotent migration guard");
+  mustContain('name==="BABYMONSTER Chart"||room.repository==="luisequeira612-commits/monstie-charts."', "existing project detection");
+  mustContain('name:"BABYMONSTER Chart",repository:"luisequeira612-commits/monstie-charts."', "BABYMONSTER Chart mapping");
+  mustContain('localStorage.setItem(MIGRATION_KEY,"babymonster-chart-v1")', "migration completion marker");
+  mustContain('if(!exists)', "do not duplicate an existing project");
+});
+
 test("default projects and role assignment rules are present", () => {
   mustContain('name:"App Guardi"', "App Guardi");
   mustContain('name:"Canal de YouTube"', "Canal de YouTube");
