@@ -64,3 +64,10 @@ test("FPS meter remains measured and cache versions are current",()=>{
  assert.match(page,/office-view\.css\?v=50/);
  assert.match(page,/office-3d\.js\?v=73/);
 });
+
+test("3D renderer pauses while the document is hidden and resumes when visible",()=>{
+ assert.match(renderer,/function render\(timestamp=0\)\{if\(disposed\)return;raf=0;if\(document\.hidden\)return;/);
+ assert.match(renderer,/const onVisibilityChange=\(\)=>\{if\(document\.hidden\)\{if\(raf\)cancelAnimationFrame\(raf\);raf=0\}else if\(!disposed&&!raf\)\{raf=requestAnimationFrame\(render\)\}\}/);
+ assert.match(renderer,/document\.addEventListener\("visibilitychange",onVisibilityChange\)/);
+ assert.match(renderer,/document\.removeEventListener\("visibilitychange",onVisibilityChange\)/);
+});
