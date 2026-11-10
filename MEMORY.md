@@ -728,3 +728,10 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Renderer actualizado a `office-3d.js?v=71`; se añade una prueba de identidad por proyecto y se actualizan las expectativas de caché.
 - Se prepara PR separado sobre main; requiere CI y no está fusionado. La comprobación visual en Tecno Pova 4 sigue pendiente.
 - Fuente: código de `buildOfficeScene`, renderer y pruebas del repositorio, 2026-11-10.
+
+
+### Ajuste de prueba para acento dinámico de monitores — 10 de noviembre de 2026
+
+- La primera CI del PR #48 [42904037810](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42904037810) pasó sintaxis y 96 de 97 pruebas. La única falla fue una expectativa heredada que todavía exigía el color turquesa fijo en la barra lateral.
+- Se actualizó `tests/verify-3d-human-worker-details.test.mjs` para exigir el uso de `stationAccent`, que es la salida de la paleta determinista por proyecto. La prueba nueva dedicada conserva las verificaciones de cada mapeo de color.
+- PR #48 permanece abierto; revisar la siguiente CI antes de considerar el merge.
