@@ -496,3 +496,5 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Se conserva el renderer WebGL2 propio para no introducir un CDN ni una biblioteca de gran tamaño. Por ello, estas caras son geometría impresa simulada y no una CanvasTexture, y el motor no es Three.js; migrar a Three.js y a textura facial real sigue siendo una diferencia respecto a la especificación literal.
 - Cache-bust del motor a v54 y pruebas de regresión para expresiones, articulaciones y accesorios. Sin cambios al esquema local, proyectos, cámara o integración GitHub.
 - Fuente: `assets/office-3d.js`, `index.html`, `tests/verify-3d-human-worker-details.test.mjs`, 2026-11-10.
+
+- Corrección de prueba: se actualizó la aserción heredada de la mano segmentada anterior para comprobar el nuevo arco C articulado de seis tramos. El primer CI detectó únicamente esa expectativa antigua; la sintaxis JavaScript pasó. Se vuelve a ejecutar la validación antes del despliegue.
