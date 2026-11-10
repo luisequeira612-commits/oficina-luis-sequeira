@@ -60,6 +60,9 @@ test("minifigure faces have distinct printed expressions and arms use articulate
   assert.match(renderer,/const segment=\(a,b,r,color,seg=8\)/);
   assert.match(renderer,/const ink=\[\.075,\.055,\.045\]/);
   assert.match(renderer,/const ink=\[\.075,\.055,\.045\],faceZ=z\+\.625/,"face is placed on the negative-Z side, toward the monitor");
+  assert.match(renderer,/box\(x,1\.65,z-\.36,1\.12,\.78,\.14,metal\);box\(x,1\.65,z-\.455/,"monitor display faces the worker");
+  assert.match(renderer,/theta=2\.42/,"home camera looks from the monitor side");
+  assert.match(renderer,/theta=clamp\(theta\+\.14,1\.35,3\.49\)/,"rotation controls can orbit around the front view");
   assert.match(renderer,/box\(x,1\.56,z\+\.642/,"torso print faces the same direction as the face");
   assert.match(renderer,/const smile=\[\]/);
   assert.match(renderer,/index%5===4/);
