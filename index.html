@@ -65,6 +65,7 @@ footer{max-width:1040px;margin:0 auto;padding:0 16px 24px;color:var(--muted);fon
 @media(min-width:680px){.rooms{grid-template-columns:repeat(2,minmax(0,1fr))}.summary{padding:14px 16px}}
 @media(prefers-reduced-motion:reduce){.ag *{animation:none!important}}
 </style>
+<link rel="stylesheet" href="assets/office-view.css">
 </head>
 <body>
 <header>
@@ -74,6 +75,11 @@ footer{max-width:1040px;margin:0 auto;padding:0 16px 24px;color:var(--muted);fon
 <section class="summary" aria-live="polite" aria-atomic="true">
 <img src="assets/guardi-mark.svg" alt="" aria-hidden="true">
 <p id="summary-text">Todos descansan por ahora.</p>
+</section>
+<section class="office-overview" aria-labelledby="office-overview-heading">
+<h2 id="office-overview-heading">Vista de oficina</h2>
+<p class="office-hint">Explora los espacios y salta directamente a sus proyectos.</p>
+<div class="office-map" id="office-map" aria-label="Mapa isométrico de proyectos"></div>
 </section>
 <section aria-labelledby="projects-heading">
 <h2 id="projects-heading">Proyectos</h2>
@@ -428,7 +434,7 @@ function refreshRepo(roomId){
 function render(){
  roomsEl.replaceChildren();
  rooms.forEach(room=>{
-  const card=document.createElement("section");card.className="room";
+  const card=document.createElement("section");card.className="room";card.dataset.roomId=room.id;
   const head=document.createElement("div");head.className="room-head";
   const title=document.createElement("div");title.className="room-title";title.textContent=room.name;
   const actions=document.createElement("div");actions.className="room-actions";
@@ -494,5 +500,6 @@ window.setInterval(()=>{
 },reducedMotion?5200:2600);
 })();
 </script>
+<script src="assets/office-view.js" defer></script>
 </body>
 </html>
