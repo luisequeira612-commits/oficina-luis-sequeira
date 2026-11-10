@@ -291,11 +291,14 @@ function buildOfficeScene(rooms){
  return {data,basePositions,workerRanges,count:positions.length/3,positionLength:positions.length,normalLength:normals.length};
 }
 function open({container,roomName,workers=[],rooms=null,onSelectRoom=null}){
+ window.Office3D.lastError=null;
  if(typeof container._office3dCleanup==="function")container._office3dCleanup();
  container.replaceChildren();container.classList.remove("is-active");
  const canvas=document.createElement("canvas");canvas.setAttribute("aria-label","Escena 3D de "+roomName);
- const gl=canvas.getContext("webgl2",{alpha:false,antialias:false,powerPreference:"low-power"});
- if(!gl){const note=document.createElement("p");note.className="office-3d-error";note.textContent="Este navegador no ofrece WebGL 2 en este momento. Se muestra la vista alternativa.";container.appendChild(note);return false}
+ let gl;
+ try{gl=canvas.getContext("webgl2",{alpha:false,antialias:false,powerPreference:"low-power"})}
+ catch(error){window.Office3D.lastError="No se pudo crear el contexto WebGL 2: "+(error&&error.message?error.message:String(error));return false}
+ if(!gl){window.Office3D.lastError="El navegador no proporcionó un contexto WebGL 2.";const note=document.createElement("p");note.className="office-3d-error";note.textContent="Este navegador no ofrece WebGL 2 en este momento. Se muestra la vista alternativa.";container.appendChild(note);return false}
  try{
   const p=program(gl),scene=rooms&&rooms.length?buildOfficeScene(rooms):buildScene(workers,roomName),buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,scene.data,gl.DYNAMIC_DRAW);
   const stride=0,loc=(name)=>gl.getAttribLocation(p,name);gl.useProgram(p);
@@ -330,7 +333,7 @@ function open({container,roomName,workers=[],rooms=null,onSelectRoom=null}){
   const cleanup=()=>{if(disposed)return;disposed=true;cancelAnimationFrame(raf);observer.disconnect();delete container._office3dUpdateStates;delete container._office3dCleanup;gl.deleteBuffer(buffer);gl.deleteProgram(p);gl.getExtension("WEBGL_lose_context")?.loseContext()};
   container._office3dCleanup=cleanup;
   return true;
- }catch(error){container.replaceChildren();const note=document.createElement("p");note.className="office-3d-error";note.textContent="No se pudo iniciar la escena 3D. Se conserva la vista alternativa.";container.appendChild(note);return false}
+ }catch(error){window.Office3D.lastError=(error&&error.name?error.name+": ":"")+(error&&error.message?error.message:String(error));container.replaceChildren();const note=document.createElement("p");note.className="office-3d-error";note.textContent="No se pudo iniciar la escena 3D. Se conserva la vista alternativa.";container.appendChild(note);return false}
 }
 window.Office3D={open,openOverview:options=>open({...options,roomName:"Vista general de la oficina",workers:[]})};
 })();
