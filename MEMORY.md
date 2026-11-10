@@ -876,3 +876,13 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Añade una prueba que verifica que no se realice una transferencia completa de `scene.positionLength` y que las actualizaciones queden dentro de cada intervalo de trabajador.
 - Head final `c553c6a8e70da18d84991edb44302d1c8dee4e1e` pasó CI [42923904223](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42923904223): sintaxis, invariantes y contenido obligatorio success; sin hilos ni revisiones pendientes. PR #60 fusionado mediante squash en `152aaec603a9dd6fa5fe66f8f5a80f8993fc7ac1`. La validación y publicación de main siguen en ejecución. Es una reducción de bytes transferidos a GPU, no una medición de FPS; el rendimiento real debe comprobarse en Tecno Pova 4.
 - Fuente: inspección de `assets/office-3d.js` y prueba de regresión, 2026-11-10.
+
+
+## PR #61 — evitar medir el viewport en cada fotograma (10 de noviembre de 2026)
+
+- Rama `perf/resize-only-on-viewport-change`, basada en main posterior a PR #60.
+- El renderizador deja de llamar `getBoundingClientRect()` a través de `resize()` en cada fotograma. Ejecuta `resize()` al iniciar la escena y deja que el `ResizeObserver` existente actualice canvas, viewport y encuadre solo cuando cambia el contenedor.
+- Conserva el límite de DPR, el encuadre inicial, la cámara y el ciclo de animación. No añade dependencias ni cambia almacenamiento o geometría.
+- Añade una prueba para garantizar que el render loop no vuelva a medir el contenedor en cada frame.
+- Pendiente de CI y revisión. No se afirma una mejora medida de FPS; falta prueba física en Tecno Pova 4.
+- Fuente: inspección de `assets/office-3d.js` y prueba, 2026-11-10.
