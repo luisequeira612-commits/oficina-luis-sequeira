@@ -35,8 +35,8 @@ function assignedAgent(room,e){
 function historyForAgent(room,e,agentId){
  if(!agentId)return [];
  const taskHistory=Array.isArray(e?.taskHistory)?e.taskHistory:[];
- const commits=latestCommits(e).map(commit=>({name:commit.message,updated_at:commit.date,status:"commit",agentId}));
- return taskHistory.filter(x=>!x.agentId||x.agentId===agentId).concat(commits).sort((a,b)=>new Date(b.updated_at||b.date||0)-new Date(a.updated_at||a.date||0)).slice(0,3).map(x=>x.name||x.message||"Actividad de GitHub");
+ const ids=roomAgentIds(room),index=ids.indexOf(agentId);
+ return taskHistory.filter(x=>x.agentId===agentId||(!x.agentId&&index>=0&&ids.length&&Number(x.runId||0)%ids.length===index)).sort((a,b)=>new Date(b.updated_at||b.completedAt||0)-new Date(a.updated_at||a.completedAt||0)).slice(0,3).map(x=>x.name||"Actividad de GitHub");
 }
 function recordCompletedRuns(room,e,previousRuns){
  const seen=new Set(Array.isArray(e?.taskHistory)?e.taskHistory.map(x=>String(x.runId||"")):[]);
