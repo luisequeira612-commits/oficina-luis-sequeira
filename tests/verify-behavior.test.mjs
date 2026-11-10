@@ -8,6 +8,13 @@ const mustContain = (text, label) => {
   assert.ok(html.includes(text), "missing " + label + ": " + text);
 };
 
+test("Phase A footer and Guardi mark placement match the approved specification", () => {
+  assert.equal((html.match(/assets\\/guardi-mark\\.svg/g) || []).length, 1, "Guardi mark appears exactly once");
+  mustContain('<img src="assets/guardi-mark.svg" alt="" aria-hidden="true">', "decorative Guardi mark beside summary");
+  assert.doesNotMatch(html, /<header>[\\s\\S]*?guardi-mark\\.svg/);
+  mustContain("<footer>Simulación. En la versión real, los estados vendrán de GitHub.</footer>", "exact Phase A footer");
+});
+
 test("default projects and role assignment rules are present", () => {
   mustContain('name:"App Guardi"', "App Guardi");
   mustContain('name:"Canal de YouTube"', "Canal de YouTube");
