@@ -66,7 +66,7 @@ test("minifigure faces have distinct printed expressions and arms use articulate
   assert.match(renderer,/box\(x,1\.65,z-\.36,1\.12,\.78,\.14,metal\);box\(x,1\.65,z-\.265/,"monitor display faces the worker after workstation mirroring");
   assert.match(renderer,/theta=\.72/,"home camera keeps the open-room view");
   assert.match(renderer,/const workstationStart=positions\.length/,"workstation geometry is mirrored as one unit");
-  assert.match(renderer,/x,z:-z,laneX,restZ:2\.0\+row\*\.72/,"employee routes follow the mirrored workstation");
+  assert.match(renderer,/x,z:-z,laneX,stationX,restZ:2\.0\+row\*\.72/,"employee routes follow the mirrored workstation");
   assert.match(renderer,/positions\[i\+v\+2\]=-positions\[i\+v\+2\]/,"mirroring reverses depth for every workstation vertex");
   assert.match(renderer,/theta=clamp\(theta\+\.14,-\.35,1\.78\)/,"rotation controls preserve bounded orbit");
   assert.match(renderer,/box\(x,1\.56,z\+\.642/,"torso print faces the same direction as the face");
@@ -101,5 +101,5 @@ test("FPS meter is visible above the fullscreen HUD and its stylesheet cache is 
   assert.match(styles,/\.office-3d-fps\{[^}]*z-index:10/);
   assert.match(styles,/\.office-3d-overview \.office-3d-fps\{[^}]*left:8px;[^}]*bottom:calc\(72px \+ env\(safe-area-inset-bottom\)\);[^}]*z-index:10/);
   assert.match(page,/office-view\.css\?v=49/);
-  assert.match(page,/office-3d\.js\?v=65/);
+  assert.match(page,/office-3d\.js\?v=66/);
 });
