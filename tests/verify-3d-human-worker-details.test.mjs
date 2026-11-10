@@ -48,8 +48,8 @@ test("3D worker activity is seated and route-free",()=>{
 });
 test("FPS meter remains measured and cache versions are current",()=>{
  assert.match(renderer,/className="office-3d-fps"/);
- assert.match(renderer,/fpsFrames++/);
- assert.match(renderer,/fpsFrames*1000/Math.max(1,timestamp-fpsWindowStart)/);
+ assert.ok(renderer.includes("fpsFrames++"));
+ assert.ok(renderer.includes("fpsFrames*1000/Math.max(1,timestamp-fpsWindowStart)"));
  assert.match(styles,/\.office-3d-fps\{[^}]*z-index:10/);
  assert.match(page,/office-view\.css\?v=49/);
  assert.match(page,/office-3d\.js\?v=67/);
