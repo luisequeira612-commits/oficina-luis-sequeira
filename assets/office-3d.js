@@ -144,10 +144,10 @@ function buildScene(workers,roomName=""){
  for(let seat=0;seat<3;seat++)box(3.65+seat*.80,.78,1.86,.72,.10,.68,[0.34,0.47,0.55]);
  box(4.45,.38,.88,1.72,.12,.82,woodTop);for(const dx of [-.68,.68])for(const dz of [-.28,.28])box(4.45+dx,.20,.88+dz,.08,.32,.08,wood);
  box(4.45,.46,.88,.52,.035,.34,[0.78,.84,.88]);
- cyl(5.55,.32,.58,.28,.52,[0.42,.25,.16]);for(let leaf=0;leaf<5;leaf++)sphere(5.55+Math.cos(leaf*1.26)*.18,.78+(leaf%2)*.10,.58+Math.sin(leaf*1.26)*.18,.16,.32,.13,plant,7,5);
- const count=Math.max(1,workers.length),cols=count>3?2:count,rows=Math.ceil(count/cols),workerRanges=[];
+ cyl(5.55,.32,.58,.28,.52,[0.42,.25,.16]);for(let leaf=0;leaf<5;leaf++)sphere(5.55+Math.cos(leaf*1.26)*.18,.78+(leaf%2)*.10,.58+Math.sin(leaf*1.26)*.18,.16,.32,.13,plant,7,5);\n }
+ const count=Math.max(1,workers.length),cols=count>=7?3:count>3?2:count,rows=Math.ceil(count/cols),workerRanges=[];
  workers.forEach((worker,index)=>{
-  const col=index%cols,row=Math.floor(index/cols),x=(col-(cols-1)/2)*4.1,z=rows===1?-1.55:-2.8+row*2.4;
+  const col=index%cols,row=Math.floor(index/cols),x=(col-(cols-1)/2)*(count>=7?3.65:4.1),z=rows===1?-1.55:count>=7?-3.0+row*2.75:-2.8+row*2.4;
   // Subtle layered contact shadows ground the workstation and chair on the floor.
   shadow(x,z+.18,1.78,1.12);shadow(x,z+1.55,.78,.72);
   // desk, legs, monitor, illuminated display, stand, keyboard, mouse and desktop tower.
@@ -256,18 +256,24 @@ function buildScene(workers,roomName=""){
  return {data,basePositions,workerRanges,count:positions.length/3,positionLength:positions.length,normalLength:normals.length};
 }
 function buildOfficeScene(rooms){
- const metal=[0.22,0.28,0.34];
- const cols=rooms.length>1?2:1,rows=Math.ceil(rooms.length/cols),scenes=rooms.map(room=>buildScene(room.workers||[],room.name||"")),positions=[],normals=[],colors=[],workerRanges=[];
- let workerOffset=0;
- scenes.forEach((scene,index)=>{
-  const col=index%cols,row=Math.floor(index/cols),xCenter=cols===1?0:(col===0?-6.2:6.2),zCenter=(row-(rows-1)/2)*10.4,flip=col===1,posStart=positions.length;
-  for(let i=0;i<scene.positionLength;i+=3){const x=scene.basePositions[i],y=scene.basePositions[i+1],z=scene.basePositions[i+2];positions.push((flip?-x:x)+xCenter,y,(flip?-z:z)+zCenter)}
-  for(let i=scene.positionLength;i<scene.positionLength+scene.normalLength;i+=3){normals.push(flip?-scene.data[i]:scene.data[i],scene.data[i+1],flip?-scene.data[i+2]:scene.data[i+2])}
-  for(let i=scene.positionLength+scene.normalLength;i<scene.data.length;i++)colors.push(scene.data[i]);
-  scene.workerRanges.forEach(worker=>workerRanges.push({...worker,start:worker.start+posStart,end:worker.end+posStart,headStart:worker.headStart+posStart,headEnd:worker.headEnd+posStart,armsStart:worker.armsStart+posStart,armsEnd:worker.armsEnd+posStart,handsStart:worker.handsStart+posStart,handsEnd:worker.handsEnd+posStart,index:worker.index+workerOffset}));
-  workerOffset+=(rooms[index].workers||[]).length;
- });
- // Give each project room a distinct entrance facing the shared corridor.
+ const allWorkers=rooms.flatMap(room=>(room.workers||[]).map(worker=>({...worker,projectName:room.name||"Proyecto"})));
+ const scene=buildScene(allWorkers,"Oficina central");
+ const positions=Array.from(scene.basePositions),normals=Array.from(scene.data.subarray(scene.positionLength,scene.positionLength+scene.normalLength)),colors=Array.from(scene.data.subarray(scene.positionLength+scene.normalLength));
+ const workerRanges=scene.workerRanges;
+ // One shared open-plan office replaces the disconnected miniature rooms.
+ // Low partitions define three collaborative rows while keeping every desk visible.
+ const addTri=(a,b,c,color)=>{const ux=b[0]-a[0],uy=b[1]-a[1],uz=b[2]-a[2],vx=c[0]-a[0],vy=c[1]-a[1],vz=c[2]-a[2];let nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx,l=Math.hypot(nx,ny,nz)||1;nx/=l;ny/=l;nz/=l;for(const p of [a,b,c]){positions.push(...p);normals.push(nx,ny,nz);colors.push(...color)}};
+ const quad=(a,b,c,d,color)=>{addTri(a,b,c,color);addTri(a,c,d,color)};
+ const box=(x,y,z,w,h,d,color)=>{const x0=x-w/2,x1=x+w/2,y0=y-h/2,y1=y+h/2,z0=z-d/2,z1=z+d/2;quad([x0,y1,z1],[x1,y1,z1],[x1,y1,z0],[x0,y1,z0],color);quad([x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1],color);quad([x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1],color);quad([x1,y0,z0],[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],color);quad([x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0],color);quad([x1,y0,z1],[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],color)};
+ for(const z of [-1.62,1.13]){box(-1.82,.66,z,3.55,1.28,.12,[.64,.71,.75]);box(1.82,.66,z,3.55,1.28,.12,[.64,.71,.75]);}
+ // Three project-color header rails distinguish teams without enclosing them.
+ const accents=[[.20,.55,.72],[.76,.47,.20],[.24,.55,.39],[.48,.36,.68]];
+ rooms.forEach((room,index)=>{const x=-4.9+(index%4)*3.25;box(x,3.34,-4.70,2.55,.12,.18,accents[index%accents.length]);});
+ const data=new Float32Array(positions.length+normals.length+colors.length);
+ data.set(positions,0);data.set(normals,positions.length);data.set(colors,positions.length+normals.length);
+ return {data,basePositions:new Float32Array(positions),workerRanges,count:positions.length/3,positionLength:positions.length,normalLength:normals.length};
+}
+// Give each project room a distinct entrance facing the shared corridor.
  const addTriDetail=(a,b,c,color)=>{const ux=b[0]-a[0],uy=b[1]-a[1],uz=b[2]-a[2],vx=c[0]-a[0],vy=c[1]-a[1],vz=c[2]-a[2];let nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx,l=Math.hypot(nx,ny,nz)||1;nx/=l;ny/=l;nz/=l;for(const p of [a,b,c]){positions.push(...p);normals.push(nx,ny,nz);colors.push(...color)}};
  const quadDetail=(a,b,c,d,color)=>{addTriDetail(a,b,c,color);addTriDetail(a,c,d,color)};
  const boxDetail=(x,y,z,w,h,d,color)=>{const x0=x-w/2,x1=x+w/2,y0=y-h/2,y1=y+h/2,z0=z-d/2,z1=z+d/2;quadDetail([x0,y1,z1],[x1,y1,z1],[x1,y1,z0],[x0,y1,z0],color);quadDetail([x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1],color);quadDetail([x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1],color);quadDetail([x1,y0,z0],[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],color);quadDetail([x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0],color);quadDetail([x1,y0,z1],[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],color)};
