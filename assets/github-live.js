@@ -31,7 +31,7 @@ function paintRoom(room){
   if(e?.checkedAt)status.textContent+=" · Datos de hace "+mins(e.checkedAt)+" min";
  }
  if(bubble){bubble.hidden=!a;bubble.textContent=a?(a.name||a.display_title||"GitHub Actions"):""}
- if(button){const wait=Math.max(0,(manualAt.get(room.id)||0)-now());button.disabled=wait>0||busy||now()<ratePause||now()<backoff;button.textContent=wait?"Espera "+Math.ceil(wait/1000)+" s":"Actualizar"}
+ if(button){const wait=Math.max(0,(manualAt.get(room.repository)||0)-now());button.disabled=wait>0||busy||now()<ratePause||now()<backoff;button.textContent=wait?"Espera "+Math.ceil(wait/1000)+" s":"Actualizar"}
  card.querySelectorAll(".ag[data-agent-id]").forEach(worker=>{
   worker.classList.remove("st-w","st-t","st-a","st-r","is-success","is-failure","is-walking");
   const prev=worker.dataset.githubState||"rest";
@@ -142,8 +142,8 @@ function sync(next){
 }
 function refresh(roomId){
  const room=rooms.find(x=>x.id===roomId);if(!room||!validRepo(room.repository)||document.visibilityState==="hidden")return;
- const allowed=manualAt.get(roomId)||0;if(now()<allowed||now()<ratePause||now()<backoff)return;
- manualAt.set(roomId,now()+MANUAL_GAP);due.set(room.repository,now());setTimeout(paint,MANUAL_GAP+50);schedule(Math.max(0,GLOBAL_GAP-(now()-lastRequest)));
+ const allowed=manualAt.get(room.repository)||0;if(now()<allowed||now()<ratePause||now()<backoff)return;
+ manualAt.set(room.repository,now()+MANUAL_GAP);due.set(room.repository,now());setTimeout(paint,MANUAL_GAP+50);schedule(Math.max(0,GLOBAL_GAP-(now()-lastRequest)));
 }
 function visible(){
  if(document.visibilityState==="hidden"){if(timer)clearTimeout(timer);timer=0;return}
