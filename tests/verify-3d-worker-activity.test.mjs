@@ -16,7 +16,7 @@ test("live worker states drive differentiated micro-movements", () => {
   assert.match(renderer, /worker\.state==="st-a"/);
   assert.match(renderer, /worker\.state==="st-s"/);
   assert.match(renderer, /worker\.state==="st-f"/);
-  assert.match(renderer, /foot=Math\.sin/);
+  assert.match(renderer, /foot=route\.paused\?0:Math\.sin/);
   assert.match(renderer, /body=-Math\.abs/);
 });
 
@@ -29,7 +29,7 @@ test("motion remains reduced-motion aware", () => {
 test("worker states map to visible behavior",()=>{assert.match(renderer,/worker\.state==="st-r"\)\{const route=sampleRoute/);assert.match(renderer,/worker\.state==="st-a"\)\{bob=/);assert.match(renderer,/office-worker-typing-bubble/);assert.match(renderer,/worker\.state!=="st-w"/)});
 
 
-test("resting workers use a bounded office route and monitors animate code",()=>{assert.match(renderer,/function sampleRoute\(worker,seconds\)/);assert.match(renderer,/routeCorridor/);assert.match(renderer,/worker\.monitorStart/);assert.match(renderer,/monitorShift/);assert.match(renderer,/codeRow<7/)});
+test("resting workers follow an aisle route while desk monitors stay fixed and animate code",()=>{assert.match(renderer,/function sampleRoute\(worker,seconds\)/);assert.match(renderer,/laneX/);assert.match(renderer,/restZ:-4\.48/);assert.match(renderer,/worker\.monitorStart/);assert.match(renderer,/monitorShift/);assert.match(renderer,/codeRow<7/);assert.doesNotMatch(renderer,/axis===2\?walkZ:0\)\}\)for\(let i=worker\.monitorStart/)});
 
 
 test("thinking workers receive their own visual marker, not the awaiting-approval marker",()=>{

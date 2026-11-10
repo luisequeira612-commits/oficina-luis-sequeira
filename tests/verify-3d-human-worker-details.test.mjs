@@ -52,7 +52,7 @@ test("minifigures have a visible top stud, molded C-grip hands and vivid glossy 
   assert.match(renderer,/for\(let k=0;k<=6;k\+\+\).*250\/6/);
   assert.match(renderer,/const shoulder=\[x\+side\*\.48,1\.49,z\+\.99\]/);
   assert.match(renderer,/shirts=\[\[0\.04,0\.30,0\.86\]/);
-  assert.match(renderer,/\),40\.0\)\*0\.24/);
+  assert.match(renderer,/pow\(max\(dot\(reflect\(-keyLight,n\),viewDir\),0\.0\),48\.0\)\*0\.28/);
 });
 
 

@@ -6,9 +6,10 @@ const css=readFileSync(new URL("../assets/office-view.css",import.meta.url),"utf
 test("resting workers use clear inter-column aisles and return to their own desk",()=>{
  assert.match(renderer,/const laneX=col===0\?-1\.82:col===1\?1\.82:5\.48/);
  assert.match(renderer,/restZ:-4\.48/);
- assert.match(renderer,/const path=\[start,lane,rest\]/);
+ assert.match(renderer,/rest=\[worker\.laneX,worker\.restZ\],path=\[start,lane,rest\]/);
  assert.match(renderer,/const returning=phase>=oneWay\+dwell/);
  assert.match(renderer,/const speed=\.82,dwell=3\.8/);
+ assert.match(renderer,/for\(const stationX of \[-1\.82,1\.82,5\.48\]\)/);
 });
 test("resting workers pause at the break point and animate their legs",()=>{
  assert.match(renderer,/paused:true/);
@@ -18,6 +19,7 @@ test("resting workers pause at the break point and animate their legs",()=>{
 test("monitor remains attached to the desk while the employee moves",()=>{
  assert.match(renderer,/worker\.monitorStart;i<worker\.monitorEnd;i\+=3/);
  assert.doesNotMatch(renderer,/axis===2\?walkZ:0\)\}\)for\(let i=worker\.monitorStart/);
+ assert.match(renderer,/worker\.monitorStart\+1;i<worker\.monitorEnd;i\+=3\)scene\.data\[i\]=scene\.basePositions\[i\]/);
 });
 test("employee focus places the figure higher and leaves a scrollable details sheet",()=>{
  assert.match(renderer,/target=\[worker\.x,1\.12,worker\.z\+1\.05\]/);
