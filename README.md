@@ -90,3 +90,8 @@ La UI separa estados reales de GitHub Actions (trabajando, éxito, fallo, descan
 
 
 The live UI keeps two timestamps per repository: `checkedAt` controls freshness ("En vivo" / "Desactualizado"), while `fetchedAt` controls the "Datos de hace X min" label. A 304 updates validation time but does not pretend the cached response body was downloaded again.
+
+
+### Distinción entre ejecuciones en cola y en curso
+
+Una ejecución `queued` se muestra como «En cola» y usa la pose de espera; solo una ejecución `in_progress` activa «Trabajando». Ambos estados conservan la prioridad de sondeo rápido. Esto evita representar como trabajo ya iniciado una ejecución que GitHub todavía no ha puesto en marcha.
