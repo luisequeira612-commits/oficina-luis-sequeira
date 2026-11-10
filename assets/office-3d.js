@@ -9,7 +9,7 @@ const FRAG=`#version 300 es
 precision mediump float; in vec3 vColor; in vec3 vNormal; out vec4 outColor;
 void main(){vec3 n=normalize(vNormal);vec3 light=normalize(vec3(-0.45,0.85,0.55));float diffuse=max(dot(n,light),0.0);float shade=0.48+diffuse*0.58;outColor=vec4(vColor*shade,1.0);}`;
 const tone={light:[0.94,0.72,0.57],medium:[0.72,0.46,0.32],deep:[0.43,0.25,0.18]};
-const hair=[0.12,0.085,0.07],shirts=[[0.18,0.34,0.52],[0.72,0.31,0.28],[0.20,0.43,0.39],[0.65,0.48,0.19],[0.39,0.29,0.43]];
+const hair=[0.12,0.085,0.07],hairColors=[[0.09,0.065,0.055],[0.19,0.12,0.08],[0.30,0.20,0.13]],shirts=[[0.18,0.34,0.52],[0.72,0.31,0.28],[0.20,0.43,0.39],[0.65,0.48,0.19],[0.39,0.29,0.43]],shirtByName={blue:shirts[0],coral:shirts[1],teal:shirts[2],mustard:shirts[3],plum:shirts[4]};
 function mat4(){return new Float32Array(16)}
 function perspective(out,fovy,aspect,near,far){const f=1/Math.tan(fovy/2),nf=1/(near-far);out.fill(0);out[0]=f/aspect;out[5]=f;out[10]=(far+near)*nf;out[11]=-1;out[14]=2*far*near*nf;return out}
 function lookAt(out,eye,target,up){let zx=eye[0]-target[0],zy=eye[1]-target[1],zz=eye[2]-target[2];let l=Math.hypot(zx,zy,zz)||1;zx/=l;zy/=l;zz/=l;let xx=up[1]*zz-up[2]*zy,xy=up[2]*zx-up[0]*zz,xz=up[0]*zy-up[1]*zx;l=Math.hypot(xx,xy,xz)||1;xx/=l;xy/=l;xz/=l;let yx=zy*xz-zz*xy,yy=zz*xx-zx*xz,yz=zx*xy-zy*xx;out[0]=xx;out[1]=yx;out[2]=zx;out[3]=0;out[4]=xy;out[5]=yy;out[6]=zy;out[7]=0;out[8]=xz;out[9]=yz;out[10]=zz;out[11]=0;out[12]=-(xx*eye[0]+xy*eye[1]+xz*eye[2]);out[13]=-(yx*eye[0]+yy*eye[1]+yz*eye[2]);out[14]=-(zx*eye[0]+zy*eye[1]+zz*eye[2]);out[15]=1;return out}
@@ -53,11 +53,12 @@ function buildScene(workers){
   box(x-1.05,1.05,z-.38,.18,.16,.18,metal);box(x-1.05,1.38,z-.38,.08,.58,.08,metal);box(x-1.05,1.7,z-.38,.48,.16,.3,[0.82,0.68,0.38]);
   cyl(x+1.02,.34,z-.35,.24,.55,[0.45,0.25,0.15]);for(let leaf=0;leaf<5;leaf++)sphere(x+1.02+Math.cos(leaf*1.26)*.18,.78+(leaf%2)*.12,z-.35+Math.sin(leaf*1.26)*.18,.18,.36,.14,plant,7,5);
   // Seated low-poly worker: torso, head, hair, arms, legs and shoes.
-  const skin=tone[worker.tone]||tone.medium,shirt=shirts[index%shirts.length],workerStart=positions.length;
+  const skin=tone[worker.tone]||tone.medium,shirt=shirtByName[worker.shirt]||shirts[index%shirts.length],hairColor=hairColors[index%hairColors.length],hairStyle=worker.hair||"short",workerStart=positions.length;
   box(x,1.27,z+1.0,.62,.78,.36,shirt);sphere(x,1.98,z+.98,.34,.38,.32,skin,10,7);
-  sphere(x,2.22,z+.96,.35,.17,.34,hair,9,5);
-  if(worker.hair==="long"||worker.hair==="tied"){sphere(x-.29,1.86,z+.97,.11,.42,.13,hair,7,5);sphere(x+.29,1.86,z+.97,.11,.42,.13,hair,7,5)}
-  if(worker.hair==="curly"){for(let curl=0;curl<5;curl++){const angle=curl*Math.PI*2/5;sphere(x+Math.cos(angle)*.25,2.28,z+.96+Math.sin(angle)*.24,.13,.13,.13,hair,6,4)}}
+  sphere(x,2.22,z+.96,.35,.17,.34,hairColor,9,5);
+  if(hairStyle==="long"||hairStyle==="tied"){sphere(x-.29,1.86,z+.97,.11,.42,.13,hairColor,7,5);sphere(x+.29,1.86,z+.97,.11,.42,.13,hairColor,7,5)}
+  if(hairStyle==="curly"){for(let curl=0;curl<7;curl++){const angle=curl*Math.PI*2/7;sphere(x+Math.cos(angle)*.25,2.28,z+.96+Math.sin(angle)*.24,.13,.13,.13,hairColor,6,4)}}
+  if(hairStyle==="tied")sphere(x,2.32,z+.69,.13,.15,.13,hairColor,7,5);
   sphere(x-.11,2.03,z+1.265,.035,.045,.025,[0.10,0.09,0.09],6,4);sphere(x+.11,2.03,z+1.265,.035,.045,.025,[0.10,0.09,0.09],6,4);
   sphere(x,1.91,z+1.285,.035,.025,.025,[0.43,0.22,0.18],6,4);
   const armsStart=positions.length;
@@ -106,6 +107,7 @@ function open({container,roomName,workers=[]}){
   makeButton("↻","Restablecer cámara",()=>{theta=.72;phi=1.08;radius=13;target=[0,1.15,0]});
   controls.append(hint,group);container.append(canvas,controls);container.classList.add("is-active");
   const projection=mat4(),view=mat4();let raf=0,disposed=false,lastFrame=0;const reducedMotion=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  container._office3dUpdateStates=states=>{scene.workerRanges.forEach((worker,index)=>{if(states[index])worker.state=states[index]})};
   function resize(){const rect=container.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,1.15),w=Math.max(1,Math.floor(rect.width*dpr)),h=Math.max(1,Math.floor(rect.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h)}}
   function render(timestamp=0){if(disposed)return;if(timestamp-lastFrame<32){raf=requestAnimationFrame(render);return}lastFrame=timestamp;resize();if(!reducedMotion){const seconds=timestamp*.001;scene.workerRanges.forEach(worker=>{let bob=0,arms=0;if(worker.state==="st-w"){bob=Math.sin(seconds*7+worker.index)*.025;arms=Math.sin(seconds*12+worker.index)*.055}else if(worker.state==="st-t"){bob=Math.sin(seconds*2+worker.index)*.014;arms=.035}else if(worker.state==="st-a"){bob=Math.sin(seconds*1.5+worker.index)*.01;arms=Math.sin(seconds*2.5+worker.index)*.025}else{bob=Math.sin(seconds*1.2+worker.index)*.018}for(let i=worker.start+1;i<worker.end;i+=3)scene.data[i]=scene.basePositions[i]+bob;for(let i=worker.armsStart+1;i<worker.armsEnd;i+=3)scene.data[i]=scene.basePositions[i]+bob+arms});gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferSubData(gl.ARRAY_BUFFER,0,scene.data.subarray(0,scene.positionLength))}const eye=[target[0]+radius*Math.sin(phi)*Math.sin(theta),target[1]+radius*Math.cos(phi),target[2]+radius*Math.sin(phi)*Math.cos(theta)];perspective(projection,.72,canvas.width/canvas.height,.1,80);lookAt(view,eye,target,[0,1,0]);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.uniformMatrix4fv(up,false,projection);gl.uniformMatrix4fv(uv,false,view);gl.drawArrays(gl.TRIANGLES,0,scene.count);raf=requestAnimationFrame(render)}
   const pointers=new Map();let last=null,lastPinch=0;
@@ -115,7 +117,7 @@ function open({container,roomName,workers=[]}){
   canvas.addEventListener("wheel",e=>{e.preventDefault();radius=clamp(radius+Math.sign(e.deltaY)*.55,8,23)},{passive:false});
   const observer=new ResizeObserver(resize);observer.observe(container);
   render();
-  const cleanup=()=>{if(disposed)return;disposed=true;cancelAnimationFrame(raf);observer.disconnect();gl.deleteBuffer(buffer);gl.deleteProgram(p);gl.getExtension("WEBGL_lose_context")?.loseContext()};
+  const cleanup=()=>{if(disposed)return;disposed=true;cancelAnimationFrame(raf);observer.disconnect();delete container._office3dUpdateStates;delete container._office3dCleanup;gl.deleteBuffer(buffer);gl.deleteProgram(p);gl.getExtension("WEBGL_lose_context")?.loseContext()};
   container._office3dCleanup=cleanup;
   return true;
  }catch(error){container.replaceChildren();const note=document.createElement("p");note.className="office-3d-error";note.textContent="No se pudo iniciar la escena 3D. Se conserva la vista alternativa.";container.appendChild(note);return false}

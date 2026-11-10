@@ -48,7 +48,7 @@ function openRoom(card){
  const workerData=agents.map(agent=>{
   const avatar=agent.querySelector(".human-worker");
   const state=Array.from(agent.classList).find(name=>/^st-[wtar]$/.test(name))||"st-r";
-  return {role:agent.querySelector(".agent-role")?.textContent?.trim()||"Puesto",state,gender:avatar?.dataset.gender||"person",tone:avatar?.dataset.skinTone||"medium"};
+  return {role:agent.querySelector(".agent-role")?.textContent?.trim()||"Puesto",state,gender:avatar?.dataset.gender||"person",tone:avatar?.dataset.skinTone||"medium",hair:avatar?.dataset.hair||"short",shirt:avatar?.dataset.shirt||"blue"};
  });
  const rendered3D=Boolean(threeD&&window.Office3D&&window.Office3D.open({container:threeD,roomName:name,workers:workerData}));
  scene.classList.toggle("room-scene-fallback-hidden",rendered3D);
@@ -82,6 +82,7 @@ function renderMap(){
 close.addEventListener("click",()=>dialog.close());
 dialog.addEventListener("click",event=>{if(event.target===dialog)dialog.close()});
 dialog.addEventListener("close",()=>{const threeD=document.getElementById("office-3d");if(threeD&&typeof threeD._office3dCleanup==="function")threeD._office3dCleanup();if(threeD)threeD.classList.remove("is-active");scene.classList.remove("room-scene-fallback-hidden")});
+function sync3DWorkerStates(){const threeD=document.getElementById("office-3d");if(!dialog.open||!selectedCard||!threeD||typeof threeD._office3dUpdateStates!=="function")return;const states=Array.from(selectedCard.querySelectorAll(".ag"),agent=>Array.from(agent.classList).find(name=>/^st-[wtar]$/.test(name))||"st-r");threeD._office3dUpdateStates(states)}
 go.addEventListener("click",()=>{
  if(!selectedCard)return;
  dialog.close();
@@ -90,5 +91,7 @@ go.addEventListener("click",()=>{
 });
 const observer=new MutationObserver(renderMap);
 observer.observe(rooms,{childList:true,subtree:true});
+const stateObserver=new MutationObserver(sync3DWorkerStates);
+stateObserver.observe(rooms,{attributes:true,attributeFilter:["class"],subtree:true});
 renderMap();
 })();
