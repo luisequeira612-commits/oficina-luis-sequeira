@@ -637,6 +637,21 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Fuente: GitHub Actions run 42895621448 y confirmación del usuario sobre 30 FPS en la versión anterior, 2026-11-10.
 
 
+## Estado sentado coherente con actividad real de GitHub — 10 de noviembre de 2026
+
+- La animación 3D mantiene a los empleados sentados: la actividad real de GitHub Actions se refleja con el estado de trabajo y la animación de teclado, sin desplazar el personaje fuera del escritorio.
+- Se eliminó la clase obsoleta `is-walking` del puente de actividad de GitHub, que ya no correspondía al diseño sentado.
+- Se amplió `tests/verify-3d-idle-walk.test.mjs` para comprobar que una ejecución real activa `st-w` y nunca introduce el estado de caminar.
+- No se modifican repositorios vinculados, localStorage, esquema, dependencias, APIs, backend ni presupuesto. Las animaciones siguen siendo simulaciones visuales; la ejecución de GitHub Actions es la señal real.
+- Fuente: cambios y pruebas del PR de corrección, 2026-11-10.
+
+
+### Corrección de CI en PR #44 — 10 de noviembre de 2026
+
+- La primera ejecución [42898945765](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42898945765) falló por comprobaciones heredadas que aún esperaban coordenadas de caminata, y por expresiones regulares inválidas o desactualizadas en las pruebas. No indicó un error de sintaxis en los archivos de aplicación.
+- Se actualizaron las pruebas de trabajadores humanos, animación en reposo, actividad, planta abierta y rutas de descanso para comprobar la postura sentada y la cámara/selección existentes.
+- La nueva ejecución para el head actualizado todavía no aparece en los resultados consultados; PR #44 sigue abierto y sin fusionar. No declarar CI aprobado hasta confirmarlo.
+
 ## Detalle de reloj mural en la oficina 3D — 10 de noviembre de 2026
 
 - Se añade un reloj analógico decorativo a la pared del fondo, construido con la geometría compartida del renderer WebGL2. Incluye marco, esfera, doce marcas y manecillas fijas a las 10:10.
