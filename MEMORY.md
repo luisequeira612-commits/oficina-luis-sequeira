@@ -298,3 +298,13 @@
 - No se añaden dependencias, modelos externos, APIs ni cambios de persistencia. El movimiento sigue desactivado cuando el usuario activa reduced-motion.
 - Se añade `tests/verify-3d-idle-walk.test.mjs`.
 - Fuente: `assets/office-3d.js` y prueba de regresión, 2026-11-10.
+
+
+## PR — iluminación y profundidad de la primera sala — 10 de noviembre de 2026
+
+- Se mejora la lectura 3D de la primera sala sin cambiar la arquitectura del renderer ni añadir dependencias.
+- El shader incorpora una luz de relleno/rim adicional y un término de cavidad/hemisferio para separar mejor planos, esquinas y volúmenes.
+- La sala añade luminarias de techo visibles y bandas de luz alineadas con la zona de trabajo, reforzando escala y profundidad del espacio Tycoon.
+- No se modifican GitHub Actions, estados reales, persistencia, APIs, modelos externos, texturas ni servicios de pago.
+- Se añade tests/verify-3d-room-lighting.test.mjs.
+- Fuente: cambios de assets/office-3d.js y prueba de regresión, 2026-11-10.
