@@ -660,3 +660,10 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Se mantiene el buffer compartido; no se añaden texturas, dependencias, animaciones, APIs, almacenamiento ni servicios de pago.
 - Se invalida la caché de office-3d.js a v68 y se añade tests/verify-3d-office-wall-clock.test.mjs.
 - Fuente: cambio del renderer y prueba de regresión, 2026-11-10. Requiere CI y comprobación visual en el Tecno Pova 4.
+
+
+## PR #46 — trabajadores sentados y detalle de reloj mural (10 de noviembre de 2026)
+
+- PR #46 reúne el cambio de coherencia de actividad real con trabajadores sentados y el reloj mural decorativo en un solo cambio basado en main. PR #44 se cerró como supersedido, sin fusionarse por separado; PR #45 se cerró como intento apilado sustituido.
+- La validación de la corrección de trabajadores había pasado previamente en [42900787830](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42900787830): 92/92 pruebas, cero fallos. PR #46 necesita su propia ejecución completa contra main.
+- No fusionar sin autorización; el modo de autonomía continúa en review.
