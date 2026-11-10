@@ -616,3 +616,13 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Workflow final [42894125763](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42894125763): validate y deploy success. Suite Node: 97/97 pruebas aprobadas, 0 fallos. Pages publicado en el head `54c5e07a7f05540b9ad4d650e0bc101fec3d954d`.
 - La confirmación final es de CI y despliegue, no de interacción física en el Tecno Pova 4. El medidor debe comprobarse visualmente en el móvil; no afirmar 30+ FPS hasta leer el valor real. No se inspeccionó la consola móvil.
 - Fuente: GitHub Actions run 42894125763 y logs de validate, 2026-11-10.
+
+
+## Rutas de paseo multidireccionales y orientación al caminar — 10 de noviembre de 2026
+
+- Luis confirmó en el Tecno Pova 4 que los FPS ya aparecen (30 FPS) y que los personajes se mueven, pero observó que el desplazamiento parecía limitarse a izquierda/derecha.
+- Causa localizada: las nueve rutas usaban el mismo lado de salida de cada columna (laneX), por lo que todos los trabajadores se desplazaban primero hacia la derecha antes de llegar al punto de descanso.
+- Se alterna el pasillo de aproximación por fila: algunos empleados salen por el lado izquierdo de su mesa y otros por el derecho. La ruta ahora contiene cuatro puntos: salida del puesto, pasillo lateral, pasillo frontal y máquina de café; regresan por el mismo trayecto. Los destinos siguen siendo las tres estaciones ya existentes y no se añade un sistema general de colisiones.
+- El cuerpo completo del minifigurín gira para mirar en la dirección de marcha. La rotación transforma también las normales a partir de una copia base, manteniendo iluminación coherente y evitando acumulación de errores entre frames. Monitores y escritorios permanecen fijos.
+- Se actualizan pruebas de rutas, orientación y normalización de caché; office-3d.js pasa a v66. No se modifica localStorage, el esquema de datos, los proyectos, la integración de GitHub Actions ni el hosting.
+- Fuente: observación de Luis en conversación y revisión de assets/office-3d.js y pruebas, 2026-11-10. Pendiente CI y confirmación visual de Luis de los nuevos recorridos.
