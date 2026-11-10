@@ -255,3 +255,11 @@
 - Si hay proyectos sin repositorio vinculado, la Oficina no afirma que todos descansan cuando los repositorios conectados están inactivos; indica que esos proyectos no tienen estado real verificable. Si todos están vinculados y ninguno activo, mantiene «Todos descansan por ahora».
 - Cambio limitado a `assets/github-live.js` y su prueba de regresión; README y MEMORY documentan el ajuste.
 - Fuente: corrección derivada de la revisión de PR #29, 2026-11-10.
+
+
+## PR #31 — edad real de la respuesta cacheada — 10 de noviembre de 2026
+
+- PR [#31](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/31) fusionado mediante squash; merge commit `7d6503306dec984b459ab8f5e647e0642ebf2e25`.
+- Corrección: el indicador «Datos de hace X min» usa `fetchedAt`, la edad del cuerpo de datos guardado; el indicador «En vivo» / «Desactualizado» sigue usando `checkedAt`, que se actualiza también tras una validación 304. Así, una respuesta 304 no hace parecer que los datos se descargaron de nuevo.
+- CI del PR [42793640562](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42793640562): validate success. Workflow Pages post-merge [42793689070](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42793689070): validate success; deploy pendiente al registrar esta nota.
+- Fuente: PR #31 y prueba `tests/verify-github-actions-live.test.mjs`, 2026-11-10.
