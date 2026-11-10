@@ -218,3 +218,11 @@
 - Prueba de regresión comprueba el ámbito del material.
 - No se modifica cámara, datos, almacenamiento local, habitaciones ni el renderer de interiores.
 - Fuente: inspección estática de `assets/office-3d.js`, 2026-11-10.
+
+
+## PR #27 — diagnóstico visible del arranque 3D — 10 de noviembre de 2026
+
+- Se detectó un defecto en la estrategia de fallback: el renderer insertaba un mensaje cuando WebGL 2 no estaba disponible o la escena fallaba, pero `renderMap()` ocultaba después todo el contenedor `office-3d-overview` al recibir `false`. Por eso el usuario solo veía el mapa/tarjetas y no el motivo del fallo.
+- La nueva corrección registra `window.Office3D.lastError` para fallos de contexto WebGL 2 y excepciones de construcción; presenta el diagnóstico en un estado accesible independiente del contenedor oculto. También añade `?v=27` a los scripts 3D para forzar una URL nueva y descartar caché antigua.
+- No se fuerza un fallback 3D falso ni se cambia el renderer, el esquema `localStorage`, los proyectos o los trabajadores. El motivo exacto todavía debe observarse en el navegador del usuario.
+- Fuente: inspección de `assets/office-3d.js`, `assets/office-view.js` e `index.html` en `main`, 2026-11-10. PR #27 pendiente de CI y revisión.
