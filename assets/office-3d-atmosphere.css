@@ -1,8 +1,8 @@
 /* Lightweight visual finish for the connected WebGL2 office. No scene or storage changes. */
 .office-3d-overview{
   border-color:#647B91;
-  box-shadow:inset 0 1px 0 #FFFFFF22,0 16px 32px #10233835;
-  background:radial-gradient(ellipse at 50% 42%,#29445F 0%,#1B3047 55%,#142437 100%);
+  box-shadow:inset 0 1px 0 #FFFFFF22,inset 0 -24px 42px #07152235,0 16px 32px #10233835;
+  background:radial-gradient(ellipse at 18% 12%,#6FB0D833 0%,transparent 36%),radial-gradient(ellipse at 82% 18%,#E7B26922 0%,transparent 31%),radial-gradient(ellipse at 50% 42%,#29445F 0%,#1B3047 55%,#142437 100%);
 }
 .office-3d-overview::before{
   content:"";
