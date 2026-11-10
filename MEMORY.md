@@ -651,3 +651,12 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - La primera ejecución [42898945765](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42898945765) falló por comprobaciones heredadas que aún esperaban coordenadas de caminata, y por expresiones regulares inválidas o desactualizadas en las pruebas. No indicó un error de sintaxis en los archivos de aplicación.
 - Se actualizaron las pruebas de trabajadores humanos, animación en reposo, actividad, planta abierta y rutas de descanso para comprobar la postura sentada y la cámara/selección existentes.
 - La nueva ejecución para el head actualizado todavía no aparece en los resultados consultados; PR #44 sigue abierto y sin fusionar. No declarar CI aprobado hasta confirmarlo.
+
+
+## Detalle de reloj mural en la oficina 3D — 10 de noviembre de 2026
+
+- Se añade un reloj analógico decorativo a la pared del fondo, construido con la geometría compartida del renderer WebGL2. Incluye marco, esfera, doce marcas y manecillas fijas a las 10:10.
+- La hora es solo un elemento decorativo fijo; no se presenta como hora local ni como dato en vivo.
+- Se mantiene el buffer compartido; no se añaden texturas, dependencias, animaciones, APIs, almacenamiento ni servicios de pago.
+- Se invalida la caché de office-3d.js a v68 y se añade tests/verify-3d-office-wall-clock.test.mjs.
+- Fuente: cambio del renderer y prueba de regresión, 2026-11-10. Requiere CI y comprobación visual en el Tecno Pova 4.
