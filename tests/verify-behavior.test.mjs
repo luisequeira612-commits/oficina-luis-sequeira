@@ -107,3 +107,10 @@ test("public GitHub Actions integration keeps project links local and configurab
   mustContain('run.conclusion==="success"', "successful workflow state");
   mustContain('run.conclusion==="failure"', "failed workflow state");
 });
+
+test("explorable room stations show the same human workers as the project cards", () => {
+  assert.ok(officeScript.includes('card.querySelectorAll(".ag")'), "room scene reads the existing worker nodes");
+  assert.ok(officeScript.includes('querySelector(".human-worker")'), "room scene reuses the human avatar");
+  assert.ok(officeScript.includes('person.classList.add("room-worker-avatar")'), "room scene marks the decorative avatar");
+  assert.ok(officeScript.includes("station.appendChild(person)"), "worker is placed at its desk");
+});
