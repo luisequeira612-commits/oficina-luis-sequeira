@@ -92,6 +92,22 @@ function buildOfficeScene(rooms){
   scene.workerRanges.forEach(worker=>workerRanges.push({...worker,start:worker.start+posStart,end:worker.end+posStart,armsStart:worker.armsStart+posStart,armsEnd:worker.armsEnd+posStart,index:worker.index+workerOffset}));
   workerOffset+=(rooms[index].workers||[]).length;
  });
+ // Give each project room a distinct entrance facing the shared corridor.
+ const addTriDetail=(a,b,c,color)=>{const ux=b[0]-a[0],uy=b[1]-a[1],uz=b[2]-a[2],vx=c[0]-a[0],vy=c[1]-a[1],vz=c[2]-a[2];let nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx,l=Math.hypot(nx,ny,nz)||1;nx/=l;ny/=l;nz/=l;for(const p of [a,b,c]){positions.push(...p);normals.push(nx,ny,nz);colors.push(...color)}};
+ const quadDetail=(a,b,c,d,color)=>{addTriDetail(a,b,c,color);addTriDetail(a,c,d,color)};
+ const boxDetail=(x,y,z,w,h,d,color)=>{const x0=x-w/2,x1=x+w/2,y0=y-h/2,y1=y+h/2,z0=z-d/2,z1=z+d/2;quadDetail([x0,y1,z1],[x1,y1,z1],[x1,y1,z0],[x0,y1,z0],color);quadDetail([x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1],color);quadDetail([x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1],color);quadDetail([x1,y0,z0],[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],color);quadDetail([x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0],color);quadDetail([x1,y0,z1],[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],color)};
+ const roomAccentPalette=[[0.20,0.55,0.72],[0.76,0.47,0.20],[0.24,0.55,0.39],[0.48,0.36,0.68]];
+ rooms.forEach((room,index)=>{
+  const col=index%cols,row=Math.floor(index/cols),xCenter=cols===1?0:(col===0?-6.2:6.2),zCenter=(row-(rows-1)/2)*10.4,side=col===0?1:-1,portalX=xCenter+side*5.82,accent=roomAccentPalette[index%roomAccentPalette.length],trim=[0.20,0.27,0.34];
+  // Two sturdy posts, a header, and a small project marker make every entrance readable.
+  boxDetail(portalX,1.34,zCenter-1.08,.22,2.68,.22,trim);
+  boxDetail(portalX,1.34,zCenter+1.08,.22,2.68,.22,trim);
+  boxDetail(portalX,2.78,zCenter,.24,.24,2.48,accent);
+  boxDetail(portalX,3.12,zCenter,.30,.42,1.42,[0.83,0.88,0.92]);
+  boxDetail(portalX+side*.17,3.12,zCenter,.08,.26,1.12,accent);
+  // A short accent runner leads from the hallway into the room.
+  boxDetail(portalX-side*.54,.035,zCenter,1.05,.045,2.28,accent);
+ });
  // Two facing rows of rooms open onto one continuous central hallway.
  if(cols>1){
   const addTri=(a,b,c,color)=>{const ux=b[0]-a[0],uy=b[1]-a[1],uz=b[2]-a[2],vx=c[0]-a[0],vy=c[1]-a[1],vz=c[2]-a[2];let nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx,l=Math.hypot(nx,ny,nz)||1;nx/=l;ny/=l;nz/=l;for(const p of [a,b,c]){positions.push(...p);normals.push(nx,ny,nz);colors.push(...color)}};
