@@ -734,7 +734,7 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 
 - La primera CI del PR #48 [42904037810](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42904037810) pasó sintaxis y 96 de 97 pruebas. La única falla fue una expectativa heredada que todavía exigía el color turquesa fijo en la barra lateral.
 - Se actualizó `tests/verify-3d-human-worker-details.test.mjs` para exigir el uso de `stationAccent`, que es la salida de la paleta determinista por proyecto. La prueba nueva dedicada conserva las verificaciones de cada mapeo de color.
-- PR #48 permanece abierto; revisar la siguiente CI antes de considerar el merge.
+- PR #48 fue fusionado mediante squash en `a1cd16bf043e6e733d6872ccc96dfd29332d1b04`; CI [42904167117](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42904167117) y despliegue Pages [42904236621](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42904236621) completados con éxito.
 
 
 ## Indicador de estado en la cabecera de los monitores — 10 de noviembre de 2026
