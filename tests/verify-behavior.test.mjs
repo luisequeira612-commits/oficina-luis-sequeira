@@ -60,6 +60,8 @@ test("public GitHub Actions integration keeps project links local and configurab
   mustContain('function migrateRooms(savedRooms)', "legacy localStorage migration");
   mustContain('room.repository===undefined', "migration preserves explicit disconnections");
   mustContain('textContent=result.message', "safe status rendering");
+  mustContain('element.dataset.repoStatus===roomId', "safe status lookup");
+  assert.doesNotMatch(html, /querySelector\(.*data-repo-status=.*roomId/);
   mustContain('textContent="Actualizar"', "manual refresh control");
   mustContain('room.repository=value||null', "disconnect support");
   mustContain('run.conclusion==="success"', "successful workflow state");
