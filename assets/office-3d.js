@@ -168,7 +168,7 @@ function buildScene(workers,roomName=""){
   }
   // Seated low-poly worker: torso, head, hair, arms, legs and shoes.
   const skin=tone[worker.tone]||tone.medium,shirt=shirtByName[worker.shirt]||shirts[index%shirts.length],hairColor=hairColors[index%hairColors.length],hairStyle=worker.hair||"short",workerStart=positions.length;
-  box(x,1.27,z+1.0,.62,.78,.36,shirt);sphere(x,1.98,z+.98,.34,.38,.32,skin,10,7);
+  box(x,1.27,z+1.0,.62,.78,.36,shirt);const headStart=positions.length;sphere(x,1.98,z+.98,.34,.38,.32,skin,10,7);
   sphere(x,2.22,z+.96,.35,.17,.34,hairColor,9,5);
   if(hairStyle==="long"||hairStyle==="tied"){sphere(x-.29,1.86,z+.97,.11,.42,.13,hairColor,7,5);sphere(x+.29,1.86,z+.97,.11,.42,.13,hairColor,7,5)}
   if(hairStyle==="curly"){for(let curl=0;curl<7;curl++){const angle=curl*Math.PI*2/7;sphere(x+Math.cos(angle)*.25,2.28,z+.96+Math.sin(angle)*.24,.13,.13,.13,hairColor,6,4)}}
@@ -183,22 +183,25 @@ function buildScene(workers,roomName=""){
   // Alternating subtle glasses and a small ear stud make silhouettes less uniform.
   if(index%4===1){box(x-.11,2.03,z+1.315,.16,.025,.025,metal);box(x+.11,2.03,z+1.315,.16,.025,.025,metal);box(x,2.03,z+1.32,.07,.018,.025,metal)}
   if(index%5===2)sphere(x+.39,1.93,z+1.04,.035,.035,.025,[0.86,0.70,0.38],6,4);
+  const headEnd=positions.length;
   // Shirt collar, placket and a restrained role badge add tailored clothing detail.
   box(x-.13,1.61,z+1.19,.18,.13,.045,[0.88,0.91,0.92]);box(x+.13,1.61,z+1.19,.18,.13,.045,[0.88,0.91,0.92]);
   box(x,1.28,z+1.19,.045,.43,.035,[0.82,0.85,0.86]);
   sphere(x+.22,1.42,z+1.195,.055,.055,.035,[0.88,0.72,0.40],7,5);
   const armsStart=positions.length;
   sphere(x-.36,1.48,z+.78,.14,.34,.14,skin,8,5);sphere(x+.36,1.48,z+.78,.14,.34,.14,skin,8,5);
-  const armsEnd=positions.length;
-  // Cuffs and articulated forearms remain within the existing animated arm range.
+  // Cuffs and hands join the arm animation so workers can visibly interact with keyboards.
   box(x-.36,1.28,z+.78,.17,.10,.17,shirt);box(x+.36,1.28,z+.78,.17,.10,.17,shirt);
+  const handsStart=positions.length;
+  sphere(x-.36,1.12,z+.48,.105,.075,.12,skin,7,5);sphere(x+.36,1.12,z+.48,.105,.075,.12,skin,7,5);
+  const handsEnd=positions.length,armsEnd=positions.length;
   box(x-.2,.74,z+.72,.18,.58,.18,shirt);box(x+.2,.74,z+.72,.18,.58,.18,shirt);
   box(x-.2,.43,z+.62,.22,.14,.3,metal);box(x+.2,.43,z+.62,.22,.14,.3,metal);
   // Subtle task-state accents; animations remain clearly labelled as simulated elsewhere.
   if(worker.state==="st-w"){box(x-.22,1.16,z+.47,.2,.18,.2,skin);box(x+.22,1.16,z+.47,.2,.18,.2,skin)}
   else if(worker.state==="st-t"){sphere(x+.44,2.35,z+.95,.13,.13,.13,[0.98,.78,.25],7,5)}
   else if(worker.state==="st-a"){sphere(x,2.52,z+.96,.11,.11,.11,[0.24,.78,.88],7,5)}
-  workerRanges.push({start:workerStart,end:positions.length,armsStart,armsEnd,state:worker.state,index});
+  workerRanges.push({start:workerStart,end:positions.length,headStart,headEnd,armsStart,armsEnd,handsStart,handsEnd,state:worker.state,index});
  });
  // Layered ceiling fixtures: recessed rails and three pendant lamps with bright diffusers.
  box(0,3.72,-.5,4.8,.08,.7,[0.34,0.41,0.47]);
@@ -322,7 +325,7 @@ function open({container,roomName,workers=[],rooms=null,onSelectRoom=null}){
   const projection=mat4(),view=mat4();let raf=0,disposed=false,lastFrame=0;const reducedMotion=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   container._office3dUpdateStates=states=>{scene.workerRanges.forEach((worker,index)=>{if(states[index])worker.state=states[index]})};
   function resize(){const rect=container.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,1.15),w=Math.max(1,Math.floor(rect.width*dpr)),h=Math.max(1,Math.floor(rect.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h)}}
-  function render(timestamp=0){if(disposed)return;if(timestamp-lastFrame<32){raf=requestAnimationFrame(render);return}lastFrame=timestamp;resize();if(!reducedMotion){const seconds=timestamp*.001;scene.workerRanges.forEach(worker=>{let bob=0,arms=0;if(worker.state==="st-w"){bob=Math.sin(seconds*7+worker.index)*.025;arms=Math.sin(seconds*12+worker.index)*.055}else if(worker.state==="st-t"){bob=Math.sin(seconds*2+worker.index)*.014;arms=.035}else if(worker.state==="st-a"){bob=Math.sin(seconds*1.5+worker.index)*.01;arms=Math.sin(seconds*2.5+worker.index)*.025}else{bob=Math.sin(seconds*1.2+worker.index)*.018}for(let i=worker.start+1;i<worker.end;i+=3)scene.data[i]=scene.basePositions[i]+bob;for(let i=worker.armsStart+1;i<worker.armsEnd;i+=3)scene.data[i]=scene.basePositions[i]+bob+arms});gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferSubData(gl.ARRAY_BUFFER,0,scene.data.subarray(0,scene.positionLength))}const eye=[target[0]+radius*Math.sin(phi)*Math.sin(theta),target[1]+radius*Math.cos(phi),target[2]+radius*Math.sin(phi)*Math.cos(theta)];perspective(projection,overviewMode?.86:.72,canvas.width/canvas.height,.1,100);lookAt(view,eye,target,[0,1,0]);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.uniformMatrix4fv(up,false,projection);gl.uniformMatrix4fv(uv,false,view);gl.drawArrays(gl.TRIANGLES,0,scene.count);raf=requestAnimationFrame(render)}
+  function render(timestamp=0){if(disposed)return;if(timestamp-lastFrame<32){raf=requestAnimationFrame(render);return}lastFrame=timestamp;resize();if(!reducedMotion){const seconds=timestamp*.001;scene.workerRanges.forEach(worker=>{let bob=0,arms=0,head=0,hands=0;if(worker.state==="st-w"){bob=Math.sin(seconds*7+worker.index)*.025;arms=Math.sin(seconds*12+worker.index)*.055;head=Math.sin(seconds*3+worker.index)*.012;hands=Math.abs(Math.sin(seconds*16+worker.index))*.045}else if(worker.state==="st-t"){bob=Math.sin(seconds*2+worker.index)*.014;arms=.035;head=Math.sin(seconds*2.5+worker.index)*.025;hands=.006}else if(worker.state==="st-a"){bob=Math.sin(seconds*1.5+worker.index)*.01;arms=Math.sin(seconds*2.5+worker.index)*.025;head=Math.sin(seconds*1.4+worker.index)*.008}else{bob=Math.sin(seconds*1.2+worker.index)*.018;arms=Math.sin(seconds*1.1+worker.index)*.012;head=Math.sin(seconds*.9+worker.index)*.012}for(let i=worker.start+1;i<worker.end;i+=3)scene.data[i]=scene.basePositions[i]+bob;for(let i=worker.armsStart+1;i<worker.armsEnd;i+=3)scene.data[i]=scene.basePositions[i]+bob+arms;for(let i=worker.headStart+1;i<worker.headEnd;i+=3)scene.data[i]=scene.basePositions[i]+bob+head;for(let i=worker.handsStart+1;i<worker.handsEnd;i+=3)scene.data[i]=scene.basePositions[i]+bob+arms+hands});gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferSubData(gl.ARRAY_BUFFER,0,scene.data.subarray(0,scene.positionLength))}const eye=[target[0]+radius*Math.sin(phi)*Math.sin(theta),target[1]+radius*Math.cos(phi),target[2]+radius*Math.sin(phi)*Math.cos(theta)];perspective(projection,overviewMode?.86:.72,canvas.width/canvas.height,.1,100);lookAt(view,eye,target,[0,1,0]);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.uniformMatrix4fv(up,false,projection);gl.uniformMatrix4fv(uv,false,view);gl.drawArrays(gl.TRIANGLES,0,scene.count);raf=requestAnimationFrame(render)}
   const pointers=new Map();let last=null,lastPinch=0;
   canvas.addEventListener("pointerdown",e=>{canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});last={x:e.clientX,y:e.clientY};if(pointers.size===2){const a=Array.from(pointers.values());lastPinch=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)}});
   canvas.addEventListener("pointermove",e=>{if(!pointers.has(e.pointerId))return;const prev=pointers.get(e.pointerId),dx=e.clientX-prev.x,dy=e.clientY-prev.y;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size>=2){const a=Array.from(pointers.values()),dist=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);if(lastPinch)radius=clamp(radius-(dist-lastPinch)*.035,minRadius,maxRadius);lastPinch=dist;target[0]-=dx*.012;target[2]+=dy*.012}else if(last){theta-=dx*.009;phi=clamp(phi+dy*.008,.42,1.42)}last={x:e.clientX,y:e.clientY}});
