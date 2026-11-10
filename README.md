@@ -51,3 +51,8 @@ La vista general del edificio incluye ahora un atrio de entrada al final del pas
 ## Trabajadores humanos low-poly — detalle visual
 
 La sala 3D añade rasgos faciales legibles (ojos, cejas, nariz, boca y orejas), gafas y pequeños accesorios en variación determinista, además de cuello, tapeta, insignia y puños en la ropa. Son detalles geométricos discretos para dar más personalidad a los trabajadores sin descargar modelos ni texturas. Los estados y movimientos continúan siendo simulación local; no representan actividad real de agentes. La apariencia física en el Tecno Pova 4 aún requiere prueba manual.
+
+
+## Acabado arquitectónico de las habitaciones 3D
+
+Las salas incorporan pilares estructurales en las esquinas, capiteles y basamentos, vigas superiores, zócalos continuos, paneles/bastidores verticales y un marco de transición entre el área de trabajo y el salón. Son detalles geométricos ligeros del renderer procedural; no requieren modelos, texturas ni recursos externos. La cámara de corte abierto y la alternativa CSS se conservan.
