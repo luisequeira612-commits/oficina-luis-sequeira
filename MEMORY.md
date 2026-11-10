@@ -855,5 +855,5 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Rama `perf/throttle-worker-nameplate-layout`, basada en main después del merge de PR #57.
 - Las etiquetas HTML de los trabajadores (posición, detección de solapamientos, visibilidad y clases de estado) se recalculan como máximo cada 100 ms, en vez de cada frame del renderizador. El render WebGL mantiene su cadencia actual; no se cambia geometría, cámara, resolución, animaciones ni persistencia.
 - Añade una prueba que verifica el límite de frecuencia. Sin dependencias, APIs, backend ni cambios de esquema.
-- Pendiente de CI y revisión antes de fusionar. La mejora de FPS debe medirse en el Tecno Pova 4; la CI solo valida la lógica.
+- Head final `3e2247a7d3c3fdc5fe30e909be78132d7d105615` pasó CI [42918395862](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42918395862), sin hilos ni revisiones pendientes. PR #58 fusionado mediante squash en `daa73719d3942704633fe9336a5d8237c26cf9a4`. Main y GitHub Pages terminaron validate y deploy en success en [42918443442](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42918443442). La mejora de FPS debe medirse en el Tecno Pova 4; la CI solo valida la lógica.
 - Fuente: inspección de `assets/office-3d.js` y prueba de regresión, 2026-11-10.
