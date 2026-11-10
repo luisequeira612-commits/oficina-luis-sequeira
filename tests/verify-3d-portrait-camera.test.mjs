@@ -12,6 +12,6 @@ test("home restores the room framing",()=>{
  assert.match(renderer,/minRadius=5\.5/);
 });
 test("employee focus brings the whole figure into view",()=>{
- assert.match(renderer,/target=\[worker\.x,1\.12,worker\.z\+1\.05\]/);
+ assert.match(renderer,/target=\[worker\.x,1\.12,worker\.z-1\.05\]/);
  assert.match(renderer,/radius=clamp\(5\.6,minRadius,maxRadius\)/);
 });
