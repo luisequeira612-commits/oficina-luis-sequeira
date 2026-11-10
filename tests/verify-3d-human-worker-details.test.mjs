@@ -10,6 +10,7 @@ test("3D workers use original brick-built minifigure proportions", () => {
   assert.ok(renderer.includes("taperBox(x,1.29"), "keeps a block-built torso");
   assert.ok(renderer.includes("taperBox(x,1.30"), "adds a printed vest detail");
   assert.ok(renderer.includes("workerRanges.push"), "keeps worker geometry inside the existing animation range");
+  assert.ok(renderer.includes("for(let sx=-5;sx<=5;sx+=1.25)"), "adds visible studs to the grey baseplate");
 });
 
 
