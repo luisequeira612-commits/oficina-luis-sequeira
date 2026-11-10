@@ -21,6 +21,8 @@ test("worker animation separates head, arms and typing hands by simulated state"
   assert.match(renderer, /worker\.headStart\+1/);
   assert.match(renderer, /worker\.handsStart\+1/);
   assert.match(renderer, /prefers-reduced-motion/);
+  assert.match(renderer, /worker\.state==="st-s"/);
+  assert.match(renderer, /worker\.state==="st-f"/);
 });
 
 
