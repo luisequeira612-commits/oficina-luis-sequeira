@@ -308,3 +308,12 @@
 - No se modifican GitHub Actions, estados reales, persistencia, APIs, modelos externos, texturas ni servicios de pago.
 - Se añade tests/verify-3d-room-lighting.test.mjs.
 - Fuente: cambios de assets/office-3d.js y prueba de regresión, 2026-11-10.
+
+
+## Encuadre adaptable de cámara 3D — 10 de noviembre de 2026
+- La cámara calcula una distancia inicial mayor cuando el viewport es vertical/estrecho, para evitar que la sala Tycoon quede recortada en teléfonos.
+- El botón de recentrado restaura el encuadre adaptado a la relación de aspecto; el rango de zoom también crece proporcionalmente para conservar el control manual.
+- El ajuste se aplica una vez al iniciar la escena y no sobrescribe los gestos de cámara del usuario.
+- No cambia la geometría, los estados reales, GitHub Actions ni la persistencia.
+- Se añade `tests/verify-3d-portrait-camera.test.mjs`.
+- Fuente: `assets/office-3d.js` y prueba de regresión, 2026-11-10.
