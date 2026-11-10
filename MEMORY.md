@@ -138,3 +138,12 @@
 - Se respeta `prefers-reduced-motion`; no se añaden animaciones continuas, dependencias, recursos externos, APIs, backend ni servicios de pago.
 - No cambia el renderer, la cámara, los trabajadores, los proyectos, `localStorage` ni el esquema persistente. Compatibilidad y rendimiento WebGL 2 en el Tecno Pova 4 siguen pendientes de prueba física.
 - Fuente: implementación de `assets/office-3d-atmosphere.css`, pruebas automatizadas y revisión del repositorio, 2026-11-10.
+
+
+## Entradas arquitectónicas 3D por proyecto — 10 de noviembre de 2026
+- Siguiente mejora de la planta conectada: cada habitación obtiene un marco de entrada físico orientado hacia el pasillo central, con postes, dintel, placa de color y alfombra de acceso.
+- Los acentos se asignan de forma determinista por orden de proyecto; las habitaciones de la columna izquierda y derecha se orientan hacia el corredor compartido.
+- Se añade geometría procedural al buffer WebGL 2 existente; no se añaden modelos, texturas, recursos externos ni dependencias.
+- No se modifica la cámara, los trabajadores, proyectos, estados, localStorage ni esquemas persistentes. La prueba de rendimiento en el Tecno Pova 4 sigue pendiente.
+- PR [#18](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/18), rama `feat/3d-room-entrances-and-identity`; CI pendiente.
+- Fuente: implementación del renderer y prueba automatizada, 2026-11-10.
