@@ -22,6 +22,24 @@ function buildScene(workers,roomName=""){
  const box=(x,y,z,w,h,d,color)=>{const x0=x-w/2,x1=x+w/2,y0=y-h/2,y1=y+h/2,z0=z-d/2,z1=z+d/2;quad([x0,y1,z1],[x1,y1,z1],[x1,y1,z0],[x0,y1,z0],color);quad([x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1],color);quad([x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1],color);quad([x1,y0,z0],[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],color);quad([x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0],color);quad([x1,y0,z1],[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],color)};
  const sphere=(cx,cy,cz,rx,ry,rz,color,segments=9,rings=6)=>{for(let r=0;r<rings;r++){const p0=-Math.PI/2+Math.PI*r/rings,p1=-Math.PI/2+Math.PI*(r+1)/rings;for(let s=0;s<segments;s++){const t0=2*Math.PI*s/segments,t1=2*Math.PI*(s+1)/segments;const pt=(p,t)=>[cx+rx*Math.cos(p)*Math.cos(t),cy+ry*Math.sin(p),cz+rz*Math.cos(p)*Math.sin(t)];const a=pt(p0,t0),b=pt(p0,t1),c=pt(p1,t1),d=pt(p1,t0);quad(a,d,c,b,color)}}};
  const cyl=(x,y,z,r,h,color,seg=8)=>{for(let i=0;i<seg;i++){const a=i*2*Math.PI/seg,b=(i+1)*2*Math.PI/seg;const p1=[x+Math.cos(a)*r,y-h/2,z+Math.sin(a)*r],p2=[x+Math.cos(b)*r,y-h/2,z+Math.sin(b)*r],p3=[x+Math.cos(b)*r,y+h/2,z+Math.sin(b)*r],p4=[x+Math.cos(a)*r,y+h/2,z+Math.sin(a)*r];quad(p1,p4,p3,p2,color);addTri([x,y+h/2,z],p3,p4,color);addTri([x,y-h/2,z],p1,p2,color)}};
+ // Layered opaque floor shadows add contact and visual grounding without a texture or shadow-map pass.
+ const shadow=(cx,cz,rx,rz)=>{
+  const bands=[{r:1.00,c:[0.51,0.47,0.40]},{r:.70,c:[0.47,0.43,0.37]},{r:.38,c:[0.43,0.40,0.35]}],segments=16,y=.009;
+  let outer=1;
+  for(const band of bands){
+   for(let i=0;i<segments;i++){
+    const a=i*Math.PI*2/segments,b=(i+1)*Math.PI*2/segments;
+    const oa=[cx+Math.cos(a)*rx*outer,y,cz+Math.sin(a)*rz*outer],ob=[cx+Math.cos(b)*rx*outer,y,cz+Math.sin(b)*rz*outer];
+    const ia=[cx+Math.cos(a)*rx*band.r,y,cz+Math.sin(a)*rz*band.r],ib=[cx+Math.cos(b)*rx*band.r,y,cz+Math.sin(b)*rz*band.r];
+    quad(oa,ia,ib,ob,band.c);
+   }
+   outer=band.r;
+  }
+  for(let i=0;i<segments;i++){
+   const a=i*Math.PI*2/segments,b=(i+1)*Math.PI*2/segments;
+   addTri([cx,y,cz],[cx+Math.cos(b)*rx*.38,y,cz+Math.sin(b)*rz*.38],[cx+Math.cos(a)*rx*.38,y,cz+Math.sin(a)*rz*.38],[0.41,0.38,0.34]);
+  }
+ };
  const wood=[0.43,0.25,0.14],woodTop=[0.64,0.42,0.25],metal=[0.22,0.28,0.34],wall=[0.76,0.81,0.85],wallDark=[0.48,0.57,0.66],floor=[0.62,0.56,0.46],screen=[0.18,0.66,0.88],chair=[0.17,0.29,0.42],plant=[0.17,0.43,0.27];
  // Room shell: open front and right for a clear game-like cutaway.
  box(0,-0.18,0,12,.36,10,floor);box(0,2,-5,12,4,.22,wall);box(-6,2,0,.22,4,10,wallDark);
@@ -119,6 +137,7 @@ function buildScene(workers,roomName=""){
  box(0,.025,1.7,9,.05,3.2,[0.31,0.38,0.43]);
  box(0,.056,1.7,8.8,.018,.10,themeColor);
  // A compact lounge corner gives the room a readable non-work zone.
+ shadow(4.45,1.70,1.62,.92);
  box(4.45,.58,1.92,2.55,.34,.82,[0.23,0.34,0.43]);
  box(4.45,.92,2.27,2.55,.72,.20,[0.18,0.28,0.37]);
  box(3.25,.72,1.92,.22,.58,.92,[0.28,0.40,0.48]);box(5.65,.72,1.92,.22,.58,.92,[0.28,0.40,0.48]);
@@ -129,6 +148,8 @@ function buildScene(workers,roomName=""){
  const count=Math.max(1,workers.length),cols=count>3?2:count,rows=Math.ceil(count/cols),workerRanges=[];
  workers.forEach((worker,index)=>{
   const col=index%cols,row=Math.floor(index/cols),x=(col-(cols-1)/2)*4.1,z=rows===1?-1.55:-2.8+row*2.4;
+  // Subtle layered contact shadows ground the workstation and chair on the floor.
+  shadow(x,z+.18,1.78,1.12);shadow(x,z+1.55,.78,.72);
   // desk, legs, monitor, illuminated display, stand, keyboard, mouse and desktop tower.
   sphere(x,.012,z+.28,1.5,.008,.72,[0.24,0.25,0.25],12,3);
   box(x,.92,z,2.65,.18,1.15,woodTop);for(const dx of [-1.12,1.12])for(const dz of [-.42,.42])box(x+dx,.47,z+dz,.11,.82,.11,wood);
