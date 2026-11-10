@@ -777,3 +777,13 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Se actualizan pruebas para verificar diez perfiles, paridad 5/5, asignación y encabezado. Sin dependencias, APIs, backend ni servicios de pago nuevos.
 - Estado al abrir PR: pendiente de CI y revisión del head final; no fusionar hasta comprobar pruebas y mergeabilidad.
 - Fuente: cambios de la rama y pruebas del repositorio, 2026-11-10.
+
+
+## PR #52 — contador correcto de minifiguras en el HUD inmersivo (10 de noviembre de 2026)
+
+- Corrige el texto obsoleto «0 humanos» del encabezado del modo Tycoon inmersivo; ahora muestra el total dinámico de empleados seguido de «minifiguras LEGO».
+- El total se calcula a partir de los trabajadores de las habitaciones presentes en la escena; no se fija un número y sigue reflejando proyectos/personajes añadidos o retirados.
+- Añade `tests/verify-tycoon-hud-count.test.mjs` para comprobar la etiqueta y evitar que reaparezca el texto anterior.
+- Cambio de interfaz y prueba solamente: sin cambios de datos, persistencia, cámara, renderer, dependencias, APIs, backend ni servicios de pago.
+- Rama: `fix/lego-worker-count-hud`; CI y revisión pendientes.
+- Fuente: inspección de `assets/office-view.js` en main y corrección de la incoherencia visual, 2026-11-10.
