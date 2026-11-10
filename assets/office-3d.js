@@ -7,7 +7,7 @@ out vec3 vColor; out vec3 vNormal;
 void main(){vColor=aColor;vNormal=aNormal;gl_Position=uProjection*uView*vec4(aPosition,1.0);}`;
 const FRAG=`#version 300 es
 precision mediump float; in vec3 vColor; in vec3 vNormal; out vec4 outColor;
-void main(){vec3 n=normalize(vNormal);vec3 keyLight=normalize(vec3(-0.45,0.85,0.55));vec3 fillLight=normalize(vec3(0.72,0.42,-0.38));float keyDiffuse=max(dot(n,keyLight),0.0);float fillDiffuse=max(dot(n,fillLight),0.0);float hemisphere=0.5+0.5*n.y;float shade=0.50+keyDiffuse*0.36+fillDiffuse*0.18+hemisphere*0.08;outColor=vec4(vColor*shade,1.0);}`;
+void main(){vec3 n=normalize(vNormal);vec3 keyLight=normalize(vec3(-0.45,0.85,0.55));vec3 fillLight=normalize(vec3(0.72,0.42,-0.38));vec3 rimLight=normalize(vec3(-0.15,0.30,-0.92));float keyDiffuse=max(dot(n,keyLight),0.0);float fillDiffuse=max(dot(n,fillLight),0.0);float rimDiffuse=max(dot(n,rimLight),0.0);float hemisphere=0.5+0.5*n.y;float cavity=0.5+0.5*max(n.y,0.0);float shade=0.44+keyDiffuse*0.39+fillDiffuse*0.15+rimDiffuse*0.06+hemisphere*0.08+cavity*0.03;outColor=vec4(vColor*shade,1.0);}`;
 const tone={light:[0.94,0.72,0.57],medium:[0.72,0.46,0.32],deep:[0.43,0.25,0.18]};
 const hair=[0.12,0.085,0.07],hairColors=[[0.09,0.065,0.055],[0.19,0.12,0.08],[0.30,0.20,0.13]],shirts=[[0.18,0.34,0.52],[0.72,0.31,0.28],[0.20,0.43,0.39],[0.65,0.48,0.19],[0.39,0.29,0.43]],shirtByName={blue:shirts[0],coral:shirts[1],teal:shirts[2],mustard:shirts[3],plum:shirts[4]};
 function mat4(){return new Float32Array(16)}
@@ -39,7 +39,7 @@ function buildScene(workers,roomName=""){
  // Continuous skirting boards visually join the two solid walls to the floor.
  box(0,.17,-4.78,11.5,.28,.12,[0.42,0.50,0.57]);
  box(-5.78,.17,0,.12,.28,9.5,[0.42,0.50,0.57]);
- // Recessed wall panels and narrow battens add depth without covering project displays.
+ // Ceiling fixtures create a visible overhead light source and a stronger playable-room silhouette.\n box(-3.0,3.68,-1.05,2.15,.10,.48,[0.28,0.33,0.39]);\n box(1.45,3.68,-1.05,2.15,.10,.48,[0.28,0.33,0.39]);\n box(-3.0,3.61,-1.05,1.35,.035,.18,[0.96,0.84,0.58]);\n box(1.45,3.61,-1.05,1.35,.035,.18,[0.96,0.84,0.58]);\n box(-3.0,3.57,-1.05,1.05,.025,.12,[0.86,0.74,0.48]);\n box(1.45,3.57,-1.05,1.05,.025,.12,[0.86,0.74,0.48]);\n // Light bands on the ceiling/floor axis reinforce depth without introducing textures.\n box(-3.0,.012,-1.05,1.55,.018,.42,[0.76,0.64,0.43]);\n box(1.45,.012,-1.05,1.55,.018,.42,[0.76,0.64,0.43]);\n // Recessed wall panels and narrow battens add depth without covering project displays.
  for(const px of [-4.85,-4.35,3.15,3.65,4.15]){
   box(px,2.02,-4.77,.055,2.95,.055,[0.64,0.70,0.75]);
  }
