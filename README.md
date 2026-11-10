@@ -56,3 +56,8 @@ La sala 3D añade rasgos faciales legibles (ojos, cejas, nariz, boca y orejas), 
 ## Acabado arquitectónico de las habitaciones 3D
 
 Las salas incorporan pilares estructurales en las esquinas, capiteles y basamentos, vigas superiores, zócalos continuos, paneles/bastidores verticales y un marco de transición entre el área de trabajo y el salón. Son detalles geométricos ligeros del renderer procedural; no requieren modelos, texturas ni recursos externos. La cámara de corte abierto y la alternativa CSS se conservan.
+
+
+## Mobiliario y detalles de oficina 3D
+
+Las estaciones de trabajo incorporan cajoneras de dos niveles, bandejas de cableado bajo el escritorio, apoyabrazos y soportes de silla, además de rejillas frontales e indicadores en las torres de PC. Una pizarra mural con notas de colores aporta un punto de planificación compartida. Todo se genera con la geometría procedural existente; no añade modelos, texturas, dependencias ni servicios externos. La escena conserva sus datos, cámara y alternativa CSS.

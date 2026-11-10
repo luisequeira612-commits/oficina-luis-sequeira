@@ -94,6 +94,16 @@ function buildScene(workers,roomName=""){
   // A neutral modular display for user-created projects.
   for(let i=0;i<4;i++)box(1.00+i*.28,2.95,-4.55,.14,.52,.05,i%2?themeColor:[0.58,0.69,0.76]);
  }
+ // A compact wall-mounted planning board adds a recognizable office detail to the left wall.
+ box(-5.68,2.35,-1.05,.10,1.42,2.15,[0.25,0.34,0.42]);
+ box(-5.61,2.35,-1.05,.045,1.28,2.01,[0.88,0.91,0.90]);
+ box(-5.57,2.35,-1.05,.025,.055,1.84,[0.22,0.55,0.72]);
+ for(let note=0;note<4;note++){
+  const noteColor=note%2? [0.88,0.68,0.35]:[0.39,0.66,0.61];
+  box(-5.56,2.52-(note%2)*.42,-1.68+note*.42,.025,.22,.30,noteColor);
+  box(-5.54,2.52-(note%2)*.42,-1.68+note*.42,.018,.025,.20,[0.94,0.95,0.92]);
+ }
+ box(-5.55,1.62,-1.05,.18,.06,2.22,woodTop);
  // Floor planks and rugs.
  for(let i=-5;i<6;i++)box(i*.98,-.005,0,.018,.012,9.6,[0.72,0.65,0.55]);
  box(0,.025,1.7,9,.05,3.2,[0.31,0.38,0.43]);
@@ -112,8 +122,20 @@ function buildScene(workers,roomName=""){
   // desk, legs, monitor, illuminated display, stand, keyboard, mouse and desktop tower.
   sphere(x,.012,z+.28,1.5,.008,.72,[0.24,0.25,0.25],12,3);
   box(x,.92,z,2.65,.18,1.15,woodTop);for(const dx of [-1.12,1.12])for(const dz of [-.42,.42])box(x+dx,.47,z+dz,.11,.82,.11,wood);
+  // Two-drawer pedestal and recessed cable tray make the desk read as finished furniture.
+  box(x+.78,.56,z-.12,.48,.62,.72,[0.43,0.49,0.54]);
+  for(let drawer=0;drawer<2;drawer++){
+   box(x+.78,.72-drawer*.27,z+.25,.40,.22,.035,[0.63,0.69,0.72]);
+   box(x+.78,.72-drawer*.27,z+.275,.13,.025,.025,metal);
+  }
+  box(x,.79,z-.43,1.45,.08,.12,[0.24,0.30,0.35]);
+  box(x,.73,z-.43,1.18,.035,.07,[0.48,0.55,0.60]);
   box(x,.28,z+.52,.5,.08,.34,metal);
   box(x,.0,z+.52,.42,.45,.28,metal);
+  // Front-facing tower vents, status light and power control remain visible at desk scale.
+  for(let vent=0;vent<4;vent++)box(x-.12+vent*.08,.12,z+.665,.025,.18,.018,[0.62,0.70,0.75]);
+  sphere(x+.14,.30,z+.665,.035,.035,.018,[0.24,0.82,0.72],6,4);
+  box(x+.12,.20,z+.665,.06,.035,.018,[0.76,0.82,0.86]);
   box(x,1.65,z-.36,1.12,.78,.14,metal);box(x,1.65,z-.265,.98,.62,.025,screen);
   // Screen glow strips and small dashboard panels.
   box(x,1.65,z-.245,.82,.035,.012,[0.63,0.91,1]);box(x-.28,1.72,z-.24,.18,.025,.012,[0.12,0.95,0.82]);box(x+.18,1.52,z-.24,.35,.025,.012,[0.12,0.95,0.82]);
@@ -122,10 +144,16 @@ function buildScene(workers,roomName=""){
   sphere(x+.62,.99,z+.12,.11,.06,.14,metal,8,5);
   // Chair, cushion, back, stem and five-foot base.
   box(x,.78,z+1.55,.9,.16,.78,chair);box(x,1.3,z+1.88,.86,1.05,.16,chair);cyl(x,.38,z+1.55,.09,.58,metal);
+  // Padded armrests and upright supports give the task chair a more complete silhouette.
+  for(const side of [-1,1]){
+   box(x+side*.48,1.02,z+1.48,.12,.42,.12,metal);
+   box(x+side*.48,1.25,z+1.48,.18,.10,.54,[0.25,0.38,0.49]);
+  }
+  box(x,.92,z+1.88,.58,.045,.035,[0.39,0.49,0.57]);
   for(let a=0;a<5;a++){const t=a*Math.PI*2/5;box(x+Math.cos(t)*.34,.12,z+1.55+Math.sin(t)*.34,.48,.08,.1,metal)}
   // Desk lamp and plant accessories.
   box(x-1.05,1.05,z-.38,.18,.16,.18,metal);box(x-1.05,1.38,z-.38,.08,.58,.08,metal);box(x-1.05,1.7,z-.38,.48,.16,.3,[0.82,0.68,0.38]);
-  cyl(x+1.02,.34,z-.35,.24,.55,[0.45,0.25,0.15]);for(let leaf=0;leaf<5;leaf++)sphere(x+1.02+Math.cos(leaf*1.26)*.18,.78+(leaf%2)*.12,z-.35+Math.sin(leaf*1.26)*.18,.18,.36,.14,plant,7,5);
+  cyl(x+.78,.34,z-.35,.24,.55,[0.45,0.25,0.15]);for(let leaf=0;leaf<5;leaf++)sphere(x+.78+Math.cos(leaf*1.26)*.18,.78+(leaf%2)*.12,z-.35+Math.sin(leaf*1.26)*.18,.18,.36,.14,plant,7,5);
   // Small themed desk objects repeat the room identity at workstation scale.
   if(projectTheme==="guardi"){
    box(x-.78,1.06,z+.12,.34,.08,.30,[0.18,0.31,0.45]);sphere(x-.78,1.16,z+.12,.09,.09,.08,themeColor,7,5);
