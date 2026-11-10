@@ -828,3 +828,13 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - El renderer detiene solicitudes de frames cuando la página está oculta y reanuda al volver; cancela el frame pendiente y elimina el listener al limpiar la escena. No cambia la animación en primer plano ni demuestra 30 FPS reales.
 - La validación y el despliegue de main para el merge commit `c95533ef8f42749fbb500df9395227a55de94766` terminaron en success en [42916294074](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42916294074). La actualización posterior de `MEMORY.md` también pasó validate y deploy en [42916326010](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42916326010); GitHub Pages publicó los cambios.
 - Fuente: PR #55, pruebas y GitHub Actions, 2026-11-10.
+
+
+## PR #56 — reiniciar la muestra del medidor FPS al volver de segundo plano (10 de noviembre de 2026)
+
+- Rama: `perf/reset-fps-window-after-background`, basada en main después del merge de PR #55.
+- Al ocultarse la página, además de cancelar el frame pendiente, se reinician `fpsFrames` y `fpsWindowStart`. Al volver, el primer frame inicia una nueva ventana de medición.
+- Evita que el tiempo pasado en segundo plano se cuente como tiempo de renderizado y produzca una lectura FPS artificialmente baja al regresar a la oficina.
+- Renderer actualizado a caché v75; se ajustan las pruebas de caché existentes y la regresión verifica el reinicio de la ventana de FPS.
+- Sin cambios en geometría, cámara, ritmo de animación en primer plano, almacenamiento, dependencias, APIs ni backend. CI pendiente.
+- Fuente: inspección del handler de visibilidad y medidor FPS de `assets/office-3d.js`, 2026-11-10.
