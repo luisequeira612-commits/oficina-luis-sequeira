@@ -13,7 +13,7 @@ test("resting workers remain seated and use only lightweight ambient motion",()=
 test("desk animation does not translate the workstation or monitor",()=>{
  assert.match(renderer,/worker.renderX=worker.x;worker.renderZ=worker.z/);
  assert.match(renderer,/worker.monitorStart/);
- assert.match(renderer,/scene.basePositions[i]/);
+ assert.match(renderer,/scene\.basePositions\[i\]/);
  assert.doesNotMatch(renderer,/axis===2?walkZ/);
 });
 
