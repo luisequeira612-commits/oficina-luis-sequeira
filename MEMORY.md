@@ -175,3 +175,5 @@
 - No se modifica cámara, lista de proyectos, trabajadores, estados, localStorage ni esquemas persistentes. La alternativa CSS permanece intacta. La prueba física de compatibilidad/rendimiento en el Tecno Pova 4 sigue pendiente.
 - Prueba nueva: `tests/verify-3d-lighting-lounge.test.mjs`.
 - Fuente: cambios del renderer y validación automatizada del repositorio, 2026-11-10.
+
+- PR [#21](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/21) fusionado mediante squash; commit de merge `048479b6aec0d775f1e49a0e1c224946b75c0a7e`. CI [42784290104](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42784290104): validate success; deploy omitido correctamente en el evento pull_request. El despliegue posterior al merge no se ha verificado.
