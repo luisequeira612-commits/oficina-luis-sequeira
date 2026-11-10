@@ -14,7 +14,7 @@ test("worker states drive differentiated lightweight desk activity",()=>{
 });
 test("reduced-motion preference slows character animation but never freezes the office",()=>{
  assert.match(renderer,/prefers-reduced-motion/);
- assert.match(renderer,/motionScale=reducedMotion?0.72:1/);
+ assert.match(renderer,/motionScale=reducedMotion\?0\.72:1/);
  assert.match(renderer,/const seconds=timestamp*.001*motionScale/);
  assert.doesNotMatch(renderer,/if\(!reducedMotion\)/);
 });
