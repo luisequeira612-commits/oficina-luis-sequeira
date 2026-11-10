@@ -22,3 +22,11 @@ test("worker animation separates head, arms and typing hands by simulated state"
   assert.match(renderer, /worker\.handsStart\+1/);
   assert.match(renderer, /prefers-reduced-motion/);
 });
+
+
+test("connected overview offsets head and hand ranges with each room geometry", () => {
+  assert.match(renderer, /headStart:worker\.headStart\+posStart/);
+  assert.match(renderer, /headEnd:worker\.headEnd\+posStart/);
+  assert.match(renderer, /handsStart:worker\.handsStart\+posStart/);
+  assert.match(renderer, /handsEnd:worker\.handsEnd\+posStart/);
+});
