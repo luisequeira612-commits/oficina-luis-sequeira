@@ -166,3 +166,12 @@
 - No cambia datos, trabajadores, cámara, `localStorage` ni esquema persistente. Aún falta probar compatibilidad y rendimiento físico en el Tecno Pova 4.
 - Prueba de regresión: `tests/verify-themed-workstations.test.mjs`; PR [#20](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/20), fusionado mediante squash en `17fdba83c5961587d70bcc4c2345d1a8a5454b94`; CI [42783629251](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42783629251): validate success.
 - Fuente: cambios del renderer y pruebas del repositorio, 2026-11-10.
+
+
+## PR #21 — iluminación arquitectónica y zona de descanso 3D — 10 de noviembre de 2026
+- La escena de cada habitación incorpora un modelo de iluminación de color más equilibrado con luz principal, luz de relleno y componente hemisférica en el shader. No se presenta como iluminación global ni como sombras físicas dinámicas.
+- Se añaden tres luminarias colgantes con difusores, ventana trasera dividida en paneles con marco y alféizar, y un rincón de descanso con sofá modular, mesa baja y planta.
+- Todo se genera con las primitivas geométricas y el renderer WebGL 2 existente; no requiere texturas, modelos externos, dependencias, CDN, API, backend ni servicios de pago.
+- No se modifica cámara, lista de proyectos, trabajadores, estados, localStorage ni esquemas persistentes. La alternativa CSS permanece intacta. La prueba física de compatibilidad/rendimiento en el Tecno Pova 4 sigue pendiente.
+- Prueba nueva: `tests/verify-3d-lighting-lounge.test.mjs`.
+- Fuente: cambios del renderer y validación automatizada del repositorio, 2026-11-10.
