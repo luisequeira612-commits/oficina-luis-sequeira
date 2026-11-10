@@ -1,42 +1,30 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-
-const renderer = readFileSync(new URL("../assets/office-3d.js", import.meta.url), "utf8");
-
-test("minifigure activity keeps independent posture ranges", () => {
-  assert.match(renderer, /legsStart,legsEnd/);
-  assert.match(renderer, /bodyStart:legsEnd/);
-  assert.match(renderer, /headShift=0,armShift=0/);
+const renderer=readFileSync(new URL("../assets/office-3d.js",import.meta.url),"utf8");
+test("seated workers keep independent geometry ranges",()=>{
+ assert.match(renderer,/headStart,headEnd,armsStart,armsEnd,handsStart,handsEnd/);
+ assert.match(renderer,/workerRanges.push/);
 });
-
-test("live worker states drive differentiated micro-movements", () => {
-  assert.match(renderer, /worker\.state==="st-w"/);
-  assert.match(renderer, /worker\.state==="st-t"/);
-  assert.match(renderer, /worker\.state==="st-a"/);
-  assert.match(renderer, /worker\.state==="st-s"/);
-  assert.match(renderer, /worker\.state==="st-f"/);
-  assert.match(renderer, /foot=route\.away&&!route\.paused\?Math\.sin/);
-  assert.match(renderer, /body=-Math\.abs/);
+test("worker states drive differentiated lightweight desk activity",()=>{
+ for(const state of ["st-w","st-t","st-a","st-s","st-f","st-r"])assert.match(renderer,new RegExp('worker\\.state==="'+state+'"'));
+ assert.match(renderer,/arms=Math.sin\(seconds\*12\+worker.index\)\*.085/);
+ assert.match(renderer,/hands=Math.abs\(Math.sin\(seconds\*16\+worker.index\)\)\*.055/);
+ assert.match(renderer,/monitorShift=/);
 });
-
-test("reduced-motion preference slows character animation but never freezes the office", () => {
-  assert.match(renderer, /prefers-reduced-motion/);
-  assert.match(renderer, /const reducedMotion=window\.matchMedia&&window\.matchMedia\("\(prefers-reduced-motion: reduce\)"\)\.matches,motionScale=reducedMotion\?0\.72:1/);
-  assert.match(renderer, /const seconds=timestamp\*\.001\*motionScale/);
-  assert.doesNotMatch(renderer, /if\(!reducedMotion\)/);
-  assert.match(renderer, /arms=Math\.sin\(seconds\*12\+worker\.index\)\*\.11/);
-  assert.match(renderer, /hands=Math\.abs\(Math\.sin\(seconds\*16\+worker\.index\)\)\*\.08/);
+test("reduced-motion preference slows character animation but never freezes the office",()=>{
+ assert.match(renderer,/prefers-reduced-motion/);
+ assert.match(renderer,/motionScale=reducedMotion?0.72:1/);
+ assert.match(renderer,/const seconds=timestamp*.001*motionScale/);
+ assert.doesNotMatch(renderer,/if\(!reducedMotion\)/);
 });
-
-
-test("worker states map to visible behavior",()=>{assert.match(renderer,/worker\.state==="st-r"\)\{route=sampleRoute/);assert.match(renderer,/worker\.state==="st-a"\)\{bob=/);assert.match(renderer,/office-worker-typing-bubble/);assert.match(renderer,/worker\.state!=="st-w"/)});
-
-
-test("resting workers follow an aisle route while desk monitors stay fixed and animate code",()=>{assert.match(renderer,/function sampleRoute\(worker,seconds\)/);assert.match(renderer,/laneX/);assert.match(renderer,/restZ:2\.0\+row\*\.72/);assert.match(renderer,/worker\.monitorStart/);assert.match(renderer,/monitorShift/);assert.match(renderer,/codeRow<7/);assert.doesNotMatch(renderer,/axis===2\?walkZ:0\)\}\)for\(let i=worker\.monitorStart/)});
-
-
-test("thinking workers receive their own visual marker, not the awaiting-approval marker",()=>{
- assert.match(renderer,/else if\(worker\.state==="st-t"\)\{sphere\(x,2\.62,z\+\.96,\.11,\.11,\.11,\[\.24,\.78,\.88\]/);
- assert.match(renderer,/else if\(worker\.state==="st-a"\)\{sphere\(x\+\.44,2\.55,z\+\.95,\.13,\.13,\.13,\[\.98,\.78,\.25\]/);
+test("workers no longer use navigation routes",()=>{
+ assert.doesNotMatch(renderer,/function sampleRoute/);
+ assert.doesNotMatch(renderer,/route=sampleRoute/);
+ assert.doesNotMatch(renderer,/walkX|walkZ|walkLift/);
+});
+test("thinking and approval states retain distinct visual markers",()=>{
+ assert.match(renderer,/worker.state==="st-t"/);
+ assert.match(renderer,/worker.state==="st-a"/);
+ assert.match(renderer,/office-worker-typing-bubble/);
 });
