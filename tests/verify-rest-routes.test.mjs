@@ -5,11 +5,13 @@ const renderer=readFileSync(new URL("../assets/office-3d.js",import.meta.url),"u
 const css=readFileSync(new URL("../assets/office-view.css",import.meta.url),"utf8");
 test("resting workers use clear inter-column aisles and return to their own desk",()=>{
  assert.match(renderer,/const laneX=col===0\?-1\.82:col===1\?1\.82:5\.48/);
- assert.match(renderer,/restZ:3\.2/);
+ assert.match(renderer,/restZ:2\.0\+row\*\.72/);
  assert.match(renderer,/rest=\[worker\.laneX,worker\.restZ\],path=\[start,lane,rest\]/);
  assert.match(renderer,/const returning=phase>=oneWay\+dwell/);
  assert.match(renderer,/const speed=\.82,dwell=3\.8/);
  assert.match(renderer,/for\(const stationX of \[-1\.82,1\.82,5\.48\]\)/);
+ assert.match(renderer,/box\(stationX,1\.08,1\.45/,"coffee machines sit at the route destination");
+ assert.match(renderer,/box\(stationX,1\.13,1\.265/,"coffee controls face the approaching employees");
 });
 test("resting workers pause at the break point and animate their legs",()=>{
  assert.match(renderer,/paused:true/);
