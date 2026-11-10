@@ -857,3 +857,12 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Añade una prueba que verifica el límite de frecuencia. Sin dependencias, APIs, backend ni cambios de esquema.
 - Head final `3e2247a7d3c3fdc5fe30e909be78132d7d105615` pasó CI [42918395862](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42918395862), sin hilos ni revisiones pendientes. PR #58 fusionado mediante squash en `daa73719d3942704633fe9336a5d8237c26cf9a4`. Main y GitHub Pages terminaron validate y deploy en success en [42918443442](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42918443442). La mejora de FPS debe medirse en el Tecno Pova 4; la CI solo valida la lógica.
 - Fuente: inspección de `assets/office-3d.js` y prueba de regresión, 2026-11-10.
+
+
+## PR #59 — invalidar caché del renderizador tras el cambio de etiquetas (10 de noviembre de 2026)
+
+- Rama `fix/bump-renderer-cache-after-nameplate-update`, basada en main después de PR #58.
+- Se actualiza la URL del renderizador en `index.html` de `office-3d.js?v=76` a `office-3d.js?v=77`, para que los navegadores descarguen el archivo modificado en PR #58 en vez de reutilizar una copia en caché.
+- Se actualizan las expectativas de caché en `tests/verify-3d-human-worker-details.test.mjs`, `tests/verify-3d-monitor-live-status.test.mjs`, `tests/verify-3d-office-wall-clock.test.mjs` y `tests/verify-3d-project-workstation-identity.test.mjs`. No cambia el comportamiento de la escena ni sus recursos gráficos.
+- Pendiente de CI y revisión antes de fusionar.
+- Fuente: revisión posterior al despliegue de PR #58, 2026-11-10.

@@ -12,7 +12,7 @@ test("monitor header uses a palette for every worker state",()=>{
  assert.ok(renderer.includes('state==="st-s"?[0.14,0.68,0.42]'));
  assert.ok(renderer.includes('state==="st-f"?[0.78,0.18,0.22]:[0.40,0.46,0.52]'));
  assert.ok(renderer.includes("box(x,1.92,z-.245,.76,.028,.012,monitorStatusColor)"));
- assert.match(page,/office-3d\.js\?v=76/);
+ assert.match(page,/office-3d\.js\?v=77/);
 });
 
 test("live state changes update only the monitor header color in the GPU buffer",()=>{
