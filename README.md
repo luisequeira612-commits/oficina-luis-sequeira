@@ -46,3 +46,8 @@ La vista general del edificio incluye ahora un atrio de entrada al final del pas
 
 - **Fase A:** simulación visual local y gestión de proyectos/personajes.
 - **Fase B:** consulta de ejecuciones recientes de GitHub Actions en repositorios públicos.
+
+
+## Trabajadores humanos low-poly — detalle visual
+
+La sala 3D añade rasgos faciales legibles (ojos, cejas, nariz, boca y orejas), gafas y pequeños accesorios en variación determinista, además de cuello, tapeta, insignia y puños en la ropa. Son detalles geométricos discretos para dar más personalidad a los trabajadores sin descargar modelos ni texturas. Los estados y movimientos continúan siendo simulación local; no representan actividad real de agentes. La apariencia física en el Tecno Pova 4 aún requiere prueba manual.
