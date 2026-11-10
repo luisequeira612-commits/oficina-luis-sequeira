@@ -67,6 +67,7 @@ footer{max-width:1040px;margin:0 auto;padding:0 16px 24px;color:var(--muted);fon
 </style>
 <link rel="stylesheet" href="assets/office-view.css">
 <link rel="stylesheet" href="assets/human-workers.css">
+<link rel="stylesheet" href="assets/github-live.css">
 </head>
 <body>
 <header>
@@ -86,6 +87,12 @@ footer{max-width:1040px;margin:0 auto;padding:0 16px 24px;color:var(--muted);fon
 <dialog class="room-dialog" id="room-dialog" aria-labelledby="room-dialog-title"><div class="room-dialog-head"><div><p class="room-dialog-kicker">HABITACIÓN</p><h3 id="room-dialog-title"></h3></div><button type="button" class="secondary room-dialog-close" id="room-dialog-close" aria-label="Cerrar habitación">×</button></div><p class="room-dialog-caption" id="room-dialog-caption"></p><div class="room-scene" id="room-scene" aria-label="Vista isométrica de la habitación"></div>
 <div class="office-3d" id="office-3d" aria-label="Oficina tridimensional interactiva"></div><div class="room-dialog-foot"><p id="room-dialog-detail"></p><button type="button" id="room-dialog-go">Ver tarjeta del proyecto</button></div></dialog>
 </section>
+<section class="activity-panel" aria-labelledby="activity-heading">
+<h2 id="activity-heading">Actividad reciente de GitHub Actions</h2>
+<p class="activity-note">Datos reales de ejecuciones públicas de GitHub Actions. Las animaciones de los personajes son decoración y no representan actividad por sí solas.</p>
+<p id="github-rate-notice" class="github-rate-notice" role="status" aria-live="polite" hidden></p>
+<ol id="github-activity-list" class="github-activity-list"><li class="activity-empty">Cargando actividad guardada…</li></ol>
+</section>
 <section aria-labelledby="projects-heading">
 <h2 id="projects-heading">Proyectos</h2>
 <form class="project-form" id="project-form" novalidate>
@@ -99,7 +106,8 @@ footer{max-width:1040px;margin:0 auto;padding:0 16px 24px;color:var(--muted);fon
 <div class="rooms" id="rooms" aria-live="polite"></div>
 </section>
 </main>
-<footer>Simulación. En la versión real, los estados vendrán de GitHub.</footer>
+<footer><strong>Qué es real:</strong> estados, nombres y horas proceden de la API pública de GitHub Actions. <strong>Qué es decorativo:</strong> movimientos ambientales, gestos y celebraciones visuales. No hay agentes ejecutándose dentro de esta página.</footer>
+<script src="assets/github-live.js"></script>
 <script>
 (function(){
 "use strict";
@@ -326,8 +334,7 @@ function loadRooms(){
 let rooms=loadRooms();
 applyMigrations();
 const states=new Map();
-const repoResults=new Map();
-const repoPullResults=new Map();
+
 const roomsEl=document.getElementById("rooms");
 const summaryEl=document.getElementById("summary-text");
 const form=document.getElementById("project-form");
@@ -345,17 +352,8 @@ function applyMigrations(){
   localStorage.setItem(MIGRATION_KEY,"babymonster-chart-v1");
  }catch(_){/* A failed migration can be retried on the next page load. */}
 }
-function pick(){var x=Math.random();return x<.45?"w":x<.7?"t":x<.85?"a":"r";}
-function stateFor(id){if(!states.has(id))states.set(id,pick());return states.get(id)}
-function updateSummary(){
- const all=rooms.flatMap(room=>room.agents);
- const working=all.filter(agent=>["w","t"].includes(stateFor(agent.id))).length;
- const waiting=all.filter(agent=>stateFor(agent.id)==="a").length;
- if(all.length===0||all.every(agent=>stateFor(agent.id)==="r")){summaryEl.textContent="Todos descansan por ahora.";return}
- const a=working===1?"personaje":"personajes";
- const b=waiting===1?"espera":"esperan";
- summaryEl.textContent="Hay "+working+" "+a+" trabajando y "+waiting+" "+b+" tu OK.";
-}
+function stateFor(id){if(!states.has(id))states.set(id,"r");return states.get(id)}
+function updateSummary(){if(window.OfficeGitHubLive)window.OfficeGitHubLive.paintSummary()}
 function makeCharacter(agent){
  const wrap=document.createElement("div");wrap.className="ag";wrap.dataset.agentId=agent.id;
  const state=stateFor(agent.id);
@@ -372,121 +370,25 @@ function makeCharacter(agent){
  return wrap;
 }
 function makeRepoPanel(room){
- const panel=document.createElement("section");panel.className="repo-panel";panel.setAttribute("aria-label","Estado del repositorio en GitHub");
- const heading=document.createElement("p");heading.className="repo-title";heading.textContent="GitHub Actions";panel.appendChild(heading);
+ const panel=document.createElement("section");panel.className="repo-panel";panel.setAttribute("aria-label","Estado real de GitHub Actions");
+ const heading=document.createElement("p");heading.className="repo-title";heading.textContent="Repositorio vinculado";panel.appendChild(heading);
  const form=document.createElement("form");form.className="repo-form";
  const input=document.createElement("input");input.type="text";input.value=room.repository||"";input.placeholder="usuario/repositorio";input.maxLength=100;input.setAttribute("aria-label","Repositorio público de GitHub para "+room.name);input.autocomplete="off";
  const saveButton=document.createElement("button");saveButton.type="submit";saveButton.textContent="Guardar";
  form.append(input,saveButton);panel.appendChild(form);
- const refreshButton=document.createElement("button");refreshButton.type="button";refreshButton.className="secondary";refreshButton.textContent="Actualizar";refreshButton.style.marginTop="7px";refreshButton.addEventListener("click",()=>refreshRepo(room.id,true));panel.appendChild(refreshButton);
- const status=document.createElement("p");status.className="repo-status";status.setAttribute("role","status");status.setAttribute("aria-live","polite");status.dataset.repoStatus=room.id;panel.appendChild(status);
- const prHeading=document.createElement("p");prHeading.className="repo-title repo-pr-title";prHeading.textContent="Pull requests abiertas";panel.appendChild(prHeading);
- const prStatus=document.createElement("div");prStatus.className="repo-pr-status";prStatus.setAttribute("role","status");prStatus.setAttribute("aria-live","polite");prStatus.dataset.repoPrStatus=room.id;panel.appendChild(prStatus);
- function paint(){
-  const result=repoResults.get(room.id);
-  if(!room.repository){status.textContent="Sin repositorio conectado.";status.dataset.kind="";return}
-  if(!result){status.textContent="Repositorio: "+room.repository+". Consultando…";status.dataset.kind="running";return}
-  status.textContent=result.message;status.dataset.kind=result.kind||"";
-  if(result.url){const link=document.createElement("a");link.href=result.url;link.target="_blank";link.rel="noopener noreferrer";link.textContent=" Ver ejecución";status.appendChild(link)}
- }
+ const actions=document.createElement("div");actions.className="repo-live-actions";
+ const refreshButton=document.createElement("button");refreshButton.type="button";refreshButton.className="secondary";refreshButton.textContent="Actualizar";refreshButton.dataset.refreshRepo=room.id;refreshButton.addEventListener("click",()=>window.OfficeGitHubLive&&window.OfficeGitHubLive.refresh(room.id,true));actions.appendChild(refreshButton);
+ const freshness=document.createElement("span");freshness.className="repo-freshness";freshness.dataset.repoFreshness=room.id;freshness.textContent=room.repository?"Consultando…":"Sin repositorio";actions.appendChild(freshness);panel.appendChild(actions);
+ const status=document.createElement("p");status.className="repo-status";status.dataset.repoStatus=room.id;status.setAttribute("role","status");status.setAttribute("aria-live","polite");status.textContent=room.repository?"Esperando la primera consulta.":"Vincula un repositorio público para ver sus ejecuciones.";panel.appendChild(status);
+ const bubble=document.createElement("p");bubble.className="repo-workflow-bubble";bubble.dataset.repoBubble=room.id;bubble.hidden=true;panel.appendChild(bubble);
  form.addEventListener("submit",event=>{
   event.preventDefault();
   const value=input.value.trim();
   if(value&&!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(value)){status.textContent="Usa el formato usuario/repositorio.";status.dataset.kind="failure";return}
-  room.repository=value||null;repoResults.delete(room.id);repoPullResults.delete(room.id);save();paint();paintRepoPullStatus(room.id);
-  if(room.repository)refreshRepo(room.id,true);
+  room.repository=value||null;save();window.OfficeGitHubLive&&window.OfficeGitHubLive.sync(rooms);
+  if(room.repository&&window.OfficeGitHubLive)window.OfficeGitHubLive.refresh(room.id,true);
  });
- paint();
- paintRepoPullStatus(room.id);
  return panel;
-}
-function repoStatusElement(roomId){return Array.from(document.querySelectorAll("[data-repo-status]")).find(element=>element.dataset.repoStatus===roomId)||null}
-function repoPullStatusElement(roomId){return Array.from(document.querySelectorAll("[data-repo-pr-status]")).find(element=>element.dataset.repoPrStatus===roomId)||null}
-function paintRepoPullStatus(roomId){
- const current=repoPullStatusElement(roomId);
- if(!current)return;
- current.replaceChildren();
- const room=rooms.find(item=>item.id===roomId);
- if(!room||!room.repository){current.textContent="Sin repositorio conectado.";return}
- const result=repoPullResults.get(roomId);
- if(!result){current.textContent="Sin consultar todavía.";return}
- if(result.message){current.textContent=result.message;current.dataset.kind=result.kind||"";return}
- const items=Array.isArray(result.items)?result.items:[];
- if(!items.length){current.textContent="No hay PR abiertas.";current.dataset.kind="";return}
- const intro=document.createElement("p");intro.className="repo-pr-count";intro.textContent="Solicitudes abiertas recientes (máximo 3):";current.appendChild(intro);
- const list=document.createElement("ul");list.className="repo-pr-list";
- items.forEach(item=>{
-  const entry=document.createElement("li");
-  const label="#"+item.number+" · "+(item.user?.login||"autor desconocido")+(item.draft?" · borrador":"")+" — "+(item.title||"Sin título");
-  if(typeof item.html_url==="string"&&item.html_url.startsWith("https://github.com/")){
-   const link=document.createElement("a");link.href=item.html_url;link.target="_blank";link.rel="noopener noreferrer";link.textContent=label;entry.appendChild(link);
-  }else entry.textContent=label;
-  list.appendChild(entry);
- });
- current.appendChild(list);
-}
-function refreshPullRequests(roomId){
- const room=rooms.find(item=>item.id===roomId);if(!room||!room.repository)return;
- const requestedRepository=room.repository;
- repoPullResults.set(roomId,{message:"Consultando pull requests…",kind:"running"});
- paintRepoPullStatus(roomId);
- const url="https://api.github.com/repos/"+requestedRepository+"/pulls?state=open&per_page=3&sort=updated&direction=desc";
- fetch(url,{headers:{Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"},cache:"no-store"})
- .then(async response=>{
-  if(response.status===404)throw new Error("Repositorio no encontrado o privado.");
-  if(response.status===403||response.status===429)throw new Error("GitHub limitó las consultas públicas. Intenta más tarde.");
-  if(!response.ok)throw new Error("GitHub respondió con el error "+response.status+".");
-  return response.json();
- })
- .then(data=>{
-  if(rooms.find(item=>item.id===roomId)?.repository!==requestedRepository)return;
-  if(!Array.isArray(data))throw new Error("GitHub devolvió una respuesta de PR no válida.");
-  repoPullResults.set(roomId,{items:data.slice(0,3)});
- })
- .catch(error=>{
-  if(rooms.find(item=>item.id===roomId)?.repository===requestedRepository)repoPullResults.set(roomId,{message:error.message||"No se pudieron consultar las PR.",kind:"failure"});
- })
- .finally(()=>paintRepoPullStatus(roomId));
-}
-function refreshRepo(roomId,includePullRequests=false){
- if(includePullRequests)refreshPullRequests(roomId);
- const room=rooms.find(item=>item.id===roomId);if(!room||!room.repository)return;
- const status=repoStatusElement(roomId);
- if(status){status.textContent="Consultando GitHub Actions…";status.dataset.kind="running"}
- const requestedRepository=room.repository;
- const url="https://api.github.com/repos/"+requestedRepository+"/actions/runs?per_page=1";
- fetch(url,{headers:{Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"},cache:"no-store"})
- .then(async response=>{
-  if(response.status===404)throw new Error("Repositorio no encontrado o privado.");
-  if(response.status===403||response.status===429)throw new Error("GitHub limitó las consultas públicas. Intenta más tarde.");
-  if(!response.ok)throw new Error("GitHub respondió con el error "+response.status+".");
-  return response.json();
- })
- .then(data=>{
-  if(rooms.find(item=>item.id===roomId)?.repository!==requestedRepository)return;
-  const run=Array.isArray(data.workflow_runs)?data.workflow_runs[0]:null;
-  if(!run){repoResults.set(roomId,{message:"No hay ejecuciones de GitHub Actions todavía.",kind:""});return}
-  let message;
-  let kind="";
-  if(run.status!=="completed"){message="En curso: "+(run.name||"GitHub Actions")+" ("+run.status+").";kind="running"}
-  else if(run.conclusion==="success"){message="Última ejecución correcta: "+(run.name||"GitHub Actions")+". ("+new Date(run.updated_at||run.created_at).toLocaleString()+")";kind="success"}
-  else if(run.conclusion==="failure"){message="La última ejecución falló: "+(run.name||"GitHub Actions")+". ("+new Date(run.updated_at||run.created_at).toLocaleString()+")";kind="failure"}
-  else if(run.conclusion==="cancelled"){message="La última ejecución fue cancelada."}
-  else if(run.conclusion==="timed_out"){message="La última ejecución agotó el tiempo límite.";kind="failure"}
-  else if(run.conclusion==="action_required"){message="La última ejecución requiere una acción manual.";kind="failure"}
-  else{message="Última ejecución: "+(run.conclusion||run.status||"estado desconocido")+".";
-  }
-  repoResults.set(roomId,{message,kind,url:run.html_url});
- })
- .catch(error=>{if(rooms.find(item=>item.id===roomId)?.repository===requestedRepository)repoResults.set(roomId,{message:error.message||"No se pudo consultar GitHub.",kind:"failure"})})
- .finally(()=>{
-  const current=repoStatusElement(roomId);
-  if(!current||rooms.find(item=>item.id===roomId)?.repository!==requestedRepository)return;
-  const result=repoResults.get(roomId);
-  current.textContent=result?result.message:"No se pudo consultar GitHub.";
-  current.dataset.kind=result?.kind||"";
-  if(result?.url){const link=document.createElement("a");link.href=result.url;link.target="_blank";link.rel="noopener noreferrer";link.textContent=" Ver ejecución";current.appendChild(link)}
- });
 }
 function render(){
  roomsEl.replaceChildren();
@@ -497,7 +399,7 @@ function render(){
   const actions=document.createElement("div");actions.className="room-actions";
   const count=document.createElement("span");count.className="room-count";
   const working=room.agents.filter(agent=>["w","t"].includes(stateFor(agent.id))).length;
-  count.textContent=working+" trabajando";
+  count.textContent=working+" puestos";
   const removeRoom=document.createElement("button");removeRoom.type="button";removeRoom.className="danger room-remove";removeRoom.textContent="×";removeRoom.setAttribute("aria-label","Eliminar proyecto "+room.name);removeRoom.title="Eliminar proyecto";
   removeRoom.addEventListener("click",()=>{if(confirm('¿Eliminar el proyecto "'+room.name+'"?')){room.agents.forEach(a=>states.delete(a.id));rooms=rooms.filter(item=>item.id!==room.id);save();render() }});
   actions.append(count,removeRoom);head.append(title,actions);card.appendChild(head);card.appendChild(makeRepoPanel(room));
@@ -513,12 +415,13 @@ function render(){
   roomsEl.appendChild(card);
  });
  updateSummary();
+ if(window.OfficeGitHubLive)window.OfficeGitHubLive.sync(rooms);
 }
 function addAgent(roomId){
  const room=rooms.find(item=>item.id===roomId);if(!room||room.agents.length>=6)return;
  const used=new Set(room.agents.map(agent=>agent.role));
  const role=ROLES.find(item=>!used.has(item))||ROLES[0];
- const agent={id:makeId(),role,source:null};room.agents.push(agent);states.set(agent.id,pick());save();render();
+ const agent={id:makeId(),role,source:null};room.agents.push(agent);states.set(agent.id,"r");save();render();
 }
 function removeAgent(agentId,role){
  if(!confirm("¿Quitar el personaje "+role+"?"))return;
@@ -535,26 +438,7 @@ form.addEventListener("submit",event=>{
 });
 nameInput.addEventListener("input",()=>{if(nameInput.value.length>0)errorEl.textContent=""});
 render();
-rooms.filter(room=>room.repository).forEach(room=>refreshRepo(room.id,true));
-// Refresh real GitHub Actions activity every five minutes; manual refresh remains available.
-window.setInterval(()=>rooms.filter(room=>room.repository).forEach(room=>refreshRepo(room.id)),300000);
-const reducedMotion=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-window.setInterval(()=>{
- rooms.forEach(room=>room.agents.forEach(agent=>{
-  if(Math.random()<.35)states.set(agent.id,pick());
- }));
- document.querySelectorAll(".ag[data-agent-id]").forEach(el=>{
-  const state=stateFor(el.dataset.agentId);
-  el.classList.remove("st-w","st-t","st-a","st-r");el.classList.add(STATES[state][0]);
-  const status=el.querySelector('[data-status="true"]');if(status)status.textContent=STATES[state][1];
- });
- document.querySelectorAll(".room").forEach((el,index)=>{
-  const room=rooms[index];if(!room)return;
-  const count=el.querySelector(".room-count");
-  if(count)count.textContent=room.agents.filter(agent=>["w","t"].includes(stateFor(agent.id))).length+" trabajando";
- });
- updateSummary();
-},reducedMotion?5200:2600);
+window.OfficeGitHubLive.start(rooms);
 })();
 </script>
 <script src="assets/human-workers.js" defer></script>

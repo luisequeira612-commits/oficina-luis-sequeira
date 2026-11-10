@@ -76,3 +76,14 @@ Si WebGL 2 no está disponible o el motor falla al construir la escena, la pági
 ### Animaciones Tycoon de trabajadores
 
 Los trabajadores low-poly ahora tienen rangos de movimiento independientes para cabeza, brazos y manos. En estado de trabajo realizan pequeños movimientos de tecleo; al pensar mueven la cabeza de forma más pausada; al esperar y descansar usan movimientos más suaves y distintos. Todo sigue siendo animación local ilustrativa, se limita a unos 30 FPS y respeta la preferencia de movimiento reducido del dispositivo. No representa telemetría ni ejecución real de agentes.
+
+
+## Actividad real de GitHub Actions
+
+Cada proyecto puede vincular un repositorio público mediante el campo `owner/repo`. El módulo `assets/github-live.js` consulta únicamente `GET /repos/{owner}/{repo}/actions/runs?per_page=5`, de forma serial y escalonada: ciclo de repositorios inactivos de aproximadamente cuatro minutos (mínimo un minuto entre peticiones globales) y prioridad de repositorios con ejecuciones `queued` o `in_progress`. Los proyectos con repositorio duplicado comparten una sola consulta.
+
+El módulo guarda por repositorio los cinco runs recientes, ETag y hora de consulta en `localStorage` bajo `oficina-luis-sequeira-github-cache-v1`; no cambia el esquema existente `oficina-luis-sequeira-v1`. Muestra la caché inmediatamente, pausa con la pestaña oculta, actualiza al volver si los datos superan dos minutos y aplica enfriamiento manual de 15 segundos. Registra `X-RateLimit-Remaining` y `X-RateLimit-Reset`, pausa por debajo de diez solicitudes y aplica retroceso exponencial ante 403/429. Un 404 se reintenta con menor frecuencia.
+
+La UI separa estados reales de GitHub Actions (trabajando, éxito, fallo, descanso) de las animaciones decorativas. El panel de actividad muestra proyecto, workflow, estado, tiempo relativo y enlace a GitHub. No se usa token, servidor, dependencia nueva ni consulta de pull requests en este módulo.
+
+**Nota de cuota:** ETag/If-None-Match permite recibir 304 cuando la respuesta no cambió, pero la documentación oficial indica que la exención de cuota primaria para 304 se aplica a solicitudes condicionales correctamente autenticadas con cabecera Authorization. Esta app no usa token, así que no presupone que un 304 anónimo sea gratuito: sigue los encabezados reales de cuota de la respuesta. Fuente: documentación oficial de GitHub sobre [solicitudes condicionales](https://docs.github.com/en/rest/using-the-rest-api/best-practices-for-using-the-rest-api) y [límites de API](https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api).

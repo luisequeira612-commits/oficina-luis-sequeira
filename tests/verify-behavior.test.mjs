@@ -6,6 +6,7 @@ const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
 const officeScript = readFileSync(new URL("../assets/office-view.js", import.meta.url), "utf8");
 const humanWorkersScript = readFileSync(new URL("../assets/human-workers.js", import.meta.url), "utf8");
 const rendererScript = readFileSync(new URL("../assets/office-3d.js", import.meta.url), "utf8");
+const githubLiveScript = readFileSync(new URL("../assets/github-live.js", import.meta.url), "utf8");
 
 const mustContain = (text, label) => {
   assert.ok(html.includes(text), "missing " + label + ": " + text);
@@ -15,7 +16,7 @@ test("Phase A footer and Guardi mark placement match the approved specification"
   assert.equal(html.split("assets/guardi-mark.svg").length - 1, 1, "Guardi mark appears exactly once");
   mustContain('<img src="assets/guardi-mark.svg" alt="" aria-hidden="true">', "decorative Guardi mark beside summary");
   assert.ok(!html.split("</header>")[0].includes("guardi-mark.svg"), "header does not duplicate the mark");
-  mustContain("<footer>Simulación. En la versión real, los estados vendrán de GitHub.</footer>", "exact Phase A footer");
+  mustContain("<footer><strong>Qué es real:</strong>", "real-versus-decorative disclosure");
 });
 
 test("BABYMONSTER Chart is added once through a versioned local migration", () => {
@@ -49,13 +50,13 @@ test("persisted data is validated and corrupted storage falls back to defaults",
   mustContain("catch(_){return initialRooms()}", "corrupt-storage fallback");
 });
 
-test("state probabilities, timing, and singular/plural wording match the specification", () => {
-  mustContain('x<.45?"w":x<.7?"t":x<.85?"a":"r"', "state picker");
-  mustContain("Math.random()<.35", "state-change probability");
-  mustContain("reducedMotion?5200:2600", "state interval");
-  mustContain('working===1?"personaje":"personajes"', "working singular/plural");
-  mustContain('waiting===1?"espera":"esperan"', "waiting singular/plural");
-  mustContain("Todos descansan por ahora.", "resting summary");
+test("character states and summary are derived only from real GitHub Actions data", () => {
+  assert.match(githubLiveScript, /status\.textContent="Trabajando/);
+  assert.match(githubLiveScript, /"Éxito"/);
+  assert.match(githubLiveScript, /"Falló"/);
+  assert.match(githubLiveScript, /"Descansando"/);
+  assert.match(githubLiveScript, /Todos descansan por ahora/);
+  assert.doesNotMatch(html, /Math\.random\(\)<\.35/);
 });
 
 test("accessibility and user-input protections remain wired", () => {
@@ -69,10 +70,20 @@ test("accessibility and user-input protections remain wired", () => {
   assert.doesNotMatch(html, /innerHTML\\s*=\\s*name/);
 });
 
-test("GitHub Actions status refreshes periodically without a backend", () => {
-  mustContain('window.setInterval(()=>rooms.filter(room=>room.repository).forEach(room=>refreshRepo(room.id)),300000)', "five-minute real activity polling");
-  mustContain('textContent="Actualizar"', "manual refresh remains available");
-  mustContain('https://api.github.com/repos/"+requestedRepository+"/actions/runs?per_page=1', "public GitHub Actions API");
+test("GitHub Actions polling uses one staggered conditional request per repository", () => {
+  assert.match(githubLiveScript, /actions\/runs\?per_page=5/);
+  assert.match(githubLiveScript, /If-None-Match/);
+  assert.match(githubLiveScript, /response\.status===304/);
+  assert.match(githubLiveScript, /GLOBAL_GAP=60000/);
+  assert.match(githubLiveScript, /IDLE_CYCLE=240000/);
+  assert.match(githubLiveScript, /ACTIVE_GAP=60000/);
+  assert.match(githubLiveScript, /MANUAL_GAP=15000/);
+  assert.match(githubLiveScript, /document\.visibilityState==="hidden"/);
+  assert.match(githubLiveScript, /X-RateLimit-Remaining/);
+  assert.match(githubLiveScript, /X-RateLimit-Reset/);
+  assert.match(githubLiveScript, /Math\.pow\(2,backoffCount-1\)/);
+  assert.match(githubLiveScript, /oficina-luis-sequeira-github-cache-v1/);
+  assert.match(html, /OfficeGitHubLive\.start\(rooms\)/);
 });
 
 test("BABYMONSTER Chart appears in required published project content", () => {
@@ -97,18 +108,15 @@ test("public GitHub Actions integration keeps project links local and configurab
   mustContain('name:"App Guardi",repository:null', "unknown project remains unlinked");
   mustContain('repository:"luisequeira612-commits/capi-aventuras"', "Capi Aventuras mapping");
   mustContain('repository:"luisequeira612-commits/jennie-ruby"', "Nova Launcher mapping");
-  mustContain('https://api.github.com/repos/"+requestedRepository+"/actions/runs?per_page=1', "public Actions endpoint");
-  mustContain('response.status===403||response.status===429', "GitHub rate-limit handling");
-  mustContain('response.status===404', "missing/private repository handling");
+  assert.match(githubLiveScript, /ROOT\+room\.repository\+"\/actions\/runs\?per_page=5"/);
+  assert.match(githubLiveScript, /response\.status===403\|\|response\.status===429/);
+  assert.match(githubLiveScript, /response\.status===404/);
   mustContain('function migrateRooms(savedRooms)', "legacy localStorage migration");
   mustContain('room.repository===undefined', "migration preserves explicit disconnections");
-  mustContain('textContent=result.message', "safe status rendering");
-  mustContain('element.dataset.repoStatus===roomId', "safe status lookup");
-  assert.doesNotMatch(html, /querySelector\(.*data-repo-status=.*roomId/);
   mustContain('textContent="Actualizar"', "manual refresh control");
   mustContain('room.repository=value||null', "disconnect support");
-  mustContain('run.conclusion==="success"', "successful workflow state");
-  mustContain('run.conclusion==="failure"', "failed workflow state");
+  assert.match(githubLiveScript, /run\.conclusion==="success"/);
+  assert.match(githubLiveScript, /run\.conclusion==="failure"/);
 });
 
 test("explorable room stations show the same human workers as the project cards", () => {
@@ -119,7 +127,8 @@ test("explorable room stations show the same human workers as the project cards"
 });
 
 test("room workers inherit the current card state and its matching human animation", () => {
-  assert.ok(officeScript.includes('find(className=>/^st-[wtar]$/.test(className))'), "room station copies the current worker state");
+  assert.ok(officeScript.includes('agent.classList.contains("is-success")'), "room station copies real success state");
+  assert.ok(officeScript.includes('agent.classList.contains("is-failure")'), "room station copies real failure state");
   assert.ok(officeScript.includes('station.classList.add(stateClass)'), "room station exposes the copied state class");
   const roomCss = readFileSync(new URL("../assets/office-view.css", import.meta.url), "utf8");
   for (const state of ["st-w", "st-t", "st-a", "st-r"]) {
@@ -127,16 +136,12 @@ test("room workers inherit the current card state and its matching human animati
   }
 });
 
-test("public GitHub pull requests are visible without credentials or background polling", () => {
-  mustContain('const repoPullResults=new Map()', "ephemeral pull request results");
-  mustContain('https://api.github.com/repos/"+requestedRepository+"/pulls?state=open&per_page=3&sort=updated&direction=desc', "public pull request endpoint");
-  mustContain('textContent="Pull requests abiertas"', "open pull request section");
-  mustContain('item.html_url.startsWith("https://github.com/")', "GitHub-only safe PR links");
-  mustContain('link.textContent=label', "PR titles are rendered as text");
-  mustContain('refreshRepo(room.id,true)', "initial and manual refresh includes pull requests");
-  mustContain('window.setInterval(()=>rooms.filter(room=>room.repository).forEach(room=>refreshRepo(room.id)),300000)', "background polling remains Actions-only");
-  assert.doesNotMatch(html, /pulls\?state=open[^\n]*setInterval/, "pull request requests are not polled in the background");
-  assert.doesNotMatch(html, /Authorization\s*:/i, "no GitHub token is added");
+test("one GitHub Actions endpoint is used; no token or secondary PR API request is added", () => {
+  assert.match(githubLiveScript, /actions\/runs\?per_page=5/);
+  assert.doesNotMatch(githubLiveScript, /\/pulls\?/);
+  assert.doesNotMatch(html, /Authorization\s*:/i);
+  assert.match(html, /Datos reales de ejecuciones públicas/);
+  assert.match(html, /animaciones.*decoración/i);
 });
 
 
@@ -179,6 +184,8 @@ test("3D workers reuse the same hairstyle, shirt and live state as their project
   assert.ok(officeScript.includes('shirt:avatar?.dataset.shirt||"blue"'), "passes the existing shirt into 3D");
   assert.ok(officeScript.includes("stateObserver.observe(rooms"), "observes live card state changes");
   assert.ok(officeScript.includes("threeD._office3dUpdateStates(states)"), "synchronizes live state to the 3D scene");
+  assert.ok(rendererScript.includes('worker.state==="st-s"'), "3D workers celebrate real successful runs");
+  assert.ok(rendererScript.includes('worker.state==="st-f"'), "3D workers display real failure alerts");
   assert.ok(rendererScript.includes("shirtByName[worker.shirt]"), "renders the selected shirt color");
   assert.ok(rendererScript.includes("hairStyle==="), "renders distinct hairstyles");
   assert.ok(rendererScript.includes("container._office3dUpdateStates=states=>"), "exposes live 3D state updates");
