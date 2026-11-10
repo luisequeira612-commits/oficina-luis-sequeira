@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
 const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+const officeScript = readFileSync(new URL("../assets/office-view.js", import.meta.url), "utf8");
 
 const mustContain = (text, label) => {
   assert.ok(html.includes(text), "missing " + label + ": " + text);
@@ -81,7 +82,7 @@ test("isometric office overview explores existing projects without changing pers
   mustContain('src="assets/office-view.js" defer', "isometric office interaction");
   mustContain('id="office-map"', "office map container");
   mustContain('card.dataset.roomId=room.id', "stable room identity for map");
-  mustContain('card.scrollIntoView({behavior:reduced?"auto":"smooth",block:"center"})', "explore project navigation");
+  assert.ok(officeScript.includes('card.scrollIntoView({behavior:reduced?"auto":"smooth",block:"center"})'), "missing explore project navigation");
   mustContain('aria-pressed', "accessible selected room state");
   assert.doesNotMatch(html, /office-view.*localStorage|STORAGE_KEY.*office-view/i, "overview does not add persisted state");
 });
