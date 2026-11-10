@@ -112,3 +112,11 @@
 - Se mantiene el renderer WebGL 2 propio, sin dependencias/CDN, y no se modifica `localStorage` ni el esquema de proyectos/agentes.
 - La animación sigue siendo simulación visual local, no telemetría de agentes reales. Compatibilidad y rendimiento en el Tecno Pova 4 aún pendientes de prueba física.
 - Fuente: revisión técnica del prototipo y decisión visual del usuario, 2026-11-10.
+
+
+## Coherencia de apariencia y estados en trabajadores 3D — 10 de noviembre de 2026
+- La escena 3D ahora recibe del avatar existente los metadatos de género, tono de piel, peinado y color de ropa, en vez de regenerar una apariencia genérica independiente. Los modelos low-poly representan esos peinados/colores y conservan la identidad visual entre tarjeta y habitación.
+- Se optimiza la decoración de avatares para no reconstruir personas que ya están presentes cuando el observador detecta cambios del DOM.
+- Un observador de clases sincroniza los cambios de estado de las tarjetas con las animaciones 3D mientras la habitación permanece abierta; al cerrar la escena se liberan recursos y callbacks.
+- No cambia el balance global mujer/hombre, los datos persistentes, `localStorage`, ni se añade dependencia o servicio externo. Los estados continúan siendo simulación visual.
+- Fuente: revisión del flujo DOM y renderizador WebGL 2 del repositorio, 2026-11-10.

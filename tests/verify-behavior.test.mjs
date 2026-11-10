@@ -4,6 +4,8 @@ import { readFileSync } from "node:fs";
 
 const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
 const officeScript = readFileSync(new URL("../assets/office-view.js", import.meta.url), "utf8");
+const humanWorkersScript = readFileSync(new URL("../assets/human-workers.js", import.meta.url), "utf8");
+const rendererScript = readFileSync(new URL("../assets/office-3d.js", import.meta.url), "utf8");
 
 const mustContain = (text, label) => {
   assert.ok(html.includes(text), "missing " + label + ": " + text);
@@ -154,4 +156,22 @@ test("real 3D room prototype uses WebGL2 locally and preserves the CSS fallback"
   assert.ok(renderer.includes("gl.DYNAMIC_DRAW"), "uses a dynamic GPU buffer for worker animation");
   assert.ok(renderer.includes("prefers-reduced-motion: reduce"), "disables 3D worker motion when reduced motion is requested");
   assert.ok(renderer.includes("rows===1?-1.55:-2.8+row*2.4"), "keeps a three-row workforce inside the room footprint");
+});
+
+test("human worker decoration is idempotent and keeps the balanced appearance metadata", () => {
+  assert.ok(humanWorkersScript.includes("if (existingAvatar)"), "does not rebuild avatars that already exist");
+  assert.ok(humanWorkersScript.includes("return;"), "skips already-decorated workers");
+  assert.ok(humanWorkersScript.includes('data-gender": gender'), "preserves gender metadata");
+  assert.ok(humanWorkersScript.includes('data-hair": hair'), "preserves hairstyle metadata");
+  assert.ok(humanWorkersScript.includes('data-shirt": shirt'), "preserves clothing metadata");
+});
+
+test("3D workers reuse the same hairstyle, shirt and live state as their project cards", () => {
+  assert.ok(officeScript.includes('hair:avatar?.dataset.hair||"short"'), "passes the existing hairstyle into 3D");
+  assert.ok(officeScript.includes('shirt:avatar?.dataset.shirt||"blue"'), "passes the existing shirt into 3D");
+  assert.ok(officeScript.includes("stateObserver.observe(rooms"), "observes live card state changes");
+  assert.ok(officeScript.includes("threeD._office3dUpdateStates(states)"), "synchronizes live state to the 3D scene");
+  assert.ok(rendererScript.includes("shirtByName[worker.shirt]"), "renders the selected shirt color");
+  assert.ok(rendererScript.includes("hairStyle==="), "renders distinct hairstyles");
+  assert.ok(rendererScript.includes("container._office3dUpdateStates=states=>"), "exposes live 3D state updates");
 });

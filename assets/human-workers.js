@@ -19,7 +19,7 @@
   function makePerson(index) {
     const gender = index % 2 === 0 ? "woman" : "man";
     const tone = tones[index % tones.length];
-    const hair = hairStyles[Math.floor(index / 2) % hairStyles.length];
+    const hair = hairStyles[(Math.floor(index / 2) + (gender === "woman" ? 1 : 0)) % hairStyles.length];
     const shirt = shirts[Math.floor(index / 3) % shirts.length];
     const svg = shape("svg", {
       viewBox: "0 0 64 70",
@@ -64,12 +64,18 @@
   function decorate() {
     const workers = Array.from(root.querySelectorAll(".ag[data-agent-id]"));
     workers.forEach((worker, index) => {
-      const oldAvatar = worker.querySelector(".human-worker");
-      if (oldAvatar) oldAvatar.remove();
+      const existingAvatar = worker.querySelector(".human-worker");
+      const status = worker.querySelector(".agent-state");
+      if (existingAvatar) {
+        if (status) {
+          const genderText = existingAvatar.dataset.gender === "woman" ? "Mujer" : "Hombre";
+          status.setAttribute("aria-label", genderText + ", " + status.textContent);
+        }
+        return;
+      }
       const legacy = worker.querySelector(":scope > svg");
       if (legacy) legacy.classList.add("legacy-bird-avatar");
       const role = worker.querySelector(".agent-role");
-      const status = worker.querySelector(".agent-state");
       const avatar = makePerson(index);
       if (role) worker.insertBefore(avatar, role);
       else worker.appendChild(avatar);
