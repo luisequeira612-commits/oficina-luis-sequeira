@@ -52,5 +52,5 @@ test("FPS meter remains measured and cache versions are current",()=>{
  assert.ok(renderer.includes("fpsFrames*1000/Math.max(1,timestamp-fpsWindowStart)"));
  assert.match(styles,/\.office-3d-fps\{[^}]*z-index:10/);
  assert.match(page,/office-view\.css\?v=49/);
- assert.match(page,/office-3d\.js\?v=67/);
+ assert.match(page,/office-3d\.js\?v=68/);
 });
