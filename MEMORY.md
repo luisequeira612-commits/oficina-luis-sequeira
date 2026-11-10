@@ -498,3 +498,5 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Fuente: `assets/office-3d.js`, `index.html`, `tests/verify-3d-human-worker-details.test.mjs`, 2026-11-10.
 
 - Corrección de prueba: se actualizó la aserción heredada de la mano segmentada anterior para comprobar el nuevo arco C articulado de seis tramos. El primer CI detectó únicamente esa expectativa antigua; la sintaxis JavaScript pasó. Se vuelve a ejecutar la validación antes del despliegue.
+
+- Segunda corrección de prueba: se sustituyó la expectativa antigua de antebrazo cúbico por la articulación cilíndrica hombro-codo-muñeca. La validación de sintaxis y la prueba anterior de arco C ya pasaron; el runner detectó esta segunda aserción visual obsoleta.
