@@ -70,7 +70,7 @@
 - Los cuatro estados existentes (trabajando, pensando, esperando OK y descansando) tienen animaciones humanas específicas y respetan movimiento reducido.
 - La asignación visual depende del orden actual de los trabajadores en pantalla; no se persiste identidad, género ni apariencia en datos de agentes.
 - La diversidad visual no pretende certificar etnia ni asociar rasgos a identidades. El estilo es una primera versión 2D tipo Tycoon dentro de la UI existente; la integración de personas 3D/escena WebGL queda fuera de alcance.
-- Rama: `feat/human-tycoon-workers`; pendiente de CI y revisión.
+- Rama: `feat/human-tycoon-workers`; pendiente CI y revisión.
 - Fuente: decisión explícita del usuario, conversación del 2026-11-10.
 
 
@@ -78,12 +78,12 @@
 - Continuación de la fase Tycoon: los interiores explorables reutilizan el mismo avatar humano de cada trabajador en su puesto de trabajo, en vez de mostrar escritorios vacíos.
 - El avatar se clona desde el personaje ya renderizado en la tarjeta, conservando tono de piel, peinado, ropa y estado animado; no se crean identidades ni datos duplicados.
 - Cambio exclusivamente visual: sin cambios de almacenamiento, roles, agentes, proyectos, APIs o dependencias.
-- Rama: `feat/human-workers-in-room-scenes`; pendiente de CI y revisión.
+- Rama: `feat/human-workers-in-room-scenes`; pendiente CI y revisión.
 
  
 ## Corrección PR #11 — animación de trabajadores en interiores — 10 de noviembre de 2026
 - Se detectó que los avatares clonados dentro de las habitaciones conservaban su apariencia, pero no recibían las clases de estado del contenedor original; por ello, las animaciones CSS de las tarjetas no se aplicaban en la escena.
-- La corrección copia únicamente la clase efímera de estado (`st-w`, `st-t`, `st-a`, `st-r`) al puesto y aplica las mismas animaciones humanas dentro de la habitación.
+- La corrección copia únicamente la clase efímera de estado (`st-w`, `st-t`, `st-a`, `st-r`) al puesto y aplica la animación humana correspondiente en la habitación.
 - La escena sigue leyendo el estado actual del DOM al abrirse; no añade persistencia ni telemetría. Respeta movimiento reducido.
 - Rama: `fix/room-worker-state-animations`; pendiente CI y revisión.
 
@@ -129,3 +129,12 @@
 - La vista general reutiliza los estados y apariencias actuales de los trabajadores y se reconstruye solo cuando cambia la lista de proyectos; los cambios de estado siguen sincronizándose sin recrear toda la escena.
 - No se modifican `localStorage`, `oficina-luis-sequeira-v1`, registros de proyectos/agentes ni esquemas persistentes. La prueba en el Tecno Pova 4 sigue pendiente.
 - Fuente: implementación del repositorio y dirección visual confirmada por el usuario, 2026-11-10.
+
+
+## PR #17 — acabado visual de la vista general 3D — 10 de noviembre de 2026
+- Se añade una capa CSS ligera sobre la vista WebGL 2: fondo ambiental, retícula tenue, etiqueta de orientación y controles con acabado coherente.
+- La navegación de habitaciones muestra numeración secuencial y acentos de color alternados; conserva desplazamiento horizontal, foco visible y adaptación a pantallas estrechas.
+- La capa visual no simula iluminación física ni añade geometría al modelo 3D; es una mejora de presentación de interfaz sobre la escena WebGL existente.
+- Se respeta `prefers-reduced-motion`; no se añaden animaciones continuas, dependencias, recursos externos, APIs, backend ni servicios de pago.
+- No cambia el renderer, la cámara, los trabajadores, los proyectos, `localStorage` ni el esquema persistente. Compatibilidad y rendimiento WebGL 2 en el Tecno Pova 4 siguen pendientes de prueba física.
+- Fuente: implementación de `assets/office-3d-atmosphere.css`, pruebas automatizadas y revisión del repositorio, 2026-11-10.
