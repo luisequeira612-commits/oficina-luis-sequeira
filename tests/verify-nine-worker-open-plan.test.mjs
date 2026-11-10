@@ -97,3 +97,17 @@ test("control buttons retain zoom, rotation, home, drag and pinch",()=>{
  for(const pattern of [/makeButton\("−"/,/makeButton\("\+"/,/makeButton\("↶"/,/makeButton\("↷"/,/makeButton\("⌂"/,/canvas\.addEventListener\("pointerdown"/,/pointers\.size>=2/])assert.match(renderer,pattern);
  assert.match(css,/\.office-3d-controls button\{width:44px;min-width:44px;height:44px;min-height:44px/);
 });
+
+test("the office title and employee count remain visible above the scene",()=>{
+ assert.match(html,/<h1>Oficina de Luis Sequeira<\\/h1>/);
+ assert.match(html,/<p class="office-header-subtitle">9 empleados · 0 humanos<\\/p>/);
+});
+test("the compact help button explains touch controls and closes itself",()=>{
+ assert.match(view,/help\.textContent="\?"/);
+ assert.match(view,/setTimeout\(\(\)=>tip\.hidden=true,4200\)/);
+});
+test("the WebGL scene keeps a single batched draw and a mobile-safe render scale",()=>{
+ assert.equal((renderer.match(/gl\.drawArrays\(gl\.TRIANGLES,0,scene\.count\)/g)||[]).length,1);
+ assert.match(renderer,/Math\.min\(window\.devicePixelRatio\|\|1,1\.15\)/);
+ assert.match(renderer,/timestamp-lastFrame<32/);
+});
