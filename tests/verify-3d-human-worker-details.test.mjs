@@ -36,7 +36,7 @@ test("the shared overview preserves animation ranges for all workers", () => {
 test("camera uses bounded drag navigation and deliberate limited rotation", () => {
   assert.match(renderer, /target\[0\]=clamp\(target\[0\]-dx\*\.018,-4\.8,4\.8\)/);
   assert.match(renderer, /target\[2\]=clamp\(target\[2\]\+dy\*\.018,-7\.5,7\.5\)/);
-  assert.match(renderer, /theta=clamp\(theta\+\.14,-\.35,1\.78\)/);
+  assert.match(renderer, /theta=clamp\(theta\+\.14,1\.35,3\.49\)/);
   assert.match(renderer, /Centrar oficina/);
 });
 
