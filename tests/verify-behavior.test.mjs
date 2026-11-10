@@ -123,3 +123,15 @@ test("room workers inherit the current card state and its matching human animati
     assert.ok(roomCss.includes(".room-station." + state + " .room-worker-avatar"), "missing room animation for " + state);
   }
 });
+
+test("public GitHub pull requests are visible without credentials or background polling", () => {
+  mustContain('const repoPullResults=new Map()', "ephemeral pull request results");
+  mustContain('https://api.github.com/repos/"+requestedRepository+"/pulls?state=open&per_page=3&sort=updated&direction=desc', "public pull request endpoint");
+  mustContain('textContent="Pull requests abiertas"', "open pull request section");
+  mustContain('item.html_url.startsWith("https://github.com/")', "GitHub-only safe PR links");
+  mustContain('link.textContent=label', "PR titles are rendered as text");
+  mustContain('refreshRepo(room.id,true)', "initial and manual refresh includes pull requests");
+  mustContain('window.setInterval(()=>rooms.filter(room=>room.repository).forEach(room=>refreshRepo(room.id)),300000)', "background polling remains Actions-only");
+  assert.doesNotMatch(html, /pulls\?state=open[^\n]*setInterval/, "pull request requests are not polled in the background");
+  assert.doesNotMatch(html, /Authorization\s*:/i, "no GitHub token is added");
+});
