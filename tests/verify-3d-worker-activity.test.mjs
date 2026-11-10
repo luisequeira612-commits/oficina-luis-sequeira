@@ -16,7 +16,7 @@ test("live worker states drive differentiated micro-movements", () => {
   assert.match(renderer, /worker\.state==="st-a"/);
   assert.match(renderer, /worker\.state==="st-s"/);
   assert.match(renderer, /worker\.state==="st-f"/);
-  assert.match(renderer, /foot=route\.paused\?0:Math\.sin/);
+  assert.match(renderer, /foot=route\.away&&!route\.paused\?Math\.sin/);
   assert.match(renderer, /body=-Math\.abs/);
 });
 
