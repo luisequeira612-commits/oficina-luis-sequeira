@@ -11,3 +11,22 @@ test("3D human workers have readable facial and clothing details", () => {
   assert.ok(renderer.includes("role badge"), "adds a small clothing badge");
   assert.ok(renderer.includes("workerRanges.push"), "keeps worker geometry inside the existing animation range");
 });
+
+
+test("worker animation separates head, arms and typing hands by simulated state", () => {
+  assert.match(renderer, /const headStart=positions\.length/);
+  assert.match(renderer, /const handsStart=positions\.length/);
+  assert.match(renderer, /headStart,headEnd,armsStart,armsEnd,handsStart,handsEnd/);
+  assert.match(renderer, /Math\.abs\(Math\.sin\(seconds\*16\+worker\.index\)\)\*\.045/);
+  assert.match(renderer, /worker\.headStart\+1/);
+  assert.match(renderer, /worker\.handsStart\+1/);
+  assert.match(renderer, /prefers-reduced-motion/);
+});
+
+
+test("connected overview offsets head and hand ranges with each room geometry", () => {
+  assert.match(renderer, /headStart:worker\.headStart\+posStart/);
+  assert.match(renderer, /headEnd:worker\.headEnd\+posStart/);
+  assert.match(renderer, /handsStart:worker\.handsStart\+posStart/);
+  assert.match(renderer, /handsEnd:worker\.handsEnd\+posStart/);
+});

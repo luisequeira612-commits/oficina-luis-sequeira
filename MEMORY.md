@@ -226,3 +226,13 @@
 - La nueva corrección registra `window.Office3D.lastError` para fallos de contexto WebGL 2 y excepciones de construcción; presenta el diagnóstico en un estado accesible independiente del contenedor oculto. También añade `?v=27` a los scripts 3D para forzar una URL nueva y descartar caché antigua.
 - No se fuerza un fallback 3D falso ni se cambia el renderer, el esquema `localStorage`, los proyectos o los trabajadores. El motivo exacto todavía debe observarse en el navegador del usuario.
 - Fuente: inspección de `assets/office-3d.js`, `assets/office-view.js` e `index.html` en `main`, 2026-11-10. PR #27 pendiente de CI y revisión.
+
+
+## PR #28 — animaciones Tycoon más expresivas para trabajadores — 10 de noviembre de 2026
+
+- Se separan los rangos geométricos de cabeza, brazos y manos para que no todos los movimientos dependan de desplazar al trabajador completo.
+- El estado de trabajo añade pequeños movimientos repetidos de manos sobre el teclado; pensamiento añade una oscilación lenta de cabeza; espera y descanso tienen movimientos más discretos y diferenciados.
+- Las manos y puños se incluyen en la animación de brazos; las actualizaciones siguen usando el buffer geométrico existente y el límite aproximado de 30 FPS.
+- Se conserva la preferencia de movimiento reducido; no se añade persistencia, telemetría, dependencias, APIs ni servicios externos. Las animaciones siguen siendo simulación visual local.
+- Prueba de regresión añadida a `tests/verify-3d-human-worker-details.test.mjs`.
+- Fuente: revisión de `assets/office-3d.js` y decisión de estilo Tycoon del usuario, 2026-11-10. PR #28 pendiente de CI.
