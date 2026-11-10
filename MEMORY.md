@@ -145,5 +145,5 @@
 - Los acentos se asignan de forma determinista por orden de proyecto; las habitaciones de la columna izquierda y derecha se orientan hacia el corredor compartido.
 - Se añade geometría procedural al buffer WebGL 2 existente; no se añaden modelos, texturas, recursos externos ni dependencias.
 - No se modifica la cámara, los trabajadores, proyectos, estados, localStorage ni esquemas persistentes. La prueba de rendimiento en el Tecno Pova 4 sigue pendiente.
-- Rama de trabajo: `feat/3d-room-entrances-and-identity`; pendiente de PR y CI.
+- PR [#18](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/18), rama `feat/3d-room-entrances-and-identity`; CI pendiente.
 - Fuente: implementación del renderer y prueba automatizada, 2026-11-10.
