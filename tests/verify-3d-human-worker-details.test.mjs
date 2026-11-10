@@ -36,7 +36,7 @@ test("the shared overview preserves animation ranges for all workers", () => {
 test("camera uses bounded drag navigation and deliberate limited rotation", () => {
   assert.match(renderer, /target\[0\]=clamp\(target\[0\]-dx\*\.018,-4\.8,4\.8\)/);
   assert.match(renderer, /target\[2\]=clamp\(target\[2\]\+dy\*\.018,-7\.5,7\.5\)/);
-  assert.match(renderer, /theta=clamp\(theta\+\.14,1\.35,3\.49\)/);
+  assert.match(renderer, /theta=clamp\(theta\+\.14,-\.35,1\.78\)/);
   assert.match(renderer, /Centrar oficina/);
 });
 
@@ -60,9 +60,12 @@ test("minifigure faces have distinct printed expressions and arms use articulate
   assert.match(renderer,/const segment=\(a,b,r,color,seg=8\)/);
   assert.match(renderer,/const ink=\[\.075,\.055,\.045\]/);
   assert.match(renderer,/const ink=\[\.075,\.055,\.045\],faceZ=z\+\.625/,"face is placed on the negative-Z side, toward the monitor");
-  assert.match(renderer,/box\(x,1\.65,z-\.36,1\.12,\.78,\.14,metal\);box\(x,1\.65,z-\.455/,"monitor display faces the worker");
-  assert.match(renderer,/theta=2\.42/,"home camera looks from the monitor side");
-  assert.match(renderer,/theta=clamp\(theta\+\.14,1\.35,3\.49\)/,"rotation controls can orbit around the front view");
+  assert.match(renderer,/box\(x,1\.65,z-\.36,1\.12,\.78,\.14,metal\);box\(x,1\.65,z-\.265/,"monitor display faces the worker after workstation mirroring");
+  assert.match(renderer,/theta=\.72/,"home camera keeps the open-room view");
+  assert.match(renderer,/const workstationStart=positions\.length/,"workstation geometry is mirrored as one unit");
+  assert.match(renderer,/x,z:-z,laneX,restZ:3\.2/,"employee routes follow the mirrored workstation");
+  assert.match(renderer,/positions\[i\+v\+2\]=-positions\[i\+v\+2\]/,"mirroring reverses depth for every workstation vertex");
+  assert.match(renderer,/theta=clamp\(theta\+\.14,-\.35,1\.78\)/,"rotation controls preserve bounded orbit");
   assert.match(renderer,/box\(x,1\.56,z\+\.642/,"torso print faces the same direction as the face");
   assert.match(renderer,/const smile=\[\]/);
   assert.match(renderer,/index%5===4/);
