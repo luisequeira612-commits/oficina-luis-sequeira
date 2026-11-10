@@ -795,5 +795,5 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Así, al añadir o quitar personajes/proyectos mientras la vista de juego está abierta, el contador se mantiene sincronizado con los trabajadores presentes.
 - Añade `tests/verify-tycoon-hud-refresh.test.mjs` para comprobar el refresco del total.
 - Sin cambios de persistencia, esquema, renderer, cámara, dependencias, APIs, backend ni servicios de pago.
-- Rama: `fix/refresh-tycoon-worker-count`; CI pendiente.
+- PR [#53](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/53) fusionado mediante squash en `76b540f75e01b3197c9193f887201a61e49b61fb`. CI del head exacto `fd156dd6580453dc82c60dcdbc8fbc5b11263ab9` terminó en success en el run [42915356933](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42915356933); deploy se omitió correctamente en el evento pull_request. La publicación de Pages posterior al merge queda pendiente de verificación.
 - Fuente: revisión de `mountTycoonControls(data)` tras PR #52, 2026-11-10.
