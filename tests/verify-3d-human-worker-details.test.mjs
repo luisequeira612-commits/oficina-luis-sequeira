@@ -38,7 +38,7 @@ test("minifigures keep face prints hands and glossy finish",()=>{
  assert.match(renderer,/faceCanvas.width=64;faceCanvas.height=48/);
  assert.ok(renderer.includes("const printFaceCanvas=(x,z,index,skin)=>"));
  assert.ok(renderer.includes("const segment=(a,b,r,color,seg=8)=>"));
- assert.match(renderer,/pow(max(dot(reflect(-keyLight,n),viewDir),0.0),48.0)*0.28/);
+ assert.ok(renderer.includes("pow(max(dot(reflect(-keyLight,n),viewDir),0.0),48.0)*0.28"));
 });
 test("3D worker activity is seated and route-free",()=>{
  assert.doesNotMatch(renderer,/function sampleRoute/);
