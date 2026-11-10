@@ -5,10 +5,10 @@ import { readFileSync } from "node:fs";
 const renderer = readFileSync(new URL("../assets/office-3d.js", import.meta.url), "utf8");
 
 test("3D workers use original brick-built minifigure proportions", () => {
-  assert.ok(renderer.includes("Original brick-built minifigure proportions"), "uses compact, readable minifigure geometry");
-  assert.ok(renderer.includes("Hair pieces are compact block-compatible caps"), "supports varied hair and accessories");
-  assert.ok(renderer.includes("Rectangular torso with broad shoulders"), "keeps a block-built torso");
-  assert.ok(renderer.includes("small role badge"), "retains a role marker");
+  assert.ok(renderer.includes("Classic minifigure proportions"), "uses compact, readable minifigure geometry");
+  assert.ok(renderer.includes("Classic minifigure"), "supports varied hair and accessories");
+  assert.ok(renderer.includes("taperBox(x,1.29"), "keeps a block-built torso");
+  assert.ok(renderer.includes("printed shirt details"), "retains a role marker");
   assert.ok(renderer.includes("workerRanges.push"), "keeps worker geometry inside the existing animation range");
 });
 
