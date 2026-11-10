@@ -411,3 +411,11 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Verificación: la herramienta GitHub disponible para consultar workflows por SHA solo devuelve ejecuciones asociadas a pull requests; los checks combinados consultados no devolvieron estados. Por tanto, no se afirma que CI haya pasado ni que Pages esté actualizado a estos últimos commits. Requiere comprobar Actions/Pages desde GitHub.
 - Restricciones preservadas: sin backend, credenciales, nuevas dependencias, escritura remota de JSON ni cambios al esquema oficina-luis-sequeira-v1.
 - Fuente: revisión de assets/github-live.js, tests/verify-editable-office-data.test.mjs y estado consultable de commits, 2026-11-10.
+
+## Corrección de atribución del historial individual — 10 de noviembre de 2026
+
+- Se detectó que los commits recientes del repositorio se añadían artificialmente al historial de cada empleado de la sala. Se retiraron de las fichas individuales: un commit es actividad del repositorio y no demuestra qué personaje lo realizó.
+- El historial de empleado ahora incluye solo ejecuciones de Actions con agentId asignado; entradas antiguas sin agentId se distribuyen con la misma regla determinista basada en runId, sin mostrarlas a todos.
+- Commits directos a main: 2f3089eb (código) y 121d6769 (regresión). La prueba comprueba que no se incorporen commits generales al historial personal.
+- Estado de verificación consultado para 121d6769: checks combinados vacíos y wrapper de workflow sin ejecuciones (este wrapper solo expone runs de pull request). No declarar CI ni Pages confirmados.
+- Fuente: assets/github-live.js y tests/verify-editable-office-data.test.mjs, 2026-11-10.
