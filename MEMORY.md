@@ -884,5 +884,5 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - El renderizador deja de llamar `getBoundingClientRect()` a través de `resize()` en cada fotograma. Ejecuta `resize()` al iniciar la escena y deja que el `ResizeObserver` existente actualice canvas, viewport y encuadre solo cuando cambia el contenedor.
 - Conserva el límite de DPR, el encuadre inicial, la cámara y el ciclo de animación. No añade dependencias ni cambia almacenamiento o geometría.
 - Añade una prueba para garantizar que el render loop no vuelva a medir el contenedor en cada frame.
-- Pendiente de CI y revisión. No se afirma una mejora medida de FPS; falta prueba física en Tecno Pova 4.
+- Head final `6cd26ad5d87355febee533a87fceb90de7d98b67` pasó CI [42924407640](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42924407640): sintaxis, invariantes y contenido obligatorio success; sin hilos ni revisiones pendientes. PR #61 fusionado mediante squash en `920e4c007d1f3219a87b8d7167ddaf147e197cf0`. La validación y publicación de main siguen en ejecución. No se afirma una mejora medida de FPS; falta prueba física en Tecno Pova 4.
 - Fuente: inspección de `assets/office-3d.js` y prueba, 2026-11-10.
