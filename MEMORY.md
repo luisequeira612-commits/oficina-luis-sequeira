@@ -752,3 +752,17 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - CI inicial [42904881660](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42904881660): sintaxis pasó; 97/98 pruebas pasaron. La prueba heredada de interfaz de monitor seguía esperando el color fijo oscuro en la cabecera.
 - Se actualizó la aserción para verificar `monitorStatusColor`, conservando la prueba dedicada que exige la paleta de estados trabajando/pensando/decisión/éxito/fallo/descanso.
 - PR #49 sigue abierto; falta confirmar la nueva CI.
+
+
+## Corrección: refresco dinámico del color de estado del monitor — 10 de noviembre de 2026
+
+- Revisión posterior al despliegue de PR #49 encontró que el color superior del monitor se calculaba al crear la geometría, pero el callback de sincronización solo actualizaba `worker.state`; por ello, el color no cambiaba cuando llegaba un nuevo estado.
+- Rama `fix/live-monitor-status-refresh`: el rango de color de la franja queda registrado por trabajador. Cuando cambia el estado, se actualiza solo ese pequeño segmento del buffer GPU con `bufferSubData`, usando la paleta de estado centralizada. No se reconstruye la escena ni se añade geometría/draw calls/materiales/texturas.
+- Renderer pasa a `office-3d.js?v=73`; prueba dedicada verifica paleta y actualización real del buffer. La mejora de estado dinámico no se considerará completa hasta pasar CI y publicarse.
+- Fuente: inspección del callback `_office3dUpdateStates` y del buffer WebGL tras PR #49, 2026-11-10.
+
+
+### Corrección de caché heredada en PR #50 — 10 de noviembre de 2026
+
+- La primera CI [42905449263](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42905449263) pasó sintaxis y falló una prueba de identidad de proyecto que aún esperaba la caché v72. Se actualizó a v73; no falló la lógica de actualización de estado.
+- Revisar la nueva ejecución antes de fusionar PR #50.

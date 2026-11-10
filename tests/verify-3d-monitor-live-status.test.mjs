@@ -5,12 +5,19 @@ import { readFileSync } from "node:fs";
 const renderer=readFileSync(new URL("../assets/office-3d.js",import.meta.url),"utf8");
 const page=readFileSync(new URL("../index.html",import.meta.url),"utf8");
 
-test("monitor header color reflects the live worker state",()=>{
- assert.ok(renderer.includes('worker.state==="st-w"?[0.12,0.62,0.46]'));
- assert.ok(renderer.includes('worker.state==="st-t"?[0.20,0.49,0.74]'));
- assert.ok(renderer.includes('worker.state==="st-a"?[0.91,0.67,0.18]'));
- assert.ok(renderer.includes('worker.state==="st-s"?[0.14,0.68,0.42]'));
- assert.ok(renderer.includes('worker.state==="st-f"?[0.78,0.18,0.22]:[0.40,0.46,0.52]'));
+test("monitor header uses a palette for every worker state",()=>{
+ assert.ok(renderer.includes('state==="st-w"?[0.12,0.62,0.46]'));
+ assert.ok(renderer.includes('state==="st-t"?[0.20,0.49,0.74]'));
+ assert.ok(renderer.includes('state==="st-a"?[0.91,0.67,0.18]'));
+ assert.ok(renderer.includes('state==="st-s"?[0.14,0.68,0.42]'));
+ assert.ok(renderer.includes('state==="st-f"?[0.78,0.18,0.22]:[0.40,0.46,0.52]'));
  assert.ok(renderer.includes("box(x,1.92,z-.245,.76,.028,.012,monitorStatusColor)"));
- assert.match(page,/office-3d\.js\?v=72/);
+ assert.match(page,/office-3d\.js\?v=73/);
+});
+
+test("live state changes update only the monitor header color in the GPU buffer",()=>{
+ assert.ok(renderer.includes("monitorStatusColorStart,monitorStatusColorEnd"));
+ assert.ok(renderer.includes("const nextState=states[index]"));
+ assert.ok(renderer.includes("worker.state=nextState"));
+ assert.ok(renderer.includes("gl.bufferSubData(gl.ARRAY_BUFFER,colorStart*4,scene.data.subarray(colorStart,colorEnd))"));
 });
