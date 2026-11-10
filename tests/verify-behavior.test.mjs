@@ -146,7 +146,7 @@ test("one GitHub Actions endpoint is used; no token or secondary PR API request 
 
 
 test("real 3D room prototype uses WebGL2 locally and preserves the CSS fallback", () => {
-  mustContain('src="assets/office-3d.js?v=27" defer', "local WebGL2 room renderer");
+  assert.match(html, /src="assets\/office-3d\.js\?v=\d+" defer/, "local WebGL2 room renderer");
   mustContain('id="office-3d"', "3D room canvas container");
   const renderer = readFileSync(new URL("../assets/office-3d.js", import.meta.url), "utf8");
   assert.ok(renderer.includes('getContext("webgl2"'), "uses an actual WebGL2 context");
