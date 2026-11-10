@@ -30,3 +30,9 @@ test("worker states map to visible behavior",()=>{assert.match(renderer,/worker\
 
 
 test("resting workers use a bounded office route and monitors animate code",()=>{assert.match(renderer,/function sampleRoute\(worker,seconds\)/);assert.match(renderer,/routeCorridor/);assert.match(renderer,/worker\.monitorStart/);assert.match(renderer,/monitorShift/);assert.match(renderer,/codeRow<7/)});
+
+
+test("thinking workers receive their own visual marker, not the awaiting-approval marker",()=>{
+ assert.match(renderer,/else if\(worker\.state==="st-t"\)\{sphere\(x,2\.62,z\+\.96,\.11,\.11,\.11,\[\.24,\.78,\.88\]/);
+ assert.match(renderer,/else if\(worker\.state==="st-a"\)\{sphere\(x\+\.44,2\.55,z\+\.95,\.13,\.13,\.13,\[\.98,\.78,\.25\]/);
+});
