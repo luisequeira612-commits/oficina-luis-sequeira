@@ -419,3 +419,13 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Commits directos a main: 2f3089eb (código) y 121d6769 (regresión). La prueba comprueba que no se incorporen commits generales al historial personal.
 - Estado de verificación consultado para 121d6769: checks combinados vacíos y wrapper de workflow sin ejecuciones (este wrapper solo expone runs de pull request). No declarar CI ni Pages confirmados.
 - Fuente: assets/github-live.js y tests/verify-editable-office-data.test.mjs, 2026-11-10.
+
+
+## Incidencia de carga del motor 3D — 10 de noviembre de 2026
+
+- El usuario informó que la página mostraba «no se cargó el archivo del motor 3D». Ese mensaje significa que office-view.js no encontró window.Office3D al renderizar; es distinto de un fallo WebGL dentro de Office3D.open.
+- Se confirmó que assets/office-3d.js existe en main (38,691 caracteres) y que index.html referenciaba v46. Se actualizó a v47 para invalidar caché y se añadieron manejadores onerror/onload que distinguen descarga fallida de archivo descargado que no ejecutó el motor.
+- Commit directo a main: 5c8ae1b8. Se corrigió y verificó el HTML final de los manejadores inline.
+- No se pudo confirmar la publicación de GitHub Pages: los checks combinados consultados están vacíos y el wrapper de workflows solo expone ejecuciones de PR. El despliegue debe comprobarse en Actions/Pages; no afirmar que el arreglo ya está visible en producción.
+- Instrucción de comprobación para el usuario cuando la publicación termine: recargar sin caché / abrir en pestaña privada. Si persiste, el mensaje nuevo distinguirá descarga del archivo frente a fallo de ejecución.
+- Fuente: index.html, assets/office-3d.js y estado consultable del commit, 2026-11-10.
