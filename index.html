@@ -93,6 +93,7 @@ footer{max-width:1040px;margin:0 auto;padding:0 16px 24px;color:var(--muted);fon
 (function(){
 "use strict";
 const STORAGE_KEY="oficina-luis-sequeira-v1";
+const MIGRATION_KEY="oficina-luis-sequeira-migrations-v1";
 const ROLE_COLORS={
   "Desarrollo":{c:"#534AB7",d:"#3C3489",l:"#AFA9EC"},
   "Diseño":{c:"#D4537E",d:"#993556",l:"#F4C0D1"},
@@ -312,6 +313,7 @@ function loadRooms(){
  catch(_){return initialRooms()}
 }
 let rooms=loadRooms();
+applyMigrations();
 const states=new Map();
 const repoResults=new Map();
 const roomsEl=document.getElementById("rooms");
@@ -320,6 +322,17 @@ const form=document.getElementById("project-form");
 const nameInput=document.getElementById("project-name");
 const errorEl=document.getElementById("project-error");
 function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify({version:1,rooms}))}catch(_){/* Storage may be unavailable; the page remains usable. */}}
+function applyMigrations(){
+ try{
+  if(localStorage.getItem(MIGRATION_KEY)==="babymonster-chart-v1")return;
+  const exists=rooms.some(room=>room.name==="BABYMONSTER Chart"||room.repository==="luisequeira612-commits/monstie-charts.");
+  if(!exists){
+   rooms.push({id:makeId(),name:"BABYMONSTER Chart",repository:"luisequeira612-commits/monstie-charts.",agents:["Escritor","Community"].map(role=>({id:makeId(),role,source:null}))});
+   save();
+  }
+  localStorage.setItem(MIGRATION_KEY,"babymonster-chart-v1");
+ }catch(_){/* A failed migration can be retried on the next page load. */}
+}
 function pick(){var x=Math.random();return x<.45?"w":x<.7?"t":x<.85?"a":"r";}
 function stateFor(id){if(!states.has(id))states.set(id,pick());return states.get(id)}
 function updateSummary(){
