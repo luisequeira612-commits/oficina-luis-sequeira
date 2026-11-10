@@ -185,3 +185,11 @@
 - No cambia datos de proyectos/personajes, estados, cámara, localStorage ni esquemas persistentes. No se añaden dependencias, texturas, modelos, CDN, APIs, backend ni servicios de pago. Se conserva la alternativa CSS.
 - Prueba nueva: `tests/verify-3d-office-reception.test.mjs`. Compatibilidad/rendimiento en el Tecno Pova 4 y despliegue Pages posterior al merge pendientes de confirmación.
 - Fuente: cambios del renderer y pruebas del repositorio, 2026-11-10.
+
+
+## PR #23 — más detalle en trabajadores humanos low-poly — 10 de noviembre de 2026
+- La escena de cada habitación añade detalles geométricos discretos a los trabajadores: ojos con pupilas, cejas, nariz, boca, orejas, gafas/accesorios alternados y elementos de ropa (cuello, tapeta, insignia y puños).
+- La variación es determinista por índice y reutiliza tono de piel, peinado y camisa existentes; no cambia el reparto mujer/hombre, los datos de personajes ni su persistencia.
+- Los nuevos elementos se generan con primitivas del renderer WebGL 2, sin modelos, texturas, dependencias, APIs, backend ni servicios de pago. Los estados siguen siendo simulación local.
+- Se añade prueba de regresión para los detalles faciales y de vestuario. Pendiente validar legibilidad y rendimiento en el Tecno Pova 4 real.
+- Fuente: cambios del renderer y pruebas del repositorio, 2026-11-10.
