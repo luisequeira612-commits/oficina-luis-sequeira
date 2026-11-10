@@ -24,3 +24,6 @@ test("motion remains reduced-motion aware", () => {
   assert.match(renderer, /prefers-reduced-motion/);
   assert.match(renderer, /if\(!reducedMotion\)/);
 });
+
+
+test("worker states map to visible behavior",()=>{assert.match(renderer,/worker\.state==="st-r"\)\{const walk=/);assert.match(renderer,/worker\.state==="st-a"\)\{bob=/);assert.match(renderer,/office-worker-typing-bubble/);assert.match(renderer,/worker\.state!=="st-w"/)});
