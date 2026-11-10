@@ -9,7 +9,7 @@ function read(){try{const x=JSON.parse(localStorage.getItem(KEY)||"{}");return x
 function save(){try{cache.__meta={ratePause,backoff,backoffCount,rateRemaining,rateReset};localStorage.setItem(KEY,JSON.stringify(cache))}catch(_){}}
 function mins(t){return Math.max(0,Math.floor((now()-(t||now()))/60000))}
 function ago(t){const m=mins(new Date(t||0).getTime());return !t?"hora desconocida":m<1?"ahora":m<60?"hace "+m+" min":m<1440?"hace "+Math.floor(m/60)+" h":"hace "+Math.floor(m/1440)+" d"}
-function at(t){return new Date(t).toLocaleTimeString("es-NI",{hour:"2-digit",minute:"2-digit"})}
+function at(t){return new Date(t).toLocaleTimeString("es-NI",{hour:"2-digit",minute:"2-digit",hourCycle:"h23"})}
 function entry(room){return room.repository?cache[room.repository]:null}
 function active(e){return (e?.runs||[]).find(x=>x.status==="in_progress"||x.status==="queued")||null}
 function latest(e){return (e?.runs||[])[0]||null}
@@ -105,7 +105,7 @@ async function request(room){
   else if(response.status===403||response.status===429){
    backoffCount=Math.min(6,backoffCount+1);
    const retry=Number(response.headers.get("Retry-After")||0)*1000,reset=Number(response.headers.get("X-RateLimit-Reset")||0)*1000;
-   backoff=now()+Math.max(retry,reset>now()?reset-now():0,Math.min(900000,30000*Math.pow(2,backoffCount-1)));
+   backoff=now()+Math.max(retry,reset>now()?reset-now():0,Math.min(900000,60000*Math.pow(2,backoffCount-1)));
    e.error="GitHub rechazó la consulta ("+response.status+"). Reintento a las "+at(backoff)+".";
    cache[room.repository]=e;save();
   }else if(response.status===404){e.error="Repositorio no encontrado, privado o Actions no disponible.";cache[room.repository]=e;save();plan(room,1800000)}
