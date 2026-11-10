@@ -16,7 +16,7 @@ test("seated workers keep the monitor fixed while their body animates",()=>{
  assert.match(renderer,/worker.renderX=worker.x;worker.renderZ=worker.z/);
 });
 test("employee focus and details sheet remain unchanged",()=>{
- assert.match(renderer,/target=[worker.x,1.12,worker.z-1.05]/);
+ assert.match(renderer,/target=\[worker\.x,1\.12,worker\.z-1\.05\]/);
  assert.match(css,/.office-employee-card{bottom:calc(132px + env(safe-area-inset-bottom));max-height:27vh;overflow:auto/);
 });
 test("custom WebGL renderer retains view-dependent plastic highlights",()=>{
