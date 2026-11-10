@@ -66,3 +66,6 @@ test("the deployed HTML requests the fresh stylesheet that positions floating 3D
   assert.match(css, /\.office-worker-tag\{position:absolute/);
   assert.match(renderer, /container\.appendChild\(workerTags\)/);
 });
+
+
+test("employee labels fit the camera viewport and the three status colors have distinct meanings",()=>{assert.match(renderer,/is-your-turn/);assert.match(renderer,/placed\.some/);assert.match(renderer,/button\.textContent=room\.name/);assert.match(css,/office-worker-tag\.is-your-turn/)});
