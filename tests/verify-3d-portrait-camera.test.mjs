@@ -5,7 +5,7 @@ import { readFileSync } from "node:fs";
 const renderer = readFileSync(new URL("../assets/office-3d.js", import.meta.url), "utf8");
 
 test("portrait canvases receive a wider initial camera distance", () => {
-  assert.match(renderer, /baseRadius\*Math\.max\(1,0\.92\/aspect\)/);
+  assert.match(renderer, /baseRadius\*Math\.max\(1,1\.22\/aspect\)/);
   assert.match(renderer, /initialRadius=baseRadius\*Math\.max/);
   assert.match(renderer, /cameraFitDone=true/);
 });
