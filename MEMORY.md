@@ -47,3 +47,17 @@
 - La vista actual de tarjetas se conserva como detalle y alternativa accesible; el prototipo no se presenta como telemetría de agentes ni como motor 3D WebGL.
 - Se respetan las preferencias de movimiento reducido y se marca el proyecto seleccionado con estado accesible.
 - Rama de trabajo: `feat/isometric-office-overview`; pendiente CI y revisión.
+
+
+## Diseño futuro de trabajadores y habitaciones — 10 de noviembre de 2026
+- El usuario pidió que, más adelante, los trabajadores dejen de ser aves de colores y pasen a ser personas animadas con estética de videojuego Tycoon.
+- Distribución solicitada: 50 % mujeres y 50 % hombres en el conjunto de trabajadores; representación visual diversa de personas blancas, morenas y mestizas, sin estereotipos.
+- Mantener animaciones asociadas a trabajo, pensamiento, espera y descanso, adaptadas a personajes humanos.
+- Esta sustitución es una etapa futura, no debe adelantarse dentro del prototipo actual de habitaciones. La nueva dirección explícita reemplaza la antigua preferencia de conservar permanentemente los avatares de aves; conservar los SVG aprobados hasta que se ejecute la fase de rediseño.
+- Antes de diseñar el elenco final, procurar equilibrio global (no redondear 50/50 por habitación de forma independiente cuando el total sea impar) y variedad de peinados, ropa, edades adultas y tonos de piel. No inferir etnias a partir de rasgos; usar paleta diversa y respetuosa.
+- Fuente: petición explícita del usuario en conversación, 2026-11-10.
+
+## Prototipo de interiores explorable — 10 de noviembre de 2026
+- Siguiente paso incremental: al tocar un bloque del mapa se abre un diálogo accesible con habitación isométrica CSS, suelo, paredes, ventana, planta y puestos de trabajo derivados de los roles existentes.
+- El diálogo enlaza con la tarjeta existente para gestión detallada; no modifica datos guardados, agentes, roles ni estados.
+- No introduce dependencias, APIs, backend ni esquema de eventos. Es una maqueta 2.5D, no un motor 3D WebGL.
