@@ -232,11 +232,14 @@ function buildScene(workers,roomName=""){
   sphere(x+.14,.30,z+.665,.035,.035,.018,[0.24,0.82,0.72],6,4);
   box(x+.12,.20,z+.665,.06,.035,.018,[0.76,0.82,0.86]);
   box(x,1.65,z-.36,1.12,.78,.14,metal);box(x,1.65,z-.265,.98,.62,.025,screen);
-  // Animated code rows live inside the monitor surface; they scroll without textures or external assets.
+  // Compact editor chrome makes each animated display read as a real work interface.
   const monitorStart=positions.length;
+  box(x,1.92,z-.245,.76,.028,.012,[0.16,0.23,0.30]);
+  box(x-.405,1.63,z-.245,.07,.43,.012,[0.12,0.62,0.66]);
+  // Animated code rows live inside the monitor surface; they scroll without textures or external assets.
   for(let codeRow=0;codeRow<7;codeRow++){
    const codeWidth=[.18,.31,.24,.38,.16,.28,.22][codeRow],codeY=1.86-codeRow*.075;
-   box(x-.39+codeWidth/2,codeY,z-.24,codeWidth,.025,.012,codeRow%3===0?[0.12,0.95,0.82]:[0.63,0.91,1]);
+   box(x-.27+codeWidth/2,codeY,z-.24,codeWidth,.025,.012,codeRow%3===0?[0.12,0.95,0.82]:[0.63,0.91,1]);
   }
   const monitorEnd=positions.length;
   box(x,1.23,z-.36,.14,.12,.14,metal);box(x,.99,z-.36,.68,.08,.35,metal);
