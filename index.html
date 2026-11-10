@@ -473,6 +473,8 @@ form.addEventListener("submit",event=>{
 nameInput.addEventListener("input",()=>{if(nameInput.value.length>0)errorEl.textContent=""});
 render();
 rooms.filter(room=>room.repository).forEach(room=>refreshRepo(room.id));
+// Refresh real GitHub Actions activity every five minutes; manual refresh remains available.
+window.setInterval(()=>rooms.filter(room=>room.repository).forEach(room=>refreshRepo(room.id)),300000);
 const reducedMotion=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 window.setInterval(()=>{
  rooms.forEach(room=>room.agents.forEach(agent=>{

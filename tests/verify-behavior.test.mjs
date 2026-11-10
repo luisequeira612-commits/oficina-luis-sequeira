@@ -66,6 +66,16 @@ test("accessibility and user-input protections remain wired", () => {
   assert.doesNotMatch(html, /innerHTML\\s*=\\s*name/);
 });
 
+test("GitHub Actions status refreshes periodically without a backend", () => {
+  mustContain('window.setInterval(()=>rooms.filter(room=>room.repository).forEach(room=>refreshRepo(room.id)),300000)', "five-minute real activity polling");
+  mustContain('textContent="Actualizar"', "manual refresh remains available");
+  mustContain('https://api.github.com/repos/"+requestedRepository+"/actions/runs?per_page=1', "public GitHub Actions API");
+});
+
+test("BABYMONSTER Chart appears in required published project content", () => {
+  mustContain('name:"BABYMONSTER Chart",repository:"luisequeira612-commits/monstie-charts."', "BABYMONSTER Chart migration");
+});
+
 test("public GitHub Actions integration keeps project links local and configurable", () => {
   mustContain('name:"App Guardi",repository:null', "unknown project remains unlinked");
   mustContain('repository:"luisequeira612-commits/capi-aventuras"', "Capi Aventuras mapping");

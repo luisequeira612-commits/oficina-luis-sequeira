@@ -38,7 +38,7 @@ jobs:
               "<title>Oficina de Luis Sequeira</title>",
               "Simulación. En la versión real, los estados vendrán de GitHub.",
               "oficina-luis-sequeira-v1",
-              "App Guardi", "Canal de YouTube", "Tema Nova Launcher",
+              "App Guardi", "Canal de YouTube", "Tema Nova Launcher", "BABYMONSTER Chart",
           ]
           missing = [item for item in required if item not in html]
           if missing:
