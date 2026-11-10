@@ -64,7 +64,7 @@ test("minifigure faces have distinct printed expressions and arms use articulate
   assert.match(renderer,/box\(x,1\.65,z-\.36,1\.12,\.78,\.14,metal\);box\(x,1\.65,z-\.265/,"monitor display faces the worker after workstation mirroring");
   assert.match(renderer,/theta=\.72/,"home camera keeps the open-room view");
   assert.match(renderer,/const workstationStart=positions\.length/,"workstation geometry is mirrored as one unit");
-  assert.match(renderer,/x,z:-z,laneX,restZ:2\.0+row\*\.72/,"employee routes follow the mirrored workstation");
+  assert.match(renderer,/x,z:-z,laneX,restZ:2\.0\+row\*\.72/,"employee routes follow the mirrored workstation");
   assert.match(renderer,/positions\[i\+v\+2\]=-positions\[i\+v\+2\]/,"mirroring reverses depth for every workstation vertex");
   assert.match(renderer,/theta=clamp\(theta\+\.14,-\.35,1\.78\)/,"rotation controls preserve bounded orbit");
   assert.match(renderer,/box\(x,1\.56,z\+\.642/,"torso print faces the same direction as the face");
