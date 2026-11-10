@@ -81,14 +81,37 @@ function buildScene(workers){
  data.set(positions,0);data.set(normals,positions.length);data.set(colors,positions.length+normals.length);
  return {data,basePositions,workerRanges,count:positions.length/3,positionLength:positions.length,normalLength:normals.length};
 }
-function open({container,roomName,workers=[]}){
+function buildOfficeScene(rooms){
+ const cols=rooms.length>1?2:1,rows=Math.ceil(rooms.length/cols),scenes=rooms.map(room=>buildScene(room.workers||[])),positions=[],normals=[],colors=[],workerRanges=[];
+ let workerOffset=0;
+ scenes.forEach((scene,index)=>{
+  const col=index%cols,row=Math.floor(index/cols),xCenter=cols===1?0:(col===0?-6.2:6.2),zCenter=(row-(rows-1)/2)*10.4,flip=col===1,posStart=positions.length;
+  for(let i=0;i<scene.positionLength;i+=3){const x=scene.basePositions[i],y=scene.basePositions[i+1],z=scene.basePositions[i+2];positions.push((flip?-x:x)+xCenter,y,(flip?-z:z)+zCenter)}
+  for(let i=scene.positionLength;i<scene.positionLength+scene.normalLength;i+=3){normals.push(flip?-scene.data[i]:scene.data[i],scene.data[i+1],flip?-scene.data[i+2]:scene.data[i+2])}
+  for(let i=scene.positionLength+scene.normalLength;i<scene.data.length;i++)colors.push(scene.data[i]);
+  scene.workerRanges.forEach(worker=>workerRanges.push({...worker,start:worker.start+posStart,end:worker.end+posStart,armsStart:worker.armsStart+posStart,armsEnd:worker.armsEnd+posStart,index:worker.index+workerOffset}));
+  workerOffset+=(rooms[index].workers||[]).length;
+ });
+ // Two facing rows of rooms open onto one continuous central hallway.
+ if(cols>1){
+  const addTri=(a,b,c,color)=>{const ux=b[0]-a[0],uy=b[1]-a[1],uz=b[2]-a[2],vx=c[0]-a[0],vy=c[1]-a[1],vz=c[2]-a[2];let nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx,l=Math.hypot(nx,ny,nz)||1;nx/=l;ny/=l;nz/=l;for(const p of [a,b,c]){positions.push(...p);normals.push(nx,ny,nz);colors.push(...color)}};
+  const quad=(a,b,c,d,color)=>{addTri(a,b,c,color);addTri(a,c,d,color)};
+  const box=(x,y,z,w,h,d,color)=>{const x0=x-w/2,x1=x+w/2,y0=y-h/2,y1=y+h/2,z0=z-d/2,z1=z+d/2;quad([x0,y1,z1],[x1,y1,z1],[x1,y1,z0],[x0,y1,z0],color);quad([x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1],color);quad([x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1],color);quad([x1,y0,z0],[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],color);quad([x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0],color);quad([x1,y0,z1],[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],color)};
+  box(0,.025,0,2.5,.12,rows*10.4,[0.40,0.46,0.51]);
+  for(let row=0;row<rows;row++){const z=(row-(rows-1)/2)*10.4;box(-1.22,.12,z,.16,.18,1.8,[0.72,0.58,0.39]);box(1.22,.12,z,.16,.18,1.8,[0.72,0.58,0.39]);box(0,3.55,z,1.4,.08,.55,[0.88,0.79,0.55])}
+ }
+ const basePositions=new Float32Array(positions),data=new Float32Array(positions.length+normals.length+colors.length);
+ data.set(positions,0);data.set(normals,positions.length);data.set(colors,positions.length+normals.length);
+ return {data,basePositions,workerRanges,count:positions.length/3,positionLength:positions.length,normalLength:normals.length};
+}
+function open({container,roomName,workers=[],rooms=null,onSelectRoom=null}){
  if(typeof container._office3dCleanup==="function")container._office3dCleanup();
  container.replaceChildren();container.classList.remove("is-active");
  const canvas=document.createElement("canvas");canvas.setAttribute("aria-label","Escena 3D de "+roomName);
  const gl=canvas.getContext("webgl2",{alpha:false,antialias:false,powerPreference:"low-power"});
  if(!gl){const note=document.createElement("p");note.className="office-3d-error";note.textContent="Este navegador no ofrece WebGL 2 en este momento. Se muestra la vista alternativa.";container.appendChild(note);return false}
  try{
-  const p=program(gl),scene=buildScene(workers),buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,scene.data,gl.DYNAMIC_DRAW);
+  const p=program(gl),scene=rooms&&rooms.length?buildOfficeScene(rooms):buildScene(workers),buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,scene.data,gl.DYNAMIC_DRAW);
   const stride=0,loc=(name)=>gl.getAttribLocation(p,name);gl.useProgram(p);
   const ap=loc("aPosition"),an=loc("aNormal"),ac=loc("aColor");
   gl.enableVertexAttribArray(ap);gl.vertexAttribPointer(ap,3,gl.FLOAT,false,stride,0);
@@ -96,25 +119,26 @@ function open({container,roomName,workers=[]}){
   gl.enableVertexAttribArray(ac);gl.vertexAttribPointer(ac,3,gl.FLOAT,false,stride,(scene.positionLength+scene.normalLength)*4);
   const up=gl.getUniformLocation(p,"uProjection"),uv=gl.getUniformLocation(p,"uView");
   gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);gl.cullFace(gl.BACK);gl.clearColor(.075,.12,.18,1);
+  const roomNav=rooms&&rooms.length?document.createElement("div"):null;if(roomNav){roomNav.className="office-3d-room-nav";rooms.forEach(room=>{const button=document.createElement("button");button.type="button";button.textContent="Entrar · "+room.name;button.setAttribute("aria-label","Entrar en la habitación "+room.name);button.addEventListener("click",()=>{if(typeof onSelectRoom==="function")onSelectRoom(room.id)});roomNav.appendChild(button)})}
   const controls=document.createElement("div");controls.className="office-3d-controls";
   const hint=document.createElement("span");hint.className="office-3d-hint";hint.textContent="Arrastra para girar · Pellizca para acercar · Dos dedos para desplazar";
   const group=document.createElement("div");group.style.display="flex";group.style.gap="5px";
   const makeButton=(label,aria,fn)=>{const b=document.createElement("button");b.type="button";b.textContent=label;b.setAttribute("aria-label",aria);b.addEventListener("click",fn);group.appendChild(b);return b};
-  let theta=.72,phi=1.08,radius=13,target=[0,1.15,0];
+  const overviewMode=Boolean(rooms&&rooms.length),overviewRows=overviewMode?Math.ceil(rooms.length/2):1,initialRadius=overviewMode?(rooms.length===1?13:Math.max(13,Math.max(24.8,overviewRows*10.4)*1.45)):13,minRadius=8,maxRadius=overviewMode?initialRadius*1.65:23;let theta=.72,phi=1.08,radius=initialRadius,target=[0,1.15,0];
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-  makeButton("−","Alejar cámara",()=>{radius=clamp(radius+1,8,23)});
-  makeButton("+","Acercar cámara",()=>{radius=clamp(radius-1,8,23)});
-  makeButton("↻","Restablecer cámara",()=>{theta=.72;phi=1.08;radius=13;target=[0,1.15,0]});
-  controls.append(hint,group);container.append(canvas,controls);container.classList.add("is-active");
+  makeButton("−","Alejar cámara",()=>{radius=clamp(radius+1,minRadius,maxRadius)});
+  makeButton("+","Acercar cámara",()=>{radius=clamp(radius-1,minRadius,maxRadius)});
+  makeButton("↻","Restablecer cámara",()=>{theta=.72;phi=1.08;radius=initialRadius;target=[0,1.15,0]});
+  controls.append(hint,group);container.append(canvas);if(roomNav)container.appendChild(roomNav);container.appendChild(controls);container.classList.add("is-active");
   const projection=mat4(),view=mat4();let raf=0,disposed=false,lastFrame=0;const reducedMotion=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   container._office3dUpdateStates=states=>{scene.workerRanges.forEach((worker,index)=>{if(states[index])worker.state=states[index]})};
   function resize(){const rect=container.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,1.15),w=Math.max(1,Math.floor(rect.width*dpr)),h=Math.max(1,Math.floor(rect.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h)}}
-  function render(timestamp=0){if(disposed)return;if(timestamp-lastFrame<32){raf=requestAnimationFrame(render);return}lastFrame=timestamp;resize();if(!reducedMotion){const seconds=timestamp*.001;scene.workerRanges.forEach(worker=>{let bob=0,arms=0;if(worker.state==="st-w"){bob=Math.sin(seconds*7+worker.index)*.025;arms=Math.sin(seconds*12+worker.index)*.055}else if(worker.state==="st-t"){bob=Math.sin(seconds*2+worker.index)*.014;arms=.035}else if(worker.state==="st-a"){bob=Math.sin(seconds*1.5+worker.index)*.01;arms=Math.sin(seconds*2.5+worker.index)*.025}else{bob=Math.sin(seconds*1.2+worker.index)*.018}for(let i=worker.start+1;i<worker.end;i+=3)scene.data[i]=scene.basePositions[i]+bob;for(let i=worker.armsStart+1;i<worker.armsEnd;i+=3)scene.data[i]=scene.basePositions[i]+bob+arms});gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferSubData(gl.ARRAY_BUFFER,0,scene.data.subarray(0,scene.positionLength))}const eye=[target[0]+radius*Math.sin(phi)*Math.sin(theta),target[1]+radius*Math.cos(phi),target[2]+radius*Math.sin(phi)*Math.cos(theta)];perspective(projection,.72,canvas.width/canvas.height,.1,80);lookAt(view,eye,target,[0,1,0]);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.uniformMatrix4fv(up,false,projection);gl.uniformMatrix4fv(uv,false,view);gl.drawArrays(gl.TRIANGLES,0,scene.count);raf=requestAnimationFrame(render)}
+  function render(timestamp=0){if(disposed)return;if(timestamp-lastFrame<32){raf=requestAnimationFrame(render);return}lastFrame=timestamp;resize();if(!reducedMotion){const seconds=timestamp*.001;scene.workerRanges.forEach(worker=>{let bob=0,arms=0;if(worker.state==="st-w"){bob=Math.sin(seconds*7+worker.index)*.025;arms=Math.sin(seconds*12+worker.index)*.055}else if(worker.state==="st-t"){bob=Math.sin(seconds*2+worker.index)*.014;arms=.035}else if(worker.state==="st-a"){bob=Math.sin(seconds*1.5+worker.index)*.01;arms=Math.sin(seconds*2.5+worker.index)*.025}else{bob=Math.sin(seconds*1.2+worker.index)*.018}for(let i=worker.start+1;i<worker.end;i+=3)scene.data[i]=scene.basePositions[i]+bob;for(let i=worker.armsStart+1;i<worker.armsEnd;i+=3)scene.data[i]=scene.basePositions[i]+bob+arms});gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferSubData(gl.ARRAY_BUFFER,0,scene.data.subarray(0,scene.positionLength))}const eye=[target[0]+radius*Math.sin(phi)*Math.sin(theta),target[1]+radius*Math.cos(phi),target[2]+radius*Math.sin(phi)*Math.cos(theta)];perspective(projection,overviewMode?.86:.72,canvas.width/canvas.height,.1,100);lookAt(view,eye,target,[0,1,0]);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.uniformMatrix4fv(up,false,projection);gl.uniformMatrix4fv(uv,false,view);gl.drawArrays(gl.TRIANGLES,0,scene.count);raf=requestAnimationFrame(render)}
   const pointers=new Map();let last=null,lastPinch=0;
   canvas.addEventListener("pointerdown",e=>{canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});last={x:e.clientX,y:e.clientY};if(pointers.size===2){const a=Array.from(pointers.values());lastPinch=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)}});
-  canvas.addEventListener("pointermove",e=>{if(!pointers.has(e.pointerId))return;const prev=pointers.get(e.pointerId),dx=e.clientX-prev.x,dy=e.clientY-prev.y;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size>=2){const a=Array.from(pointers.values()),dist=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);if(lastPinch)radius=clamp(radius-(dist-lastPinch)*.035,8,23);lastPinch=dist;target[0]-=dx*.012;target[2]+=dy*.012}else if(last){theta-=dx*.009;phi=clamp(phi+dy*.008,.42,1.42)}last={x:e.clientX,y:e.clientY}});
+  canvas.addEventListener("pointermove",e=>{if(!pointers.has(e.pointerId))return;const prev=pointers.get(e.pointerId),dx=e.clientX-prev.x,dy=e.clientY-prev.y;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size>=2){const a=Array.from(pointers.values()),dist=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);if(lastPinch)radius=clamp(radius-(dist-lastPinch)*.035,minRadius,maxRadius);lastPinch=dist;target[0]-=dx*.012;target[2]+=dy*.012}else if(last){theta-=dx*.009;phi=clamp(phi+dy*.008,.42,1.42)}last={x:e.clientX,y:e.clientY}});
   const release=e=>{pointers.delete(e.pointerId);last=pointers.size?Array.from(pointers.values())[0]:null;if(pointers.size<2)lastPinch=0};canvas.addEventListener("pointerup",release);canvas.addEventListener("pointercancel",release);
-  canvas.addEventListener("wheel",e=>{e.preventDefault();radius=clamp(radius+Math.sign(e.deltaY)*.55,8,23)},{passive:false});
+  canvas.addEventListener("wheel",e=>{e.preventDefault();radius=clamp(radius+Math.sign(e.deltaY)*.55,minRadius,maxRadius)},{passive:false});
   const observer=new ResizeObserver(resize);observer.observe(container);
   render();
   const cleanup=()=>{if(disposed)return;disposed=true;cancelAnimationFrame(raf);observer.disconnect();delete container._office3dUpdateStates;delete container._office3dCleanup;gl.deleteBuffer(buffer);gl.deleteProgram(p);gl.getExtension("WEBGL_lose_context")?.loseContext()};
@@ -122,5 +146,5 @@ function open({container,roomName,workers=[]}){
   return true;
  }catch(error){container.replaceChildren();const note=document.createElement("p");note.className="office-3d-error";note.textContent="No se pudo iniciar la escena 3D. Se conserva la vista alternativa.";container.appendChild(note);return false}
 }
-window.Office3D={open};
+window.Office3D={open,openOverview:options=>open({...options,roomName:"Vista general de la oficina",workers:[]})};
 })();

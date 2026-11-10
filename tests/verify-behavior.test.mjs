@@ -83,6 +83,7 @@ test("isometric office overview explores existing projects without changing pers
   mustContain('href="assets/office-view.css"', "isometric office styles");
   mustContain('src="assets/office-view.js" defer', "isometric office interaction");
   mustContain('id="office-map"', "office map container");
+  mustContain('id="office-3d-overview"', "connected 3D office overview container");
   mustContain('card.dataset.roomId=room.id', "stable room identity for map");
   assert.ok(officeScript.includes('selectedCard.scrollIntoView({behavior:reduced?"auto":"smooth",block:"center"})'), "missing explore project navigation");
   assert.ok(officeScript.includes("aria-pressed"), "missing accessible selected room state");
@@ -149,6 +150,8 @@ test("real 3D room prototype uses WebGL2 locally and preserves the CSS fallback"
   assert.ok(renderer.includes("Alejar cámara") && renderer.includes("Acercar cámara"), "provides accessible zoom controls");
   assert.ok(renderer.includes("box(x,1.65,z-.36,1.12,.78,.14,metal)"), "scene geometry includes visible computer monitors");
   assert.ok(officeScript.includes("window.Office3D.open"), "room dialog opens the 3D scene");
+  assert.ok(officeScript.includes("window.Office3D.openOverview"), "office overview opens the connected 3D building");
+  assert.ok(officeScript.includes("roomData=cards.map"), "overview uses every current project room");
   assert.ok(officeScript.includes("room-scene-fallback-hidden"), "keeps the CSS room as a fallback");
   assert.ok(officeScript.includes("threeD._office3dCleanup()"), "stops the WebGL render loop when the room closes");
   assert.doesNotMatch(renderer, /https?:\/\//, "3D renderer has no external runtime requests");
@@ -156,6 +159,11 @@ test("real 3D room prototype uses WebGL2 locally and preserves the CSS fallback"
   assert.ok(renderer.includes("gl.DYNAMIC_DRAW"), "uses a dynamic GPU buffer for worker animation");
   assert.ok(renderer.includes("prefers-reduced-motion: reduce"), "disables 3D worker motion when reduced motion is requested");
   assert.ok(renderer.includes("rows===1?-1.55:-2.8+row*2.4"), "keeps a three-row workforce inside the room footprint");
+  assert.ok(renderer.includes("function buildOfficeScene(rooms)"), "builds a multi-room 3D office");
+  assert.ok(renderer.includes("central hallway"), "connects project rooms with a shared corridor");
+  assert.ok(renderer.includes("col===1"), "faces the two room columns toward the shared hallway");
+  assert.ok(renderer.includes("overviewRows=overviewMode?Math.ceil(rooms.length/2):1"), "scales the overview for multiple rows on mobile");
+  assert.ok(renderer.includes("office-3d-room-nav"), "provides direct entry controls for each 3D room");
 });
 
 test("human worker decoration is idempotent and keeps the balanced appearance metadata", () => {
@@ -174,4 +182,11 @@ test("3D workers reuse the same hairstyle, shirt and live state as their project
   assert.ok(rendererScript.includes("shirtByName[worker.shirt]"), "renders the selected shirt color");
   assert.ok(rendererScript.includes("hairStyle==="), "renders distinct hairstyles");
   assert.ok(rendererScript.includes("container._office3dUpdateStates=states=>"), "exposes live 3D state updates");
+});
+
+test("connected 3D overview falls back to the accessible project map without WebGL2", () => {
+  assert.ok(officeScript.includes("map.hidden=renderedOverview"), "keeps the CSS project map when the 3D overview is unavailable");
+  assert.ok(officeScript.includes("overview.hidden=!renderedOverview"), "only shows the 3D overview after successful initialization");
+  assert.ok(officeScript.includes("function closeOverview()"), "releases the overview before entering a project room");
+  assert.ok(officeScript.includes("renderMap()});"), "restores the connected overview when a room closes");
 });

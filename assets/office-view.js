@@ -2,6 +2,7 @@
 "use strict";
 const rooms=document.getElementById("rooms");
 const map=document.getElementById("office-map");
+const overview=document.getElementById("office-3d-overview");
 const dialog=document.getElementById("room-dialog");
 const scene=document.getElementById("room-scene");
 const title=document.getElementById("room-dialog-title");
@@ -11,7 +12,10 @@ const close=document.getElementById("room-dialog-close");
 const go=document.getElementById("room-dialog-go");
 let selectedCard=null;
 if(!rooms||!map||!dialog||!scene)return;
+function closeOverview(){if(overview&&typeof overview._office3dCleanup==="function")overview._office3dCleanup();if(overview){overview.classList.remove("is-active");overview.hidden=true}map.hidden=false}
+function workerDataFor(agent){const avatar=agent.querySelector(".human-worker");const state=Array.from(agent.classList).find(name=>/^st-[wtar]$/.test(name))||"st-r";return {role:agent.querySelector(".agent-role")?.textContent?.trim()||"Puesto",state,gender:avatar?.dataset.gender||"person",tone:avatar?.dataset.skinTone||"medium",hair:avatar?.dataset.hair||"short",shirt:avatar?.dataset.shirt||"blue"}}
 function openRoom(card){
+ closeOverview();
  selectedCard=card;
  const name=card.querySelector(".room-title")?.textContent?.trim()||"Proyecto";
  const agents=Array.from(card.querySelectorAll(".ag"));
@@ -45,17 +49,14 @@ function openRoom(card){
  }
  floor.append(wallBack,wallSide,furniture);scene.appendChild(floor);
  const threeD=document.getElementById("office-3d");
- const workerData=agents.map(agent=>{
-  const avatar=agent.querySelector(".human-worker");
-  const state=Array.from(agent.classList).find(name=>/^st-[wtar]$/.test(name))||"st-r";
-  return {role:agent.querySelector(".agent-role")?.textContent?.trim()||"Puesto",state,gender:avatar?.dataset.gender||"person",tone:avatar?.dataset.skinTone||"medium",hair:avatar?.dataset.hair||"short",shirt:avatar?.dataset.shirt||"blue"};
- });
+ const workerData=agents.map(workerDataFor);
  const rendered3D=Boolean(threeD&&window.Office3D&&window.Office3D.open({container:threeD,roomName:name,workers:workerData}));
  scene.classList.toggle("room-scene-fallback-hidden",rendered3D);
  if(typeof dialog.showModal==="function")dialog.showModal();
  else {dialog.setAttribute("open","");close.focus()}
 }
 function renderMap(){
+ if(dialog.open)return;
  const cards=Array.from(rooms.querySelectorAll(".room[data-room-id]"));
  const activeId=map.querySelector('.office-tile[aria-pressed="true"]')?.dataset.targetRoom||"";
  map.replaceChildren();
@@ -78,11 +79,15 @@ function renderMap(){
   });
   map.appendChild(tile);
  });
+ const roomData=cards.map(card=>({id:card.dataset.roomId,name:card.querySelector(".room-title")?.textContent?.trim()||"Proyecto",workers:Array.from(card.querySelectorAll(".ag"),workerDataFor)}));
+ const renderedOverview=Boolean(overview&&window.Office3D&&roomData.length&&window.Office3D.openOverview({container:overview,rooms:roomData,onSelectRoom:id=>{const card=cards.find(item=>item.dataset.roomId===id);if(card)openRoom(card)}}));
+ if(overview){overview.hidden=!renderedOverview;if(renderedOverview)overview.classList.add("is-active")}
+ map.hidden=renderedOverview;
 }
 close.addEventListener("click",()=>dialog.close());
 dialog.addEventListener("click",event=>{if(event.target===dialog)dialog.close()});
-dialog.addEventListener("close",()=>{const threeD=document.getElementById("office-3d");if(threeD&&typeof threeD._office3dCleanup==="function")threeD._office3dCleanup();if(threeD)threeD.classList.remove("is-active");scene.classList.remove("room-scene-fallback-hidden")});
-function sync3DWorkerStates(){const threeD=document.getElementById("office-3d");if(!dialog.open||!selectedCard||!threeD||typeof threeD._office3dUpdateStates!=="function")return;const states=Array.from(selectedCard.querySelectorAll(".ag"),agent=>Array.from(agent.classList).find(name=>/^st-[wtar]$/.test(name))||"st-r");threeD._office3dUpdateStates(states)}
+dialog.addEventListener("close",()=>{const threeD=document.getElementById("office-3d");if(threeD&&typeof threeD._office3dCleanup==="function")threeD._office3dCleanup();if(threeD)threeD.classList.remove("is-active");scene.classList.remove("room-scene-fallback-hidden");renderMap()});
+function sync3DWorkerStates(){const allStates=Array.from(rooms.querySelectorAll(".ag"),agent=>Array.from(agent.classList).find(name=>/^st-[wtar]$/.test(name))||"st-r");if(overview&&!overview.hidden&&typeof overview._office3dUpdateStates==="function")overview._office3dUpdateStates(allStates);const threeD=document.getElementById("office-3d");if(dialog.open&&selectedCard&&threeD&&typeof threeD._office3dUpdateStates==="function"){const states=Array.from(selectedCard.querySelectorAll(".ag"),agent=>Array.from(agent.classList).find(name=>/^st-[wtar]$/.test(name))||"st-r");threeD._office3dUpdateStates(states)}}
 go.addEventListener("click",()=>{
  if(!selectedCard)return;
  dialog.close();
@@ -90,7 +95,7 @@ go.addEventListener("click",()=>{
  selectedCard.scrollIntoView({behavior:reduced?"auto":"smooth",block:"center"});
 });
 const observer=new MutationObserver(renderMap);
-observer.observe(rooms,{childList:true,subtree:true});
+observer.observe(rooms,{childList:true});
 const stateObserver=new MutationObserver(sync3DWorkerStates);
 stateObserver.observe(rooms,{attributes:true,attributeFilter:["class"],subtree:true});
 renderMap();
