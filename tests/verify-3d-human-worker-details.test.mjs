@@ -59,7 +59,7 @@ test("minifigures have a visible top stud, molded C-grip hands and vivid glossy 
 test("minifigure faces have distinct printed expressions and arms use articulated molded C-grips",()=>{
   assert.match(renderer,/const segment=\(a,b,r,color,seg=8\)/);
   assert.match(renderer,/faceCanvas\.width=64;faceCanvas\.height=48/);
-  assert.match(renderer,/faceContext\.getImageData\(0,0,64,48\)/);
+  assert.match(renderer,/ctx\.getImageData\(0,0,64,48\)/);
   assert.match(renderer,/printFaceCanvas\(x,z,index,skin\)/,"printed expressions are generated on canvas and baked into the shared mesh");
   assert.match(renderer,/box\(x,1\.65,z-\.36,1\.12,\.78,\.14,metal\);box\(x,1\.65,z-\.265/,"monitor display faces the worker after workstation mirroring");
   assert.match(renderer,/theta=\.72/,"home camera keeps the open-room view");
