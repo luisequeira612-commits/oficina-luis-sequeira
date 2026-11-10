@@ -2,11 +2,11 @@
 "use strict";
 const KEY="oficina-luis-sequeira-github-cache-v1",ROOT="https://api.github.com/repos/";
 const IDLE_CYCLE=240000,GLOBAL_GAP=60000,ACTIVE_GAP=60000,MANUAL_GAP=15000,STALE=120000;
-let rooms=[],cache={},due=new Map(),manualAt=new Map(),timer=0,busy=false,started=false,lastRequest=0,backoff=0,backoffCount=0,ratePause=0;
+let rooms=[],cache={},due=new Map(),manualAt=new Map(),timer=0,busy=false,started=false,lastRequest=0,backoff=0,backoffCount=0,ratePause=0,rateRemaining=null,rateReset=0;
 const list=document.getElementById("github-activity-list"),notice=document.getElementById("github-rate-notice");
 const now=()=>Date.now(),validRepo=x=>typeof x==="string"&&/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(x);
 function read(){try{const x=JSON.parse(localStorage.getItem(KEY)||"{}");return x&&typeof x==="object"?x:{}}catch(_){return {}}}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(cache))}catch(_){}}
+function save(){try{cache.__meta={ratePause,backoff,backoffCount,rateRemaining,rateReset};localStorage.setItem(KEY,JSON.stringify(cache))}catch(_){}}
 function mins(t){return Math.max(0,Math.floor((now()-(t||now()))/60000))}
 function ago(t){const m=mins(new Date(t||0).getTime());return !t?"hora desconocida":m<1?"ahora":m<60?"hace "+m+" min":m<1440?"hace "+Math.floor(m/60)+" h":"hace "+Math.floor(m/1440)+" d"}
 function at(t){return new Date(t).toLocaleTimeString("es-NI",{hour:"2-digit",minute:"2-digit"})}
@@ -87,7 +87,8 @@ function nextRoom(){
 function rateHeaders(response){
  const remaining=response.headers.get("X-RateLimit-Remaining"),reset=response.headers.get("X-RateLimit-Reset");
  if(remaining!==null&&reset!==null&&Number.isFinite(Number(remaining))&&Number.isFinite(Number(reset))){
-  if(Number(remaining)<10)ratePause=Math.max(ratePause,Number(reset)*1000);
+  rateRemaining=Number(remaining);rateReset=Number(reset);
+  if(rateRemaining<10)ratePause=Math.max(ratePause,rateReset*1000);
   else if(ratePause<=now())ratePause=0;
  }
 }
@@ -150,7 +151,7 @@ function visible(){
  if(stale)due.set(stale.repository,now());schedule(0);
 }
 function start(initial){
- if(started)return;started=true;cache=read();sync(initial);
+ if(started)return;started=true;cache=read();const meta=cache.__meta||{};ratePause=Number(meta.ratePause)||0;backoff=Number(meta.backoff)||0;backoffCount=Number(meta.backoffCount)||0;rateRemaining=Number.isFinite(meta.rateRemaining)?meta.rateRemaining:null;rateReset=Number(meta.rateReset)||0;sync(initial);
  const all=ids(),gap=idleGap();all.forEach((id,index)=>{if(!cache[id])cache[id]={runs:[],etag:"",checkedAt:0};due.set(id,now()+index*gap)});
  save();paint();document.addEventListener("visibilitychange",visible);window.addEventListener("online",()=>{if(document.visibilityState!=="hidden")schedule(0)});schedule(1200);
 }
