@@ -635,3 +635,12 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Validación final [42895621448](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42895621448): validate y deploy success. La suite completa de Node pasó en validate; GitHub Pages publicó el commit de código/pruebas `b6fd0791da547eede61a083cb21fd0dc32802add`.
 - El cambio de movimiento queda desplegado, pero la nueva ruta y el giro aún necesitan confirmación visual de Luis en el Tecno Pova 4. Los 30 FPS confirmados corresponden a la versión anterior; no atribuir esa medición a esta nueva versión hasta que se vuelva a comprobar en el dispositivo.
 - Fuente: GitHub Actions run 42895621448 y confirmación del usuario sobre 30 FPS en la versión anterior, 2026-11-10.
+
+
+## Estado sentado coherente con actividad real de GitHub — 10 de noviembre de 2026
+
+- La animación 3D mantiene a los empleados sentados: la actividad real de GitHub Actions se refleja con el estado de trabajo y la animación de teclado, sin desplazar el personaje fuera del escritorio.
+- Se eliminó la clase obsoleta `is-walking` del puente de actividad de GitHub, que ya no correspondía al diseño sentado.
+- Se amplió `tests/verify-3d-idle-walk.test.mjs` para comprobar que una ejecución real activa `st-w` y nunca introduce el estado de caminar.
+- No se modifican repositorios vinculados, localStorage, esquema, dependencias, APIs, backend ni presupuesto. Las animaciones siguen siendo simulaciones visuales; la ejecución de GitHub Actions es la señal real.
+- Fuente: cambios y pruebas del PR de corrección, 2026-11-10.
