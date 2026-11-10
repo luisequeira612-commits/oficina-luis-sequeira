@@ -157,3 +157,12 @@
 - Prueba de regresión: `tests/verify-project-themed-rooms.test.mjs`. PR [#19](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/19), fusionado mediante squash en `74636403ce0936ddcf05ef0beec4a03c3fbca88c`; CI [42783094539](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42783094539): validate success.
 - Compatibilidad y rendimiento en Tecno Pova 4 todavía sin prueba física.
 - Fuente: revisión del renderer y nombres de proyectos actuales del repositorio, 2026-11-10.
+
+
+## Accesorios temáticos en puestos 3D — 10 de noviembre de 2026
+- La identidad visual de cada proyecto se extiende desde el mural a los puestos individuales: alfombra con franja del color del proyecto y un objeto pequeño sobre cada escritorio.
+- Guardi recibe un accesorio tipo insignia; YouTube, una claqueta/línea de edición; Nova Launcher, un teléfono en miniatura; BABYMONSTER Chart, barras de ranking; proyectos personalizados, un objeto modular neutro.
+- La geometría se añade al constructor de la sala WebGL 2 existente y se repite solo por puesto real; no introduce texturas, modelos externos, dependencias ni nuevas APIs.
+- No cambia datos, trabajadores, cámara, `localStorage` ni esquema persistente. Aún falta probar compatibilidad y rendimiento físico en el Tecno Pova 4.
+- Prueba de regresión: `tests/verify-themed-workstations.test.mjs`; rama `feat/project-themed-workstations`, pendiente PR/CI.
+- Fuente: cambios del renderer y pruebas del repositorio, 2026-11-10.
