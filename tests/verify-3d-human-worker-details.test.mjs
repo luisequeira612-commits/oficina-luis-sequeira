@@ -4,11 +4,11 @@ import { readFileSync } from "node:fs";
 
 const renderer = readFileSync(new URL("../assets/office-3d.js", import.meta.url), "utf8");
 
-test("3D human workers have readable facial and clothing details", () => {
-  assert.ok(renderer.includes("Facial features are deliberately simple"), "documents the mobile-scale face detail");
-  assert.ok(renderer.includes("Alternating subtle glasses"), "adds deterministic accessory variation");
-  assert.ok(renderer.includes("Shirt collar, placket"), "adds tailored clothing detail");
-  assert.ok(renderer.includes("role badge"), "adds a small clothing badge");
+test("3D workers use original brick-built minifigure proportions", () => {
+  assert.ok(renderer.includes("Original brick-built minifigure proportions"), "uses compact, readable minifigure geometry");
+  assert.ok(renderer.includes("Hair pieces are compact block-compatible caps"), "supports varied hair and accessories");
+  assert.ok(renderer.includes("Rectangular torso with broad shoulders"), "keeps a block-built torso");
+  assert.ok(renderer.includes("small role badge"), "retains a role marker");
   assert.ok(renderer.includes("workerRanges.push"), "keeps worker geometry inside the existing animation range");
 });
 
@@ -31,4 +31,11 @@ test("connected overview offsets head and hand ranges with each room geometry", 
   assert.match(renderer, /headEnd:worker\.headEnd\+posStart/);
   assert.match(renderer, /handsStart:worker\.handsStart\+posStart/);
   assert.match(renderer, /handsEnd:worker\.handsEnd\+posStart/);
+});
+
+test("camera uses bounded drag navigation and deliberate limited rotation", () => {
+  assert.match(renderer, /target\[0\]=clamp\(target\[0\]-dx\*\.018,-4\.8,4\.8\)/);
+  assert.match(renderer, /target\[2\]=clamp\(target\[2\]\+dy\*\.018,-7\.5,7\.5\)/);
+  assert.match(renderer, /theta=clamp\(theta\+\.14,-\.35,1\.78\)/);
+  assert.match(renderer, /Centrar oficina/);
 });
