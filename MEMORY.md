@@ -608,3 +608,11 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Se añadieron pruebas de regresión para comprobar que la preferencia de movimiento reducido no congela el motor y que el medidor queda en una posición visible con la caché renovada.
 - No se cambió la clave ni el esquema local, ni se inició la fase de datos editables/tiempo real. No se migró hosting.
 - Fuente: revisión del renderer, CSS, HTML y pruebas del repositorio; reporte del usuario, 2026-11-10.
+
+
+### Cierre y verificación de la corrección de movimiento/FPS — 10 de noviembre de 2026
+
+- La primera CI tras la mejora encontró aserciones antiguas que esperaban amplitudes/velocidades previas y la versión v48 de CSS. Se actualizaron únicamente las expectativas de pruebas; no se revirtió la mejora de movimiento ni la caché nueva.
+- Workflow final [42894125763](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42894125763): validate y deploy success. Suite Node: 97/97 pruebas aprobadas, 0 fallos. Pages publicado en el head `54c5e07a7f05540b9ad4d650e0bc101fec3d954d`.
+- La confirmación final es de CI y despliegue, no de interacción física en el Tecno Pova 4. El medidor debe comprobarse visualmente en el móvil; no afirmar 30+ FPS hasta leer el valor real. No se inspeccionó la consola móvil.
+- Fuente: GitHub Actions run 42894125763 y logs de validate, 2026-11-10.
