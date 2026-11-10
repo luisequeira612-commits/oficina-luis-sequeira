@@ -6,7 +6,7 @@ test("waiting workers use a bounded ambient walk cycle", () => {
   assert.match(renderer, /worker\.state==="st-r"/);
   assert.match(renderer, /const route=sampleRoute\(worker,seconds\)/);
   assert.match(renderer, /walkZ=route\.z-worker\.z/);
-  assert.match(renderer, /const speed=\.82,dwell=3\.8/);
+  assert.match(renderer, /const speed=1\.0,dwell=3\.8/);
   assert.match(renderer, /worker\.index\*2\.7/);
 });
 test("walking stays inside inter-column aisles and keeps equipment separate", () => {

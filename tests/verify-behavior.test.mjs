@@ -91,7 +91,7 @@ test("BABYMONSTER Chart appears in required published project content", () => {
 });
 
 test("immersive office overview explores existing projects without changing persisted data", () => {
-  assert.ok(html.includes('href="assets/office-view.css?v=48"'), "immersive office styles");
+  assert.ok(html.includes('href="assets/office-view.css?v=49"'), "immersive office styles");
   assert.ok(html.includes('src="assets/office-view.js?v=49"'), "office interaction");
   assert.doesNotMatch(html, /id="office-map"/, "obsolete large project card grid is removed");
   mustContain('id="office-3d-overview"', "connected 3D office overview container");

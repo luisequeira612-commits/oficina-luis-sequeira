@@ -20,7 +20,7 @@ test("worker animation separates head, arms and typing hands by simulated state"
   assert.match(renderer, /const headStart=positions\.length/);
   assert.match(renderer, /const handsStart=positions\.length/);
   assert.match(renderer, /headStart,headEnd,armsStart,armsEnd,handsStart,handsEnd/);
-  assert.match(renderer, /Math\.abs\(Math\.sin\(seconds\*16\+worker\.index\)\)\*\.045/);
+  assert.match(renderer, /Math\.abs\(Math\.sin\(seconds\*16\+worker\.index\)\)\*\.08/);
   assert.match(renderer, /worker\.headStart\+1/);
   assert.match(renderer, /worker\.handsStart\+1/);
   assert.match(renderer, /prefers-reduced-motion/);

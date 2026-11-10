@@ -61,7 +61,7 @@ test("direct employee selection highlights the worker in the actual WebGL scene"
 
 
 test("the deployed HTML requests the fresh stylesheet that positions floating 3D nameplates", () => {
-  assert.match(html, /office-view\.css\?v=48/);
+  assert.match(html, /office-view\.css\?v=49/);
   assert.match(css, /\.office-worker-tags\{position:absolute/);
   assert.match(css, /\.office-worker-tag\{position:absolute/);
   assert.match(renderer, /container\.appendChild\(workerTags\)/);
