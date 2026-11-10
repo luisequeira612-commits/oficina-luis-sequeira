@@ -171,6 +171,18 @@ function buildScene(workers,roomName=""){
   box(-5.54,2.52-(note%2)*.42,-1.68+note*.42,.018,.025,.20,[0.94,0.95,0.92]);
  }
  box(-5.55,1.62,-1.05,.18,.06,2.22,woodTop);
+ // Analog wall clock: a small office prop with baked geometry, no texture or runtime animation.
+ const clockX=4.65,clockY=2.95,clockFaceZ=-4.69;
+ sphere(clockX,clockY,-4.79,.42,.42,.075,[0.17,0.25,0.34],12,8);
+ sphere(clockX,clockY,clockFaceZ,.35,.35,.035,[0.93,0.92,0.84],12,8);
+ for(let mark=0;mark<12;mark++){
+  const angle=mark*Math.PI/6,mx=clockX+Math.cos(angle)*.285,my=clockY+Math.sin(angle)*.285;
+  sphere(mx,my,clockFaceZ+.035,.018,.018,.012,[0.24,0.31,0.37],6,4);
+ }
+ // Fixed 10:10 hands are decorative geometry, not a live clock reading.
+ segment([clockX,clockY,clockFaceZ+.045],[clockX-.13,clockY+.13,clockFaceZ+.045],.022,[0.17,0.25,0.34],7);
+ segment([clockX,clockY,clockFaceZ+.05],[clockX+.21,clockY+.19,clockFaceZ+.05],.014,[0.17,0.25,0.34],7);
+ sphere(clockX,clockY,clockFaceZ+.06,.035,.035,.018,[0.82,0.55,0.24],7,4);
  // Floor planks and rugs.
  for(let i=-5;i<6;i++)box(i*.98,-.005,0,.018,.012,9.6,[0.72,0.65,0.55]);
  box(0,.025,1.7,9,.05,3.2,[0.31,0.38,0.43]);
