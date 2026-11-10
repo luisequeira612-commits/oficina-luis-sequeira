@@ -84,6 +84,9 @@ test("isometric office overview explores existing projects without changing pers
   mustContain('card.dataset.roomId=room.id', "stable room identity for map");
   assert.ok(officeScript.includes('card.scrollIntoView({behavior:reduced?"auto":"smooth",block:"center"})'), "missing explore project navigation");
   assert.ok(officeScript.includes("aria-pressed"), "missing accessible selected room state");
+  assert.ok(officeScript.includes("dialog.showModal"), "room opens in an accessible dialog");
+  assert.ok(officeScript.includes("room-desk"), "room scene includes desk furniture");
+  assert.ok(officeScript.includes("selectedCard.scrollIntoView"), "room dialog links back to project details");
   assert.doesNotMatch(html, /office-view.*localStorage|STORAGE_KEY.*office-view/i, "overview does not add persisted state");
 });
 
