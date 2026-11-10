@@ -296,7 +296,7 @@ function open({container,roomName,workers=[],rooms=null,onSelectRoom=null}){
   const hint=document.createElement("span");hint.className="office-3d-hint";hint.textContent="Arrastra para moverte · Pellizca para acercar · Usa ↶ ↷ para girar";
   const group=document.createElement("div");group.style.display="flex";group.style.gap="5px";
   const makeButton=(label,aria,fn)=>{const b=document.createElement("button");b.type="button";b.textContent=label;b.setAttribute("aria-label",aria);b.addEventListener("click",fn);group.appendChild(b);return b};
-  const overviewMode=Boolean(rooms&&rooms.length),overviewRows=overviewMode?Math.ceil(rooms.length/2):1,baseRadius=overviewMode?(rooms.length===1?13:Math.max(13,Math.max(24.8,overviewRows*10.4)*1.45)):13,minRadius=8;let initialRadius=baseRadius,maxRadius=overviewMode?baseRadius*1.65:23,theta=.72,phi=1.08,radius=baseRadius,target=[0,1.15,0],cameraFitDone=false;
+  const overviewMode=Boolean(rooms&&rooms.length),baseRadius=overviewMode?15:13,minRadius=8;let initialRadius=baseRadius,maxRadius=overviewMode?baseRadius*1.65:23,theta=.72,phi=1.08,radius=baseRadius,target=[0,1.15,0],cameraFitDone=false;
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   makeButton("−","Alejar cámara",()=>{radius=clamp(radius+1,minRadius,maxRadius)});
   makeButton("+","Acercar cámara",()=>{radius=clamp(radius-1,minRadius,maxRadius)});
