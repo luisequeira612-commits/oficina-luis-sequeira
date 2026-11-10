@@ -38,10 +38,10 @@ function historyForAgent(room,e,agentId){
  const commits=latestCommits(e).map(commit=>({name:commit.message,updated_at:commit.date,status:"commit",agentId}));
  return taskHistory.filter(x=>!x.agentId||x.agentId===agentId).concat(commits).sort((a,b)=>new Date(b.updated_at||b.date||0)-new Date(a.updated_at||a.date||0)).slice(0,3).map(x=>x.name||x.message||"Actividad de GitHub");
 }
-function recordCompletedRuns(e,previousRuns){
+function recordCompletedRuns(room,e,previousRuns){
  const seen=new Set(Array.isArray(e?.taskHistory)?e.taskHistory.map(x=>String(x.runId||"")):[]);
  const prior=new Set((previousRuns||[]).map(x=>String(x.id)));
- const additions=(e?.runs||[]).filter(run=>run.status==="completed"&&!prior.has(String(run.id))&&!seen.has(String(run.id))).map(run=>({runId:run.id,name:run.name||run.display_title||"GitHub Actions",conclusion:run.conclusion||"completed",completedAt:run.updated_at||run.completed_at||run.created_at||"",updated_at:run.updated_at||run.completed_at||run.created_at||"",agentId:(e.runAssignments||{})[String(run.id)]||null}));
+ const additions=(e?.runs||[]).filter(run=>run.status==="completed"&&!prior.has(String(run.id))&&!seen.has(String(run.id))).map(run=>{const key=String(run.id),ids=roomAgentIds(room),assignments=e.runAssignments&&typeof e.runAssignments==="object"?e.runAssignments:{};let agentId=assignments[key]||null;if(!agentId&&ids.length){agentId=ids[(Number(run.id)||0)%ids.length];assignments[key]=agentId;e.runAssignments=assignments}return {runId:run.id,name:run.name||run.display_title||"GitHub Actions",conclusion:run.conclusion||"completed",completedAt:run.updated_at||run.completed_at||run.created_at||"",updated_at:run.updated_at||run.completed_at||run.created_at||"",agentId};});
  e.taskHistory=[...(e.taskHistory||[]),...additions].sort((a,b)=>new Date(b.updated_at||b.completedAt||0)-new Date(a.updated_at||a.completedAt||0)).slice(0,12);
 }
 function state(e){const a=running(e),q=queued(e),r=latest(e);if(a)return "working";if(q)return "queued";if(!r||r.status!=="completed")return "rest";if(["failure","timed_out","action_required"].includes(r.conclusion))return "failure";if(r.conclusion==="success"&&(e.celebrateUntil||0)>now())return "success";return "rest"}
@@ -155,7 +155,7 @@ async function request(room){
    const previousId=previousRuns[0]?.id;e.runs=data.workflow_runs.slice(0,5);
    if(e.runs[0]?.id!==previousId&&e.runs[0]?.status==="completed"&&e.runs[0]?.conclusion==="success")e.celebrateUntil=now()+7000;
    e.etag=response.headers.get("ETag")||e.etag||"";e.checkedAt=now();e.fetchedAt=now();delete e.error;
-   recordCompletedRuns(e,previousRuns);
+   recordCompletedRuns(room,e,previousRuns);
    cache[room.repository]=e;save();backoffCount=0;backoff=0;workflowFresh=true;
   }
   if(workflowFresh){
