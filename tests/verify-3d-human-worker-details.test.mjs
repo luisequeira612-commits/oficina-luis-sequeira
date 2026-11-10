@@ -26,11 +26,10 @@ test("worker animation separates head, arms and typing hands by simulated state"
 });
 
 
-test("connected overview offsets head and hand ranges with each room geometry", () => {
-  assert.match(renderer, /headStart:worker\.headStart\+posStart/);
-  assert.match(renderer, /headEnd:worker\.headEnd\+posStart/);
-  assert.match(renderer, /handsStart:worker\.handsStart\+posStart/);
-  assert.match(renderer, /handsEnd:worker\.handsEnd\+posStart/);
+test("the shared overview preserves animation ranges for all workers", () => {
+  assert.match(renderer, /const allWorkers=rooms\.flatMap/);
+  assert.match(renderer, /const workerRanges=scene\.workerRanges/);
+  assert.match(renderer, /workerRanges,count:positions\.length\/3/);
 });
 
 test("camera uses bounded drag navigation and deliberate limited rotation", () => {
