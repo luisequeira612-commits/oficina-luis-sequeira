@@ -15,8 +15,8 @@ let selectedCard=null;
 if(!rooms||!map||!dialog||!scene)return;
 function closeOverview(){if(overview&&typeof overview._office3dCleanup==="function")overview._office3dCleanup();if(overview){overview.classList.remove("is-active");overview.hidden=true}document.body.classList.remove("office-game-active");map.hidden=false}
 function workerState(agent){return agent.classList.contains("is-success")?"st-s":agent.classList.contains("is-failure")?"st-f":Array.from(agent.classList).find(name=>/^st-[wtar]$/.test(name))||"st-r"}
-function workerDataFor(agent){const avatar=agent.querySelector(".human-worker");const state=workerState(agent);return {name:agent.dataset.employeeName||agent.querySelector(".agent-role")?.textContent?.trim()||"Agente",role:agent.dataset.agentRole||"Puesto",state,gender:avatar?.dataset.gender||agent.dataset.employeeGender||"person",tone:avatar?.dataset.skinTone||agent.dataset.skinTone||"medium",hair:avatar?.dataset.hair||agent.dataset.hair||"short",shirt:avatar?.dataset.shirt||agent.dataset.shirt||"blue"}}
-function openRoom(card){
+function workerDataFor(agent){const avatar=agent.querySelector(".human-worker");const state=workerState(agent);return {id:agent.dataset.agentId||"",name:agent.dataset.employeeName||agent.querySelector(".agent-role")?.textContent?.trim()||"Agente",role:agent.dataset.agentRole||"Puesto",state,gender:avatar?.dataset.gender||agent.dataset.employeeGender||"person",tone:avatar?.dataset.skinTone||agent.dataset.skinTone||"medium",hair:avatar?.dataset.hair||agent.dataset.hair||"short",shirt:avatar?.dataset.shirt||agent.dataset.shirt||"blue"}}
+function openRoom(card,selectedEmployeeId=""){
  closeOverview();
  selectedCard=card;
  const name=card.querySelector(".room-title")?.textContent?.trim()||"Proyecto";
@@ -24,7 +24,7 @@ function openRoom(card){
  const roles=agents.map(agent=>agent.querySelector(".agent-role")?.textContent?.trim()||"Puesto");
  const repoStatus=card.querySelector(".repo-status")?.textContent?.trim()||"Sin estado de repositorio disponible";
  title.textContent=name;
- caption.textContent=roles.length?roles.length+" puestos de trabajo en esta habitación":"Habitación lista para incorporar puestos de trabajo";
+ const selectedAgent=agents.find(agent=>agent.dataset.agentId===selectedEmployeeId);caption.textContent=selectedAgent?"Seleccionaste a "+(selectedAgent.dataset.employeeName||"este empleado")+" · "+(selectedAgent.dataset.agentRole||"Puesto"):roles.length?roles.length+" puestos de trabajo en esta habitación":"Habitación lista para incorporar puestos de trabajo";
  detail.textContent=repoStatus;
  scene.replaceChildren();
  const floor=document.createElement("div");floor.className="room-floor";
@@ -41,7 +41,7 @@ function openRoom(card){
    const desk=document.createElement("div");desk.className="room-desk";
    const screen=document.createElement("div");screen.className="room-screen";
    const chair=document.createElement("div");chair.className="room-chair";
-   const label=document.createElement("span");label.className="room-station-label";label.textContent=role;
+   const label=document.createElement("span");label.className="room-station-label";label.textContent=role;station.dataset.employeeId=agents[index]?.dataset.agentId||"";if(selectedEmployeeId&&station.dataset.employeeId===selectedEmployeeId)station.classList.add("is-selected-worker");
    const avatar=agents[index]?.querySelector(".human-worker");
    if(avatar){const person=avatar.cloneNode(true);person.classList.add("room-worker-avatar");station.appendChild(person)}
    station.append(chair,desk,screen,label);station.style.setProperty("--station-index",String(index));furniture.appendChild(station);
@@ -81,8 +81,8 @@ function renderMap(){
   });
   map.appendChild(tile);
  });
- const roomData=cards.map(card=>({id:card.dataset.roomId,name:card.querySelector(".room-title")?.textContent?.trim()||"Proyecto",workers:Array.from(card.querySelectorAll(".ag"),workerDataFor)}));
- const renderedOverview=Boolean(overview&&window.Office3D&&roomData.length&&window.Office3D.openOverview({container:overview,rooms:roomData,onSelectRoom:id=>{const card=cards.find(item=>item.dataset.roomId===id);if(card)openRoom(card)}}));
+ const roomData=cards.map(card=>({id:card.dataset.roomId,name:card.querySelector(".room-title")?.textContent?.trim()||"Proyecto",workers:Array.from(card.querySelectorAll(".ag"),agent=>({...workerDataFor(agent),roomId:card.dataset.roomId}))}));
+ const renderedOverview=Boolean(overview&&window.Office3D&&roomData.length&&window.Office3D.openOverview({container:overview,rooms:roomData,onSelectRoom:(id,employeeId)=>{const card=cards.find(item=>item.dataset.roomId===id);if(card)openRoom(card,employeeId||"")}}));
  if(renderedOverview){
   const roster=document.createElement("div");roster.className="office-employee-roster";roster.setAttribute("aria-label","Plantilla de nueve empleados");
   const heading=document.createElement("div");heading.className="office-roster-heading";heading.textContent="EQUIPO · "+roomData.reduce((n,room)=>n+room.workers.length,0)+" EMPLEADOS";
