@@ -147,3 +147,13 @@
 - No se modifica la cámara, los trabajadores, proyectos, estados, localStorage ni esquemas persistentes. La prueba de rendimiento en el Tecno Pova 4 sigue pendiente.
 - PR [#18](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/18), rama `feat/3d-room-entrances-and-identity`; CI pendiente.
 - Fuente: implementación del renderer y prueba automatizada, 2026-11-10.
+
+
+## Identidad visual temática por habitación 3D — 10 de noviembre de 2026
+- Cada escena de proyecto recibe el nombre visible de su habitación y genera una instalación mural procedural distinta, tanto en la vista de detalle como en el edificio conectado.
+- App Guardi usa un emblema tipo escudo; Canal de YouTube, un símbolo de reproducción y una pequeña línea de edición; Tema Nova Launcher, un teléfono con elementos orbitales; BABYMONSTER Chart, barras de ranking y un motivo musical. Los proyectos creados por el usuario reciben una composición modular neutra.
+- Los motivos son iconografía geométrica original y abstracta, no logotipos oficiales ni imágenes descargadas. Se construyen con las primitivas del renderer WebGL 2 existente.
+- Sin nuevas dependencias, texturas, recursos externos, APIs, backend o servicios de pago. No cambia la cámara, los trabajadores, datos de proyectos, `localStorage` ni su esquema.
+- Prueba de regresión: `tests/verify-project-themed-rooms.test.mjs`. Rama `feat/project-themed-3d-rooms`; pendiente de PR/CI.
+- Compatibilidad y rendimiento en Tecno Pova 4 todavía sin prueba física.
+- Fuente: revisión del renderer y nombres de proyectos actuales del repositorio, 2026-11-10.

@@ -15,7 +15,7 @@ function perspective(out,fovy,aspect,near,far){const f=1/Math.tan(fovy/2),nf=1/(
 function lookAt(out,eye,target,up){let zx=eye[0]-target[0],zy=eye[1]-target[1],zz=eye[2]-target[2];let l=Math.hypot(zx,zy,zz)||1;zx/=l;zy/=l;zz/=l;let xx=up[1]*zz-up[2]*zy,xy=up[2]*zx-up[0]*zz,xz=up[0]*zy-up[1]*zx;l=Math.hypot(xx,xy,xz)||1;xx/=l;xy/=l;xz/=l;let yx=zy*xz-zz*xy,yy=zz*xx-zx*xz,yz=zx*xy-zy*xx;out[0]=xx;out[1]=yx;out[2]=zx;out[3]=0;out[4]=xy;out[5]=yy;out[6]=zy;out[7]=0;out[8]=xz;out[9]=yz;out[10]=zz;out[11]=0;out[12]=-(xx*eye[0]+xy*eye[1]+xz*eye[2]);out[13]=-(yx*eye[0]+yy*eye[1]+yz*eye[2]);out[14]=-(zx*eye[0]+zy*eye[1]+zz*eye[2]);out[15]=1;return out}
 function shader(gl,type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(s)||"Shader error");return s}
 function program(gl){const p=gl.createProgram();gl.attachShader(p,shader(gl,gl.VERTEX_SHADER,VERT));gl.attachShader(p,shader(gl,gl.FRAGMENT_SHADER,FRAG));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(p)||"Program error");return p}
-function buildScene(workers){
+function buildScene(workers,roomName=""){
  const positions=[],normals=[],colors=[];
  const addTri=(a,b,c,color)=>{const ux=b[0]-a[0],uy=b[1]-a[1],uz=b[2]-a[2],vx=c[0]-a[0],vy=c[1]-a[1],vz=c[2]-a[2];let nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx,l=Math.hypot(nx,ny,nz)||1;nx/=l;ny/=l;nz/=l;for(const p of [a,b,c]){positions.push(...p);normals.push(nx,ny,nz);colors.push(...color)}};
  const quad=(a,b,c,d,color)=>{addTri(a,b,c,color);addTri(a,c,d,color)};
@@ -29,6 +29,42 @@ function buildScene(workers){
  box(0,3.88,-4.82,12,.12,.12,[0.88,0.91,0.94]);box(-5.82,2,0,.12,4,10,[0.60,0.68,0.74]);
  box(-2.6,2.25,-4.84,2.6,1.8,.08,[0.22,0.49,0.64]);box(-2.6,2.25,-4.77,2.38,1.58,.06,[0.43,0.72,0.82]);
  box(-2.6,2.25,-4.70,.08,1.7,.08,[0.86,0.91,0.94]);box(-2.6,2.25,-4.69,2.5,.08,.08,[0.86,0.91,0.94]);
+ // A project-specific wall installation makes each room recognizable without external textures.
+ const projectKey=String(roomName||"").toLowerCase();
+ const projectTheme=projectKey.includes("guardi")?"guardi":projectKey.includes("youtube")?"video":projectKey.includes("nova")?"launcher":projectKey.includes("babymonster")||projectKey.includes("chart")?"charts":"studio";
+ const themeColors={guardi:[0.20,0.48,0.72],video:[0.82,0.22,0.25],launcher:[0.37,0.48,0.76],charts:[0.70,0.38,0.66],studio:[0.36,0.54,0.66]};
+ const themeColor=themeColors[projectTheme];
+ box(1.45,2.95,-4.76,2.72,1.52,.16,[0.17,0.23,0.30]);
+ box(1.45,2.95,-4.65,2.54,1.34,.08,[0.83,0.87,0.90]);
+ box(1.45,3.55,-4.59,2.48,.12,.035,themeColor);
+ box(.28,2.95,-4.58,.12,1.18,.05,themeColor);
+ if(projectTheme==="guardi"){
+  // Shield-like emblem for the Guardi development room.
+  box(1.42,2.98,-4.56,.66,.72,.07,[0.18,0.31,0.45]);
+  addTri([1.42,3.30,-4.51],[1.10,2.98,-4.51],[1.42,2.57,-4.51],themeColor);
+  addTri([1.42,3.30,-4.51],[1.42,2.57,-4.51],[1.74,2.98,-4.51],themeColor);
+  box(1.42,2.98,-4.49,.10,.34,.04,[0.90,0.94,0.97]);
+ }else if(projectTheme==="video"){
+  // Play symbol and a small editing timeline.
+  box(1.42,3.02,-4.55,.88,.66,.06,[0.76,0.18,0.22]);
+  addTri([1.25,2.82,-4.50],[1.25,3.22,-4.50],[1.70,3.02,-4.50],[1,1,1]);
+  for(let i=0;i<5;i++)box(2.02+i*.16,2.67,-4.53,.10,.09+(i%2)*.08,.035,i%2?themeColor:[0.35,0.68,0.75]);
+ }else if(projectTheme==="launcher"){
+  // Phone mock-up with orbit dots for the launcher/design room.
+  box(1.42,2.98,-4.55,.55,.90,.07,[0.16,0.22,0.31]);
+  box(1.42,3.00,-4.50,.43,.72,.025,[0.35,0.60,0.77]);
+  sphere(1.42,2.67,-4.47,.045,.045,.025,[0.92,0.95,0.98],7,4);
+  sphere(2.05,3.20,-4.52,.14,.14,.05,themeColor,8,5);
+  sphere(2.30,2.78,-4.52,.09,.09,.04,[0.82,0.72,0.42],8,5);
+ }else if(projectTheme==="charts"){
+  // Chart bars and a music-note motif for the BABYMONSTER workspace.
+  for(let i=0;i<5;i++)box(1.00+i*.22,2.78+(i%3)*.16,-4.55,.12,.36+(i%3)*.32,.05,i%2?themeColor:[0.37,0.60,0.76]);
+  sphere(2.08,3.18,-4.52,.16,.13,.06,[0.20,0.24,0.31],8,5);
+  box(2.20,3.48,-4.52,.07,.55,.05,[0.20,0.24,0.31]);
+ }else{
+  // A neutral modular display for user-created projects.
+  for(let i=0;i<4;i++)box(1.00+i*.28,2.95,-4.55,.14,.52,.05,i%2?themeColor:[0.58,0.69,0.76]);
+ }
  // Floor planks and rugs.
  for(let i=-5;i<6;i++)box(i*.98,-.005,0,.018,.012,9.6,[0.72,0.65,0.55]);
  box(0,.025,1.7,9,.05,3.2,[0.31,0.38,0.43]);
@@ -82,7 +118,7 @@ function buildScene(workers){
  return {data,basePositions,workerRanges,count:positions.length/3,positionLength:positions.length,normalLength:normals.length};
 }
 function buildOfficeScene(rooms){
- const cols=rooms.length>1?2:1,rows=Math.ceil(rooms.length/cols),scenes=rooms.map(room=>buildScene(room.workers||[])),positions=[],normals=[],colors=[],workerRanges=[];
+ const cols=rooms.length>1?2:1,rows=Math.ceil(rooms.length/cols),scenes=rooms.map(room=>buildScene(room.workers||[],room.name||"")),positions=[],normals=[],colors=[],workerRanges=[];
  let workerOffset=0;
  scenes.forEach((scene,index)=>{
   const col=index%cols,row=Math.floor(index/cols),xCenter=cols===1?0:(col===0?-6.2:6.2),zCenter=(row-(rows-1)/2)*10.4,flip=col===1,posStart=positions.length;
@@ -127,7 +163,7 @@ function open({container,roomName,workers=[],rooms=null,onSelectRoom=null}){
  const gl=canvas.getContext("webgl2",{alpha:false,antialias:false,powerPreference:"low-power"});
  if(!gl){const note=document.createElement("p");note.className="office-3d-error";note.textContent="Este navegador no ofrece WebGL 2 en este momento. Se muestra la vista alternativa.";container.appendChild(note);return false}
  try{
-  const p=program(gl),scene=rooms&&rooms.length?buildOfficeScene(rooms):buildScene(workers),buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,scene.data,gl.DYNAMIC_DRAW);
+  const p=program(gl),scene=rooms&&rooms.length?buildOfficeScene(rooms):buildScene(workers,roomName),buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,scene.data,gl.DYNAMIC_DRAW);
   const stride=0,loc=(name)=>gl.getAttribLocation(p,name);gl.useProgram(p);
   const ap=loc("aPosition"),an=loc("aNormal"),ac=loc("aColor");
   gl.enableVertexAttribArray(ap);gl.vertexAttribPointer(ap,3,gl.FLOAT,false,stride,0);
