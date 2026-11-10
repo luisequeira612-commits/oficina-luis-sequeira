@@ -271,3 +271,13 @@
 - Los repositorios con cualquiera de los dos estados siguen teniendo prioridad de sondeo rápido (60 s). El resumen global incluye proyectos en cola y no los cuenta como trabajo iniciado.
 - Cambios limitados al módulo de GitHub Actions, prueba de regresión, README y MEMORY; sin cambios al esquema de proyectos, almacenamiento, API, tokens, servidor ni dependencias.
 - Fuente: revisión de la lógica de estados y requisito de precisión de la interfaz, 2026-11-10.
+
+
+## PR #34 — LEGO Office Tycoon 3D: minifiguras y vista inmersiva — 10 de noviembre de 2026
+
+- Implementa la primera etapa de la dirección visual aprobada: personajes originales de estilo minifigura en la escena WebGL 2 (cabeza cilíndrica con stud, torso bloque, brazos y piernas geométricos, cara impresa, variación de peinados y accesorios), sustituyendo el modelo humano low-poly.
+- Los avatares pequeños de las tarjetas también pasan a una silueta SVG brick-built. Se conserva el reparto alternado de género y la variedad existente de tonos de piel, peinados y ropa.
+- La vista general pasa a modo inmersivo a pantalla completa. Arrastrar desplaza la cámara dentro de límites, pellizcar acerca/aleja y controles explícitos permiten rotación acotada y recentrado; deja de comportarse como navegación libre tipo mapa.
+- Sin dependencias, modelos, texturas, APIs, backend ni pagos. Se preservan WebGL 2, la alternativa CSS, GitHub Actions, el esquema `oficina-luis-sequeira-v1` y la caché independiente.
+- Compatibilidad y rendimiento visual en el Tecno Pova 4 aún requieren prueba manual; CI no certifica la apariencia del dispositivo.
+- Fuente: aprobación explícita del usuario y cambios de la rama `feat/lego-tycoon-fullscreen-office`, 2026-11-10.

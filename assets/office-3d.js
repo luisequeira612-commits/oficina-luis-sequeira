@@ -166,43 +166,43 @@ function buildScene(workers,roomName=""){
   }else{
    box(x-.78,1.06,z+.12,.34,.08,.30,themeColor);box(x-.78,1.12,z+.12,.22,.025,.06,[0.91,0.94,0.97]);
   }
-  // Seated low-poly worker: torso, head, hair, arms, legs and shoes.
+  // Original brick-built minifigure proportions: cylindrical head, top stud, block torso and separate legs.
   const skin=tone[worker.tone]||tone.medium,shirt=shirtByName[worker.shirt]||shirts[index%shirts.length],hairColor=hairColors[index%hairColors.length],hairStyle=worker.hair||"short",workerStart=positions.length;
-  box(x,1.27,z+1.0,.62,.78,.36,shirt);const headStart=positions.length;sphere(x,1.98,z+.98,.34,.38,.32,skin,10,7);
-  sphere(x,2.22,z+.96,.35,.17,.34,hairColor,9,5);
-  if(hairStyle==="long"||hairStyle==="tied"){sphere(x-.29,1.86,z+.97,.11,.42,.13,hairColor,7,5);sphere(x+.29,1.86,z+.97,.11,.42,.13,hairColor,7,5)}
-  if(hairStyle==="curly"){for(let curl=0;curl<7;curl++){const angle=curl*Math.PI*2/7;sphere(x+Math.cos(angle)*.25,2.28,z+.96+Math.sin(angle)*.24,.13,.13,.13,hairColor,6,4)}}
-  if(hairStyle==="tied")sphere(x,2.32,z+.69,.13,.15,.13,hairColor,7,5);
-  // Facial features are deliberately simple, readable at mobile scale, and face the room.
-  sphere(x-.11,2.03,z+1.265,.052,.055,.025,[0.94,0.91,0.84],7,4);sphere(x+.11,2.03,z+1.265,.052,.055,.025,[0.94,0.91,0.84],7,4);
-  sphere(x-.11,2.03,z+1.289,.023,.031,.014,[0.10,0.09,0.09],6,4);sphere(x+.11,2.03,z+1.289,.023,.031,.014,[0.10,0.09,0.09],6,4);
-  box(x-.11,2.13,z+1.265,.12,.035,.035,hairColor);box(x+.11,2.13,z+1.265,.12,.035,.035,hairColor);
-  sphere(x,1.96,z+1.30,.045,.075,.045,skin,7,5);
-  box(x,1.86,z+1.285,.10,.018,.025,[0.38,0.15,0.14]);
-  sphere(x-.35,1.98,z+.98,.075,.11,.065,skin,7,5);sphere(x+.35,1.98,z+.98,.075,.11,.065,skin,7,5);
-  // Alternating subtle glasses and a small ear stud make silhouettes less uniform.
-  if(index%4===1){box(x-.11,2.03,z+1.315,.16,.025,.025,metal);box(x+.11,2.03,z+1.315,.16,.025,.025,metal);box(x,2.03,z+1.32,.07,.018,.025,metal)}
-  if(index%5===2)sphere(x+.39,1.93,z+1.04,.035,.035,.025,[0.86,0.70,0.38],6,4);
+  const minifigureGender=worker.gender==="woman"?"woman":"man";
+  // Seated block legs and square shoes remain clearly separated below the desk.
+  box(x-.20,.73,z+.76,.34,.62,.38,shirt);box(x+.20,.73,z+.76,.34,.62,.38,shirt);
+  box(x-.20,.40,z+.91,.38,.18,.48,metal);box(x+.20,.40,z+.91,.38,.18,.48,metal);
+  // Rectangular torso with broad shoulders, flat front and a small role badge.
+  box(x,1.28,z+1.0,.82,.76,.48,shirt);
+  box(x,1.61,z+1.245,.30,.12,.035,[0.88,0.91,0.92]);
+  sphere(x+.25,1.43,z+1.255,.065,.065,.035,[0.88,0.72,0.40],7,5);
+  const headStart=positions.length;
+  // Cylindrical minifigure head with the characteristic top stud.
+  cyl(x,2.02,z+.99,.355,.68,skin,12);
+  cyl(x,2.40,z+.99,.125,.12,skin,12);
+  // Hair pieces are compact block-compatible caps; long and tied styles keep variety.
+  if(hairStyle==="short")box(x,2.34,z+.98,.70,.16,.67,hairColor);
+  else if(hairStyle==="curly"){sphere(x,2.35,z+.98,.37,.18,.36,hairColor,9,5);for(let curl=0;curl<5;curl++){const a=curl*Math.PI*2/5;sphere(x+Math.cos(a)*.25,2.40,z+.98+Math.sin(a)*.24,.12,.12,.12,hairColor,6,4)}}
+  else {box(x,2.34,z+.98,.72,.16,.68,hairColor);if(hairStyle==="long"){box(x-.30,2.02,z+.98,.13,.55,.48,hairColor);box(x+.30,2.02,z+.98,.13,.55,.48,hairColor)}else{sphere(x,2.48,z+.68,.13,.14,.13,hairColor,7,5)}}
+  // Simple printed face: two eyes and a small smile, not realistic anatomy.
+  sphere(x-.12,2.04,z+1.344,.045,.052,.025,[0.12,.10,.09],7,4);
+  sphere(x+.12,2.04,z+1.344,.045,.052,.025,[0.12,.10,.09],7,4);
+  box(x,1.91,z+1.345,.12,.018,.02,[0.40,.18,.15]);
+  if(minifigureGender==="woman"&&index%3===0)box(x+.25,2.02,z+1.30,.07,.035,.025,[0.86,.70,.38]);
   const headEnd=positions.length;
-  // Shirt collar, placket and a restrained role badge add tailored clothing detail.
-  box(x-.13,1.61,z+1.19,.18,.13,.045,[0.88,0.91,0.92]);box(x+.13,1.61,z+1.19,.18,.13,.045,[0.88,0.91,0.92]);
-  box(x,1.28,z+1.19,.045,.43,.035,[0.82,0.85,0.86]);
-  sphere(x+.22,1.42,z+1.195,.055,.055,.035,[0.88,0.72,0.40],7,5);
   const armsStart=positions.length;
-  sphere(x-.36,1.48,z+.78,.14,.34,.14,skin,8,5);sphere(x+.36,1.48,z+.78,.14,.34,.14,skin,8,5);
-  // Cuffs and hands join the arm animation so workers can visibly interact with keyboards.
-  box(x-.36,1.28,z+.78,.17,.10,.17,shirt);box(x+.36,1.28,z+.78,.17,.10,.17,shirt);
+  // Short articulated block arms and rounded hands rest toward the keyboard.
+  sphere(x-.48,1.52,z+.98,.16,.17,.16,shirt,8,5);sphere(x+.48,1.52,z+.98,.16,.17,.16,shirt,8,5);
+  cyl(x-.49,1.34,z+.84,.115,.38,shirt,8);cyl(x+.49,1.34,z+.84,.115,.38,shirt,8);
   const handsStart=positions.length;
-  sphere(x-.36,1.12,z+.48,.105,.075,.12,skin,7,5);sphere(x+.36,1.12,z+.48,.105,.075,.12,skin,7,5);
+  sphere(x-.49,1.12,z+.58,.13,.13,.13,skin,8,5);sphere(x+.49,1.12,z+.58,.13,.13,.13,skin,8,5);
   const handsEnd=positions.length,armsEnd=positions.length;
-  box(x-.2,.74,z+.72,.18,.58,.18,shirt);box(x+.2,.74,z+.72,.18,.58,.18,shirt);
-  box(x-.2,.43,z+.62,.22,.14,.3,metal);box(x+.2,.43,z+.62,.22,.14,.3,metal);
-  // Subtle task-state accents; animations remain clearly labelled as simulated elsewhere.
+  // Small printed state markers remain separate from real GitHub activity labels.
   if(worker.state==="st-w"){box(x-.22,1.16,z+.47,.2,.18,.2,skin);box(x+.22,1.16,z+.47,.2,.18,.2,skin)}
-  else if(worker.state==="st-t"){sphere(x+.44,2.35,z+.95,.13,.13,.13,[0.98,.78,.25],7,5)}
-  else if(worker.state==="st-a"){sphere(x,2.52,z+.96,.11,.11,.11,[0.24,.78,.88],7,5)}
-  else if(worker.state==="st-s"){sphere(x-.34,2.52,z+.96,.08,.08,.08,[.98,.78,.22],7,5);sphere(x+.34,2.52,z+.96,.08,.08,.08,[.98,.78,.22],7,5)}
-  else if(worker.state==="st-f"){box(x-.38,2.46,z+.96,.1,.3,.1,[.86,.16,.22]);sphere(x-.38,2.22,z+.96,.07,.07,.07,[.86,.16,.22],7,5)}
+  else if(worker.state==="st-t"){sphere(x+.44,2.55,z+.95,.13,.13,.13,[.98,.78,.25],7,5)}
+  else if(worker.state==="st-a"){sphere(x,2.62,z+.96,.11,.11,.11,[.24,.78,.88],7,5)}
+  else if(worker.state==="st-s"){sphere(x-.34,2.62,z+.96,.08,.08,.08,[.98,.78,.22],7,5);sphere(x+.34,2.62,z+.96,.08,.08,.08,[.98,.78,.22],7,5)}
+  else if(worker.state==="st-f"){box(x-.38,2.55,z+.96,.1,.3,.1,[.86,.16,.22]);sphere(x-.38,2.32,z+.96,.07,.07,.07,[.86,.16,.22],7,5)}
   workerRanges.push({start:workerStart,end:positions.length,headStart,headEnd,armsStart,armsEnd,handsStart,handsEnd,state:worker.state,index});
  });
  // Layered ceiling fixtures: recessed rails and three pendant lamps with bright diffusers.
@@ -315,23 +315,23 @@ function open({container,roomName,workers=[],rooms=null,onSelectRoom=null}){
   gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);gl.cullFace(gl.BACK);gl.clearColor(.075,.12,.18,1);
   const roomNav=rooms&&rooms.length?document.createElement("div"):null;if(roomNav){roomNav.className="office-3d-room-nav";rooms.forEach(room=>{const button=document.createElement("button");button.type="button";button.textContent="Entrar · "+room.name;button.setAttribute("aria-label","Entrar en la habitación "+room.name);button.addEventListener("click",()=>{if(typeof onSelectRoom==="function")onSelectRoom(room.id)});roomNav.appendChild(button)})}
   const controls=document.createElement("div");controls.className="office-3d-controls";
-  const hint=document.createElement("span");hint.className="office-3d-hint";hint.textContent="Arrastra para girar · Pellizca para acercar · Dos dedos para desplazar";
+  const hint=document.createElement("span");hint.className="office-3d-hint";hint.textContent="Arrastra para moverte · Pellizca para acercar · Usa ↶ ↷ para girar";
   const group=document.createElement("div");group.style.display="flex";group.style.gap="5px";
   const makeButton=(label,aria,fn)=>{const b=document.createElement("button");b.type="button";b.textContent=label;b.setAttribute("aria-label",aria);b.addEventListener("click",fn);group.appendChild(b);return b};
   const overviewMode=Boolean(rooms&&rooms.length),overviewRows=overviewMode?Math.ceil(rooms.length/2):1,initialRadius=overviewMode?(rooms.length===1?13:Math.max(13,Math.max(24.8,overviewRows*10.4)*1.45)):13,minRadius=8,maxRadius=overviewMode?initialRadius*1.65:23;let theta=.72,phi=1.08,radius=initialRadius,target=[0,1.15,0];
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   makeButton("−","Alejar cámara",()=>{radius=clamp(radius+1,minRadius,maxRadius)});
   makeButton("+","Acercar cámara",()=>{radius=clamp(radius-1,minRadius,maxRadius)});
-  makeButton("↻","Restablecer cámara",()=>{theta=.72;phi=1.08;radius=initialRadius;target=[0,1.15,0]});
+  makeButton("↶","Girar a la izquierda",()=>{theta=clamp(theta-.14,-.35,1.78)});makeButton("↷","Girar a la derecha",()=>{theta=clamp(theta+.14,-.35,1.78)});makeButton("⌂","Centrar oficina",()=>{theta=.72;phi=1.08;radius=initialRadius;target=[0,1.15,0]});
   controls.append(hint,group);container.append(canvas);if(roomNav)container.appendChild(roomNav);container.appendChild(controls);container.classList.add("is-active");
   const projection=mat4(),view=mat4();let raf=0,disposed=false,lastFrame=0;const reducedMotion=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   container._office3dUpdateStates=states=>{scene.workerRanges.forEach((worker,index)=>{if(states[index])worker.state=states[index]})};
   function resize(){const rect=container.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,1.15),w=Math.max(1,Math.floor(rect.width*dpr)),h=Math.max(1,Math.floor(rect.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h)}}
   function render(timestamp=0){if(disposed)return;if(timestamp-lastFrame<32){raf=requestAnimationFrame(render);return}lastFrame=timestamp;resize();if(!reducedMotion){const seconds=timestamp*.001;scene.workerRanges.forEach(worker=>{let bob=0,arms=0,head=0,hands=0;if(worker.state==="st-w"){bob=Math.sin(seconds*7+worker.index)*.025;arms=Math.sin(seconds*12+worker.index)*.055;head=Math.sin(seconds*3+worker.index)*.012;hands=Math.abs(Math.sin(seconds*16+worker.index))*.045}else if(worker.state==="st-t"){bob=Math.sin(seconds*2+worker.index)*.014;arms=.035;head=Math.sin(seconds*2.5+worker.index)*.025;hands=.006}else if(worker.state==="st-a"){bob=Math.sin(seconds*1.5+worker.index)*.01;arms=Math.sin(seconds*2.5+worker.index)*.025;head=Math.sin(seconds*1.4+worker.index)*.008}else if(worker.state==="st-s"){bob=Math.abs(Math.sin(seconds*5+worker.index))*.055;arms=Math.sin(seconds*9+worker.index)*.1;head=Math.sin(seconds*4+worker.index)*.018;hands=Math.abs(Math.sin(seconds*12+worker.index))*.035}else if(worker.state==="st-f"){bob=Math.sin(seconds*1.6+worker.index)*.008;arms=Math.sin(seconds*1.2+worker.index)*.012;head=Math.sin(seconds*1.5+worker.index)*.018}else{bob=Math.sin(seconds*1.2+worker.index)*.018;arms=Math.sin(seconds*1.1+worker.index)*.012;head=Math.sin(seconds*.9+worker.index)*.012}for(let i=worker.start+1;i<worker.end;i+=3)scene.data[i]=scene.basePositions[i]+bob;for(let i=worker.armsStart+1;i<worker.armsEnd;i+=3)scene.data[i]=scene.basePositions[i]+bob+arms;for(let i=worker.headStart+1;i<worker.headEnd;i+=3)scene.data[i]=scene.basePositions[i]+bob+head;for(let i=worker.handsStart+1;i<worker.handsEnd;i+=3)scene.data[i]=scene.basePositions[i]+bob+arms+hands});gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferSubData(gl.ARRAY_BUFFER,0,scene.data.subarray(0,scene.positionLength))}const eye=[target[0]+radius*Math.sin(phi)*Math.sin(theta),target[1]+radius*Math.cos(phi),target[2]+radius*Math.sin(phi)*Math.cos(theta)];perspective(projection,overviewMode?.86:.72,canvas.width/canvas.height,.1,100);lookAt(view,eye,target,[0,1,0]);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.uniformMatrix4fv(up,false,projection);gl.uniformMatrix4fv(uv,false,view);gl.drawArrays(gl.TRIANGLES,0,scene.count);raf=requestAnimationFrame(render)}
-  const pointers=new Map();let last=null,lastPinch=0;
-  canvas.addEventListener("pointerdown",e=>{canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});last={x:e.clientX,y:e.clientY};if(pointers.size===2){const a=Array.from(pointers.values());lastPinch=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)}});
-  canvas.addEventListener("pointermove",e=>{if(!pointers.has(e.pointerId))return;const prev=pointers.get(e.pointerId),dx=e.clientX-prev.x,dy=e.clientY-prev.y;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size>=2){const a=Array.from(pointers.values()),dist=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);if(lastPinch)radius=clamp(radius-(dist-lastPinch)*.035,minRadius,maxRadius);lastPinch=dist;target[0]-=dx*.012;target[2]+=dy*.012}else if(last){theta-=dx*.009;phi=clamp(phi+dy*.008,.42,1.42)}last={x:e.clientX,y:e.clientY}});
-  const release=e=>{pointers.delete(e.pointerId);last=pointers.size?Array.from(pointers.values())[0]:null;if(pointers.size<2)lastPinch=0};canvas.addEventListener("pointerup",release);canvas.addEventListener("pointercancel",release);
+  const pointers=new Map();let lastPinch=0;
+  canvas.addEventListener("pointerdown",e=>{canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size===2){const a=Array.from(pointers.values());lastPinch=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)}});
+  canvas.addEventListener("pointermove",e=>{if(!pointers.has(e.pointerId))return;const prev=pointers.get(e.pointerId),dx=e.clientX-prev.x,dy=e.clientY-prev.y;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size>=2){const a=Array.from(pointers.values()),dist=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);if(lastPinch)radius=clamp(radius-(dist-lastPinch)*.035,minRadius,maxRadius);lastPinch=dist;target[0]=clamp(target[0]-dx*.012,-4.8,4.8);target[2]=clamp(target[2]+dy*.012,-7.5,7.5)}else{target[0]=clamp(target[0]-dx*.018,-4.8,4.8);target[2]=clamp(target[2]+dy*.018,-7.5,7.5)}});
+  const release=e=>{pointers.delete(e.pointerId);if(pointers.size<2)lastPinch=0};canvas.addEventListener("pointerup",release);canvas.addEventListener("pointercancel",release);
   canvas.addEventListener("wheel",e=>{e.preventDefault();radius=clamp(radius+Math.sign(e.deltaY)*.55,minRadius,maxRadius)},{passive:false});
   const observer=new ResizeObserver(resize);observer.observe(container);
   render();

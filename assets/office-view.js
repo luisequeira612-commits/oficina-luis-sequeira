@@ -13,7 +13,7 @@ const close=document.getElementById("room-dialog-close");
 const go=document.getElementById("room-dialog-go");
 let selectedCard=null;
 if(!rooms||!map||!dialog||!scene)return;
-function closeOverview(){if(overview&&typeof overview._office3dCleanup==="function")overview._office3dCleanup();if(overview){overview.classList.remove("is-active");overview.hidden=true}map.hidden=false}
+function closeOverview(){if(overview&&typeof overview._office3dCleanup==="function")overview._office3dCleanup();if(overview){overview.classList.remove("is-active");overview.hidden=true}document.body.classList.remove("office-game-active");map.hidden=false}
 function workerState(agent){return agent.classList.contains("is-success")?"st-s":agent.classList.contains("is-failure")?"st-f":Array.from(agent.classList).find(name=>/^st-[wtar]$/.test(name))||"st-r"}
 function workerDataFor(agent){const avatar=agent.querySelector(".human-worker");const state=workerState(agent);return {role:agent.querySelector(".agent-role")?.textContent?.trim()||"Puesto",state,gender:avatar?.dataset.gender||"person",tone:avatar?.dataset.skinTone||"medium",hair:avatar?.dataset.hair||"short",shirt:avatar?.dataset.shirt||"blue"}}
 function openRoom(card){
@@ -84,6 +84,7 @@ function renderMap(){
  const roomData=cards.map(card=>({id:card.dataset.roomId,name:card.querySelector(".room-title")?.textContent?.trim()||"Proyecto",workers:Array.from(card.querySelectorAll(".ag"),workerDataFor)}));
  const renderedOverview=Boolean(overview&&window.Office3D&&roomData.length&&window.Office3D.openOverview({container:overview,rooms:roomData,onSelectRoom:id=>{const card=cards.find(item=>item.dataset.roomId===id);if(card)openRoom(card)}}));
  if(overview){overview.hidden=!renderedOverview;if(renderedOverview)overview.classList.add("is-active")}
+ document.body.classList.toggle("office-game-active",renderedOverview);
  map.hidden=renderedOverview;
  if(overviewStatus){overviewStatus.hidden=renderedOverview;overviewStatus.textContent=renderedOverview?"":(window.Office3D?(window.Office3D.lastError||"No se pudo iniciar el motor 3D."):"No se cargó el archivo del motor 3D.");}
 }
