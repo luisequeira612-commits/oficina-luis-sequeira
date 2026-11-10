@@ -374,9 +374,10 @@ function makeRepoPanel(room){
  paint();
  return panel;
 }
+function repoStatusElement(roomId){return Array.from(document.querySelectorAll("[data-repo-status]")).find(element=>element.dataset.repoStatus===roomId)||null}
 function refreshRepo(roomId){
  const room=rooms.find(item=>item.id===roomId);if(!room||!room.repository)return;
- const status=document.querySelector('[data-repo-status="'+roomId+'"]');
+ const status=repoStatusElement(roomId);
  if(status){status.textContent="Consultando GitHub Actions…";status.dataset.kind="running"}
  const requestedRepository=room.repository;
  const url="https://api.github.com/repos/"+requestedRepository+"/actions/runs?per_page=1";
@@ -405,7 +406,7 @@ function refreshRepo(roomId){
  })
  .catch(error=>{if(rooms.find(item=>item.id===roomId)?.repository===requestedRepository)repoResults.set(roomId,{message:error.message||"No se pudo consultar GitHub.",kind:"failure"})})
  .finally(()=>{
-  const current=document.querySelector('[data-repo-status="'+roomId+'"]');
+  const current=repoStatusElement(roomId);
   if(!current||rooms.find(item=>item.id===roomId)?.repository!==requestedRepository)return;
   const result=repoResults.get(roomId);
   current.textContent=result?result.message:"No se pudo consultar GitHub.";
