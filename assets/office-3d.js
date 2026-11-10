@@ -123,10 +123,10 @@ function buildScene(workers,roomName=""){
   sphere(x,.012,z+.28,1.5,.008,.72,[0.24,0.25,0.25],12,3);
   box(x,.92,z,2.65,.18,1.15,woodTop);for(const dx of [-1.12,1.12])for(const dz of [-.42,.42])box(x+dx,.47,z+dz,.11,.82,.11,wood);
   // Two-drawer pedestal and recessed cable tray make the desk read as finished furniture.
-  box(x+1.02,.56,z-.12,.48,.62,.72,[0.43,0.49,0.54]);
+  box(x+.78,.56,z-.12,.48,.62,.72,[0.43,0.49,0.54]);
   for(let drawer=0;drawer<2;drawer++){
-   box(x+1.02,.72-drawer*.27,z+.25,.40,.22,.035,[0.63,0.69,0.72]);
-   box(x+1.02,.72-drawer*.27,z+.275,.13,.025,.025,metal);
+   box(x+.78,.72-drawer*.27,z+.25,.40,.22,.035,[0.63,0.69,0.72]);
+   box(x+.78,.72-drawer*.27,z+.275,.13,.025,.025,metal);
   }
   box(x,.79,z-.43,1.45,.08,.12,[0.24,0.30,0.35]);
   box(x,.73,z-.43,1.18,.035,.07,[0.48,0.55,0.60]);
@@ -153,7 +153,7 @@ function buildScene(workers,roomName=""){
   for(let a=0;a<5;a++){const t=a*Math.PI*2/5;box(x+Math.cos(t)*.34,.12,z+1.55+Math.sin(t)*.34,.48,.08,.1,metal)}
   // Desk lamp and plant accessories.
   box(x-1.05,1.05,z-.38,.18,.16,.18,metal);box(x-1.05,1.38,z-.38,.08,.58,.08,metal);box(x-1.05,1.7,z-.38,.48,.16,.3,[0.82,0.68,0.38]);
-  cyl(x+1.02,.34,z-.35,.24,.55,[0.45,0.25,0.15]);for(let leaf=0;leaf<5;leaf++)sphere(x+1.02+Math.cos(leaf*1.26)*.18,.78+(leaf%2)*.12,z-.35+Math.sin(leaf*1.26)*.18,.18,.36,.14,plant,7,5);
+  cyl(x+.78,.34,z-.35,.24,.55,[0.45,0.25,0.15]);for(let leaf=0;leaf<5;leaf++)sphere(x+.78+Math.cos(leaf*1.26)*.18,.78+(leaf%2)*.12,z-.35+Math.sin(leaf*1.26)*.18,.18,.36,.14,plant,7,5);
   // Small themed desk objects repeat the room identity at workstation scale.
   if(projectTheme==="guardi"){
    box(x-.78,1.06,z+.12,.34,.08,.30,[0.18,0.31,0.45]);sphere(x-.78,1.16,z+.12,.09,.09,.08,themeColor,7,5);
