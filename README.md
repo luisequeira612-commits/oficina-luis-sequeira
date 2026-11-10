@@ -39,6 +39,9 @@ Cada habitación del edificio conectado tiene ahora una entrada física orientad
 
 La sala 3D incorpora iluminación de relleno direccional y ambiental más equilibrada, tres lámparas colgantes con difusores, una ventana trasera dividida en paneles con marco y alféizar, y una pequeña zona de descanso con sofá, mesa y planta. Son primitivas geométricas locales; no son luces físicas con sombras dinámicas ni recursos descargados. El renderizador conserva su alternativa CSS y no modifica el almacenamiento. La compatibilidad y el rendimiento en el Tecno Pova 4 siguen pendientes de prueba física.
 
+
+La vista general del edificio incluye ahora un atrio de entrada al final del pasillo: recepción con mostrador y terminal visible, muro de bienvenida con señalización, asientos para visitantes, jardineras, portal de acceso y marquesina con luces. Es geometría procedural del renderer WebGL 2; no representa una recepción operada por una persona o agente real.
+
 ## Fases
 
 - **Fase A:** simulación visual local y gestión de proyectos/personajes.
