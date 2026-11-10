@@ -21,3 +21,12 @@
 ## Fuente
 - Especificación visual, de comportamiento y SVG facilitada directamente por el usuario en la conversación, 2026-11-09.
 - Fase B aprobada e implementada mediante PR #2, 2026-11-09.
+
+
+## Migración BABYMONSTER Chart — 10 de noviembre de 2026
+- Usuario autorizó añadir el proyecto BABYMONSTER Chart a las instalaciones existentes.
+- Proyecto vinculado: `luisequeira612-commits/monstie-charts.`.
+- La migración debe ejecutarse una sola vez y no volver a añadir el proyecto si el usuario lo elimina posteriormente.
+- Mantener el esquema actual `oficina-luis-sequeira-v1`; usar una clave separada de migración `oficina-luis-sequeira-migrations-v1`, sin cambiar la estructura de datos existente.
+- Detectar tanto el nombre `BABYMONSTER Chart` como el repositorio antes de añadir para evitar duplicados.
+- Autonomía aprobada: agentes preparan PR; no fusionan sin autorización. Diseño híbrido isométrico/explorable. Presupuesto cero.
