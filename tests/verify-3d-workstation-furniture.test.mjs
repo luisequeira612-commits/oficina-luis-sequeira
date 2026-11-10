@@ -27,6 +27,6 @@ test("3D startup failures remain visible outside the hidden overview canvas",()=
  assert.match(renderer,/El navegador no proporcionó un contexto WebGL 2/);
  assert.match(view,/overviewStatus\.textContent=renderedOverview\?"":\(window\.Office3D\?/);
  assert.match(html,/id="office-3d-status"[^>]*role="status"/);
- assert.match(html,/office-3d\.js\?v=27/);
- assert.match(html,/office-view\.js\?v=27/);
+ assert.match(html,/office-3d\.js\?v=34/);
+ assert.match(html,/office-view\.js\?v=34/);
 });
