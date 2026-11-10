@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "projects": [
+    {"id":"guardi","name":"App Guardi","repository":null,"employeeIds":["valeria","mateo","camila"]},
+    {"id":"youtube","name":"Canal de YouTube","repository":"luisequeira612-commits/capi-aventuras","employeeIds":["diego","aisha"]},
+    {"id":"nova","name":"Tema Nova Launcher","repository":"luisequeira612-commits/jennie-ruby","employeeIds":["noah"]},
+    {"id":"babymonster-chart","name":"BABYMONSTER Chart","repository":"luisequeira612-commits/monstie-charts","employeeIds":["mei","amir","elena"]}
+  ]
+}
