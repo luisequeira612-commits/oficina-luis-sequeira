@@ -818,3 +818,13 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Sin cambios en geometría, cámara, datos, almacenamiento, dependencias, APIs ni backend.
 - Rama: `perf/pause-3d-when-page-hidden`; CI pendiente.
 - Fuente: inspección del bucle `requestAnimationFrame` de `assets/office-3d.js`, 2026-11-10.
+
+
+### Resultado final PR #55 — pausa del renderer en segundo plano (10 de noviembre de 2026)
+
+- PR [#55](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/55) fusionado mediante squash en `c95533ef8f42749fbb500df9395227a55de94766`.
+- La primera CI falló por cuatro expectativas antiguas que aún exigían `office-3d.js?v=73` en pruebas del medidor FPS, estado de monitores, reloj mural e identidad de estaciones. Se actualizaron únicamente esas aserciones a v74; la prueba nueva de pausa/reanudación ya pasaba.
+- El head final `d0559abb33d0ff4458911469f551b9e7f9cf007e` pasó CI [42916244541](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42916244541): sintaxis, invariantes de SVG/UI y contenido obligatorio success. No había revisiones ni hilos pendientes.
+- El renderer detiene solicitudes de frames cuando la página está oculta y reanuda al volver; cancela el frame pendiente y elimina el listener al limpiar la escena. No cambia la animación en primer plano ni demuestra 30 FPS reales.
+- La validación de main para el merge commit `c95533ef8f42749fbb500df9395227a55de94766` quedó en cola en [42916294074](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42916294074); despliegue Pages pendiente de verificación.
+- Fuente: PR #55, pruebas y GitHub Actions, 2026-11-10.
