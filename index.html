@@ -479,7 +479,7 @@ window.OfficeGitHubLive.start(rooms);
 })();
 </script>
 <script src="assets/human-workers.js?v=40" defer></script>
-<script src="assets/office-3d.js?v=46" defer></script>
+<script id="office-3d-engine" src="assets/office-3d.js?v=47" defer onerror="var s=document.getElementById(\'office-3d-status\');if(s){s.hidden=false;s.textContent=\'No se pudo descargar el motor 3D (assets/office-3d.js). Recarga la página; si continúa, avísame.\';}" onload="if(!window.Office3D){var s=document.getElementById(\'office-3d-status\');if(s){s.hidden=false;s.textContent=\'El archivo del motor 3D se descargó, pero no pudo ejecutarse.\';}}"></script>
 <script src="assets/office-view.js?v=45" defer></script>
 </body>
 </html>
