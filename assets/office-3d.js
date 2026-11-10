@@ -212,12 +212,12 @@ function buildOfficeScene(rooms){
    box(side*2.25,.48,foyerZ+.55,1.45,.18,.62,[0.25,0.36,0.44]);
    box(side*2.25,.88,foyerZ+.78,1.45,.68,.18,[0.20,0.31,0.39]);
    box(side*2.25,.16,foyerZ+.55,.12,.30,.12,metal);
-   cyl(side*3.55,.38,foyerZ-1.0,.28,.62,[0.42,.26,.17]);
-   for(let leaf=0;leaf<5;leaf++)sphere(side*3.55+Math.cos(leaf*1.26)*.18,.83+(leaf%2)*.12,foyerZ-1.0+Math.sin(leaf*1.26)*.18,.17,.34,.14,[0.17,0.43,0.27],7,5);
+   box(side*3.55,.38,foyerZ-1.0,.48,.62,.48,[0.42,.26,.17]);
+   for(let leaf=0;leaf<5;leaf++)box(side*3.55+Math.cos(leaf*1.26)*.20,.83+(leaf%2)*.12,foyerZ-1.0+Math.sin(leaf*1.26)*.20,.14,.58,.14,[0.17,0.43,0.27]);
   }
   // Ceiling canopy and warm downlights visually frame the entrance without external textures.
   box(0,3.88,foyerZ+.65,8.0,.16,5.2,[0.34,0.42,0.48]);
-  for(const lightX of [-2.6,0,2.6]){box(lightX,3.77,foyerZ+.65,.68,.045,.68,[0.96,.91,.75]);sphere(lightX,3.72,foyerZ+.65,.20,.07,.20,[1,.88,.58],8,5)}
+  for(const lightX of [-2.6,0,2.6]){box(lightX,3.77,foyerZ+.65,.68,.045,.68,[0.96,.91,.75]);box(lightX,3.70,foyerZ+.65,.30,.08,.30,[1,.88,.58])}
  }
  const basePositions=new Float32Array(positions),data=new Float32Array(positions.length+normals.length+colors.length);
  data.set(positions,0);data.set(normals,positions.length);data.set(colors,positions.length+normals.length);
