@@ -20,9 +20,13 @@ test("live worker states drive differentiated micro-movements", () => {
   assert.match(renderer, /body=-Math\.abs/);
 });
 
-test("motion remains reduced-motion aware", () => {
+test("reduced-motion preference slows character animation but never freezes the office", () => {
   assert.match(renderer, /prefers-reduced-motion/);
-  assert.match(renderer, /if\(!reducedMotion\)/);
+  assert.match(renderer, /const reducedMotion=window\.matchMedia&&window\.matchMedia\("\(prefers-reduced-motion: reduce\)"\)\.matches,motionScale=reducedMotion\?0\.72:1/);
+  assert.match(renderer, /const seconds=timestamp\*\.001\*motionScale/);
+  assert.doesNotMatch(renderer, /if\(!reducedMotion\)/);
+  assert.match(renderer, /arms=Math\.sin\(seconds\*12\+worker\.index\)\*\.11/);
+  assert.match(renderer, /hands=Math\.abs\(Math\.sin\(seconds\*16\+worker\.index\)\)\*\.08/);
 });
 
 

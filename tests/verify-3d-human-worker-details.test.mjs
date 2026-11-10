@@ -3,6 +3,8 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
 const renderer = readFileSync(new URL("../assets/office-3d.js", import.meta.url), "utf8");
+const styles = readFileSync(new URL("../assets/office-view.css", import.meta.url), "utf8");
+const page = readFileSync(new URL("../index.html", import.meta.url), "utf8");
 
 test("3D workers use original brick-built minifigure proportions", () => {
   assert.ok(renderer.includes("Classic minifigure proportions"), "uses compact, readable minifigure geometry");
@@ -92,4 +94,12 @@ test("3D view exposes measured render FPS instead of claiming the frame cap is d
   assert.match(renderer,/fpsFrames\+\+/);
   assert.match(renderer,/fpsFrames\*1000\/Math\.max\(1,timestamp-fpsWindowStart\)/);
   assert.match(renderer,/measured>=30\?"good":measured>=24\?"warn":"low"/);
+});
+
+
+test("FPS meter is visible above the fullscreen HUD and its stylesheet cache is refreshed",()=>{
+  assert.match(styles,/\.office-3d-fps\{[^}]*z-index:10/);
+  assert.match(styles,/\.office-3d-overview \.office-3d-fps\{[^}]*left:8px;[^}]*bottom:calc\(72px \+ env\(safe-area-inset-bottom\)\);[^}]*z-index:10/);
+  assert.match(page,/office-view\.css\?v=49/);
+  assert.match(page,/office-3d\.js\?v=65/);
 });

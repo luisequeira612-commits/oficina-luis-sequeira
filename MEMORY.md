@@ -599,3 +599,12 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Se conserva el renderer WebGL2, el buffer compartido, los controles y el límite de cadencia existentes. No se añadieron dependencias, servicios, APIs, backend ni cambios de almacenamiento.
 - Se añadió prueba de regresión para el cálculo y los umbrales; el motor cambia a office-3d.js?v=64 para evitar caché antigua.
 - Fuente: assets/office-3d.js, assets/office-view.css, index.html y tests/verify-3d-human-worker-details.test.mjs, 2026-11-10.
+
+
+## Corrección de visibilidad FPS y movimiento de empleados — 10 de noviembre de 2026
+
+- Luis informó que el medidor de FPS no aparecía y que los personajes parecían inmóviles. La inspección encontró que el indicador estaba ubicado en la esquina superior derecha, debajo del HUD de pantalla completa (z-index del HUD superior), y que la hoja de estilos no tenía una nueva versión de caché. Se reubicó el medidor a la parte inferior izquierda del HUD en el modo general, por encima de la barra de equipo y con z-index 10; en la vista individual permanece arriba a la derecha. Se incrementó la versión de caché de `office-view.css` a v49 y de `office-3d.js` a v65.
+- La causa directa del congelamiento era la condición `if(!reducedMotion)`: cuando Android/navegador informa `prefers-reduced-motion: reduce`, el motor saltaba por completo la actualización de geometría y dejaba los personajes inmóviles. Ahora respeta esa preferencia ralentizando las animaciones al 72% en vez de anularlas. También se hicieron más perceptibles los movimientos de manos, brazos, cabeza y torso al trabajar, y se elevó moderadamente la velocidad de las rutas de descanso y la zancada.
+- Se añadieron pruebas de regresión para comprobar que la preferencia de movimiento reducido no congela el motor y que el medidor queda en una posición visible con la caché renovada.
+- No se cambió la clave ni el esquema local, ni se inició la fase de datos editables/tiempo real. No se migró hosting.
+- Fuente: revisión del renderer, CSS, HTML y pruebas del repositorio; reporte del usuario, 2026-11-10.
