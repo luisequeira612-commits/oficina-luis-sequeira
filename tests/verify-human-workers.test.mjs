@@ -6,7 +6,7 @@ const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
 const workerScript = readFileSync(new URL("../assets/human-workers.js", import.meta.url), "utf8");
 const workerCss = readFileSync(new URL("../assets/human-workers.css", import.meta.url), "utf8");
 
-test("human Tycoon workers replace bird artwork at runtime without rewriting approved SVG source", () => {
+test("minifigure Tycoon workers replace bird artwork at runtime without rewriting approved SVG source", () => {
   assert.match(html, /assets\/human-workers\.css/);
   assert.match(html, /assets\/human-workers\.js/);
   assert.match(workerScript, /legacy-bird-avatar/);
@@ -22,7 +22,7 @@ test("the workforce balances women and men globally and cycles through three ski
   assert.match(workerScript, /\["blue", "coral", "teal", "mustard", "plum"\]/);
 });
 
-test("human workers retain distinct work, thinking, waiting and resting animations", () => {
+test("minifigure workers retain distinct work, thinking, waiting and resting animations", () => {
   for (const state of ["st-w", "st-t", "st-a", "st-r"]) {
     assert.ok(workerCss.includes(".ag." + state), "missing animation state " + state);
   }
@@ -33,4 +33,11 @@ test("the character visuals are decorative and do not alter persisted agent reco
   assert.match(workerScript, /"aria-hidden": "true"/);
   assert.doesNotMatch(workerScript, /localStorage|STORAGE_KEY|JSON\.stringify/);
   assert.doesNotMatch(workerScript, /fetch\(|XMLHttpRequest/);
+});
+
+test("worker avatars use the brick-built minifigure silhouette", () => {
+  assert.match(workerScript, /Original minifigure silhouette/);
+  assert.match(workerScript, /width: 28, height: 30/);
+  assert.match(workerScript, /cx: 32, cy: 6\.5, r: 4/);
+  assert.match(workerScript, /\["light", "medium", "deep"\]/);
 });
