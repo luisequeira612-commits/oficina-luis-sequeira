@@ -136,7 +136,8 @@ function buildScene(workers,roomName=""){
  for(let i=-5;i<6;i++)box(i*.98,-.005,0,.018,.012,9.6,[0.72,0.65,0.55]);
  box(0,.025,1.7,9,.05,3.2,[0.31,0.38,0.43]);
  box(0,.056,1.7,8.8,.018,.10,themeColor);
- // A compact lounge corner gives the room a readable non-work zone.
+ // Keep the lounge in smaller project rooms; the nine-person office uses the full floor for workstations.
+ if(workers.length<=6){
  shadow(4.45,1.70,1.62,.92);
  box(4.45,.58,1.92,2.55,.34,.82,[0.23,0.34,0.43]);
  box(4.45,.92,2.27,2.55,.72,.20,[0.18,0.28,0.37]);
@@ -144,7 +145,8 @@ function buildScene(workers,roomName=""){
  for(let seat=0;seat<3;seat++)box(3.65+seat*.80,.78,1.86,.72,.10,.68,[0.34,0.47,0.55]);
  box(4.45,.38,.88,1.72,.12,.82,woodTop);for(const dx of [-.68,.68])for(const dz of [-.28,.28])box(4.45+dx,.20,.88+dz,.08,.32,.08,wood);
  box(4.45,.46,.88,.52,.035,.34,[0.78,.84,.88]);
- cyl(5.55,.32,.58,.28,.52,[0.42,.25,.16]);for(let leaf=0;leaf<5;leaf++)sphere(5.55+Math.cos(leaf*1.26)*.18,.78+(leaf%2)*.10,.58+Math.sin(leaf*1.26)*.18,.16,.32,.13,plant,7,5);\n }
+ cyl(5.55,.32,.58,.28,.52,[0.42,.25,.16]);for(let leaf=0;leaf<5;leaf++)sphere(5.55+Math.cos(leaf*1.26)*.18,.78+(leaf%2)*.10,.58+Math.sin(leaf*1.26)*.18,.16,.32,.13,plant,7,5);
+ }
  const count=Math.max(1,workers.length),cols=count>=7?3:count>3?2:count,rows=Math.ceil(count/cols),workerRanges=[];
  workers.forEach((worker,index)=>{
   const col=index%cols,row=Math.floor(index/cols),x=(col-(cols-1)/2)*(count>=7?3.65:4.1),z=rows===1?-1.55:count>=7?-3.0+row*2.75:-2.8+row*2.4;
@@ -260,79 +262,16 @@ function buildOfficeScene(rooms){
  const scene=buildScene(allWorkers,"Oficina central");
  const positions=Array.from(scene.basePositions),normals=Array.from(scene.data.subarray(scene.positionLength,scene.positionLength+scene.normalLength)),colors=Array.from(scene.data.subarray(scene.positionLength+scene.normalLength));
  const workerRanges=scene.workerRanges;
- // One shared open-plan office replaces the disconnected miniature rooms.
- // Low partitions define three collaborative rows while keeping every desk visible.
+ // Low partitions and project accent rails shape one connected open-plan office.
  const addTri=(a,b,c,color)=>{const ux=b[0]-a[0],uy=b[1]-a[1],uz=b[2]-a[2],vx=c[0]-a[0],vy=c[1]-a[1],vz=c[2]-a[2];let nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx,l=Math.hypot(nx,ny,nz)||1;nx/=l;ny/=l;nz/=l;for(const p of [a,b,c]){positions.push(...p);normals.push(nx,ny,nz);colors.push(...color)}};
  const quad=(a,b,c,d,color)=>{addTri(a,b,c,color);addTri(a,c,d,color)};
  const box=(x,y,z,w,h,d,color)=>{const x0=x-w/2,x1=x+w/2,y0=y-h/2,y1=y+h/2,z0=z-d/2,z1=z+d/2;quad([x0,y1,z1],[x1,y1,z1],[x1,y1,z0],[x0,y1,z0],color);quad([x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1],color);quad([x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1],color);quad([x1,y0,z0],[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],color);quad([x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0],color);quad([x1,y0,z1],[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],color)};
  for(const z of [-1.62,1.13]){box(-1.82,.66,z,3.55,1.28,.12,[.64,.71,.75]);box(1.82,.66,z,3.55,1.28,.12,[.64,.71,.75]);}
- // Three project-color header rails distinguish teams without enclosing them.
  const accents=[[.20,.55,.72],[.76,.47,.20],[.24,.55,.39],[.48,.36,.68]];
  rooms.forEach((room,index)=>{const x=-4.9+(index%4)*3.25;box(x,3.34,-4.70,2.55,.12,.18,accents[index%accents.length]);});
  const data=new Float32Array(positions.length+normals.length+colors.length);
  data.set(positions,0);data.set(normals,positions.length);data.set(colors,positions.length+normals.length);
  return {data,basePositions:new Float32Array(positions),workerRanges,count:positions.length/3,positionLength:positions.length,normalLength:normals.length};
-}
-// Give each project room a distinct entrance facing the shared corridor.
- const addTriDetail=(a,b,c,color)=>{const ux=b[0]-a[0],uy=b[1]-a[1],uz=b[2]-a[2],vx=c[0]-a[0],vy=c[1]-a[1],vz=c[2]-a[2];let nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx,l=Math.hypot(nx,ny,nz)||1;nx/=l;ny/=l;nz/=l;for(const p of [a,b,c]){positions.push(...p);normals.push(nx,ny,nz);colors.push(...color)}};
- const quadDetail=(a,b,c,d,color)=>{addTriDetail(a,b,c,color);addTriDetail(a,c,d,color)};
- const boxDetail=(x,y,z,w,h,d,color)=>{const x0=x-w/2,x1=x+w/2,y0=y-h/2,y1=y+h/2,z0=z-d/2,z1=z+d/2;quadDetail([x0,y1,z1],[x1,y1,z1],[x1,y1,z0],[x0,y1,z0],color);quadDetail([x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1],color);quadDetail([x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1],color);quadDetail([x1,y0,z0],[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],color);quadDetail([x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0],color);quadDetail([x1,y0,z1],[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],color)};
- const roomAccentPalette=[[0.20,0.55,0.72],[0.76,0.47,0.20],[0.24,0.55,0.39],[0.48,0.36,0.68]];
- rooms.forEach((room,index)=>{
-  const col=index%cols,row=Math.floor(index/cols),xCenter=cols===1?0:(col===0?-6.2:6.2),zCenter=(row-(rows-1)/2)*10.4,side=col===0?1:-1,portalX=xCenter+side*5.82,accent=roomAccentPalette[index%roomAccentPalette.length],trim=[0.20,0.27,0.34];
-  // Two sturdy posts, a header, and a small project marker make every entrance readable.
-  boxDetail(portalX,1.34,zCenter-1.08,.22,2.68,.22,trim);
-  boxDetail(portalX,1.34,zCenter+1.08,.22,2.68,.22,trim);
-  boxDetail(portalX,2.78,zCenter,.24,.24,2.48,accent);
-  boxDetail(portalX,3.12,zCenter,.30,.42,1.42,[0.83,0.88,0.92]);
-  boxDetail(portalX+side*.17,3.12,zCenter,.08,.26,1.12,accent);
-  // A short accent runner leads from the hallway into the room.
-  boxDetail(portalX-side*.54,.035,zCenter,1.05,.045,2.28,accent);
- });
- // Two facing rows of rooms open onto one continuous central hallway.
- if(cols>1){
-  const addTri=(a,b,c,color)=>{const ux=b[0]-a[0],uy=b[1]-a[1],uz=b[2]-a[2],vx=c[0]-a[0],vy=c[1]-a[1],vz=c[2]-a[2];let nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx,l=Math.hypot(nx,ny,nz)||1;nx/=l;ny/=l;nz/=l;for(const p of [a,b,c]){positions.push(...p);normals.push(nx,ny,nz);colors.push(...color)}};
-  const quad=(a,b,c,d,color)=>{addTri(a,b,c,color);addTri(a,c,d,color)};
-  const box=(x,y,z,w,h,d,color)=>{const x0=x-w/2,x1=x+w/2,y0=y-h/2,y1=y+h/2,z0=z-d/2,z1=z+d/2;quad([x0,y1,z1],[x1,y1,z1],[x1,y1,z0],[x0,y1,z0],color);quad([x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1],color);quad([x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1],color);quad([x1,y0,z0],[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],color);quad([x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0],color);quad([x1,y0,z1],[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],color)};
-  box(0,.025,0,2.5,.12,rows*10.4,[0.40,0.46,0.51]);
-  for(let row=0;row<rows;row++){const z=(row-(rows-1)/2)*10.4;box(-1.22,.12,z,.16,.18,1.8,[0.72,0.58,0.39]);box(1.22,.12,z,.16,.18,1.8,[0.72,0.58,0.39]);box(0,3.55,z,1.4,.08,.55,[0.88,0.79,0.55])}
-  // A widened entrance atrium terminates the corridor with a staffed-looking reception counter.
-  const foyerZ=(rows-1)*5.2+6.8;
-  box(0,.015,foyerZ,8.4,.12,5.8,[0.52,0.58,0.62]);
-  box(0,.09,foyerZ,7.9,.045,5.35,[0.69,0.65,0.57]);
-  for(let tile=-3;tile<=3;tile++)box(tile*1.08,.118,foyerZ,.018,.012,5.1,[0.82,0.79,0.72]);
-  box(0,.04,foyerZ-2.35,5.4,.08,.55,[0.20,0.34,0.43]);
-  // Reception desk, stone counter, front panels and a visible terminal.
-  box(0,.62,foyerZ-1.35,3.55,1.08,.92,[0.24,0.34,0.41]);
-  box(0,1.20,foyerZ-1.35,3.82,.16,1.08,[0.72,0.76,0.77]);
-  box(0,.62,foyerZ-.875,2.95,.62,.035,[0.31,0.48,0.55]);
-  box(0,1.48,foyerZ-1.58,.92,.58,.12,metal);
-  box(0,1.48,foyerZ-1.505,.78,.42,.025,[0.18,0.65,0.78]);
-  box(0,1.48,foyerZ-1.48,.58,.025,.012,[0.72,0.94,0.98]);
-  // Tall welcome wall and a suspended wayfinding sign.
-  box(0,2.05,foyerZ-3.02,4.8,2.9,.18,[0.28,0.38,0.46]);
-  box(0,2.05,foyerZ-2.91,4.48,2.58,.06,[0.78,0.83,0.85]);
-  box(0,2.88,foyerZ-2.86,3.8,.16,.035,[0.20,0.48,0.62]);
-  box(0,2.20,foyerZ-2.85,2.6,.08,.035,[0.42,0.51,0.57]);
-  box(0,3.62,foyerZ-.1,4.4,.42,.16,[0.18,0.27,0.34]);
-  box(0,3.62,foyerZ-.005,4.08,.24,.045,[0.24,0.55,0.68]);
-  // Entrance portal and paired visitor seating create a clear public-facing threshold.
-  for(const side of [-1,1]){
-   box(side*3.35,1.62,foyerZ+2.10,.22,3.24,.22,[0.22,0.30,0.37]);
-   box(side*3.35,3.24,foyerZ+2.10,.22,.22,4.8,[0.22,0.30,0.37]);
-   box(side*2.25,.48,foyerZ+.55,1.45,.18,.62,[0.25,0.36,0.44]);
-   box(side*2.25,.88,foyerZ+.78,1.45,.68,.18,[0.20,0.31,0.39]);
-   box(side*2.25,.16,foyerZ+.55,.12,.30,.12,metal);
-   box(side*3.55,.38,foyerZ-1.0,.48,.62,.48,[0.42,.26,.17]);
-   for(let leaf=0;leaf<5;leaf++)box(side*3.55+Math.cos(leaf*1.26)*.20,.83+(leaf%2)*.12,foyerZ-1.0+Math.sin(leaf*1.26)*.20,.14,.58,.14,[0.17,0.43,0.27]);
-  }
-  // Ceiling canopy and warm downlights visually frame the entrance without external textures.
-  box(0,3.88,foyerZ+.65,8.0,.16,5.2,[0.34,0.42,0.48]);
-  for(const lightX of [-2.6,0,2.6]){box(lightX,3.77,foyerZ+.65,.68,.045,.68,[0.96,.91,.75]);box(lightX,3.70,foyerZ+.65,.30,.08,.30,[1,.88,.58])}
- }
- const basePositions=new Float32Array(positions),data=new Float32Array(positions.length+normals.length+colors.length);
- data.set(positions,0);data.set(normals,positions.length);data.set(colors,positions.length+normals.length);
- return {data,basePositions,workerRanges,count:positions.length/3,positionLength:positions.length,normalLength:normals.length};
 }
 function open({container,roomName,workers=[],rooms=null,onSelectRoom=null}){
  window.Office3D.lastError=null;
