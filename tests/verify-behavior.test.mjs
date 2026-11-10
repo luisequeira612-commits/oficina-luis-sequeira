@@ -21,7 +21,7 @@ test("Phase A footer and Guardi mark placement match the approved specification"
 
 test("BABYMONSTER Chart is added once through a versioned local migration", () => {
   mustContain('const MIGRATION_KEY="oficina-luis-sequeira-migrations-v1"', "separate migration marker");
-  mustContain('localStorage.getItem(MIGRATION_KEY)==="babymonster-chart-v1"', "idempotent migration guard");
+  mustContain('localStorage.getItem(MIGRATION_KEY)!=="babymonster-chart-v1"', "idempotent migration guard");
   mustContain('name==="BABYMONSTER Chart"||room.repository==="luisequeira612-commits/monstie-charts."', "existing project detection");
   mustContain('name:"BABYMONSTER Chart",repository:"luisequeira612-commits/monstie-charts."', "BABYMONSTER Chart mapping");
   mustContain('localStorage.setItem(MIGRATION_KEY,"babymonster-chart-v1")', "migration completion marker");
@@ -166,7 +166,7 @@ test("real 3D room prototype uses WebGL2 locally and preserves the CSS fallback"
   assert.ok(renderer.includes("workerRanges") && renderer.includes("bufferSubData"), "animates 3D worker poses in the WebGL buffer");
   assert.ok(renderer.includes("gl.DYNAMIC_DRAW"), "uses a dynamic GPU buffer for worker animation");
   assert.ok(renderer.includes("prefers-reduced-motion: reduce"), "disables 3D worker motion when reduced motion is requested");
-  assert.ok(renderer.includes("rows===1?-1.55:-2.8+row*2.4"), "keeps a three-row workforce inside the room footprint");
+  assert.ok(renderer.includes("rows===1?-1.55:count>=7?-3.0+row*2.75:-2.8+row*2.4"), "keeps a three-row workforce inside the room footprint");
   assert.ok(renderer.includes("function buildOfficeScene(rooms)"), "builds a multi-room 3D office");
   assert.ok(renderer.includes("central hallway"), "connects project rooms with a shared corridor");
   assert.ok(renderer.includes("col===1"), "faces the two room columns toward the shared hallway");
@@ -183,7 +183,7 @@ test("human worker decoration is idempotent and keeps the balanced appearance me
 });
 
 test("3D workers reuse the same hairstyle, shirt and live state as their project cards", () => {
-  assert.ok(officeScript.includes('hair:avatar?.dataset.hair||"short"'), "passes the existing hairstyle into 3D");
+  assert.ok(officeScript.includes('hair:avatar?.dataset.hair||agent.dataset.hair||"short"'), "passes the existing hairstyle into 3D");
   assert.ok(officeScript.includes('shirt:avatar?.dataset.shirt||"blue"'), "passes the existing shirt into 3D");
   assert.ok(officeScript.includes("stateObserver.observe(rooms"), "observes live card state changes");
   assert.ok(officeScript.includes("threeD._office3dUpdateStates(states)"), "synchronizes live state to the 3D scene");
