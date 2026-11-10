@@ -28,7 +28,7 @@ function paintRoom(room){
   else if(s==="success")status.textContent="Éxito · "+(r.name||r.display_title||"GitHub Actions");
   else if(s==="failure")status.textContent="Falló · "+(r.name||r.display_title||"GitHub Actions");
   else status.textContent=r?"Sin ejecuciones activas · última: "+(r.name||r.display_title||"GitHub Actions"):"Sin ejecuciones recientes. Descansando.";
-  if(e?.checkedAt)status.textContent+=" · Datos de hace "+mins(e.checkedAt)+" min";
+  if(e?.checkedAt)status.textContent+=" · Datos de hace "+mins(e.fetchedAt||e.checkedAt)+" min";
  }
  if(bubble){bubble.hidden=!a;bubble.textContent=a?(a.name||a.display_title||"GitHub Actions"):""}
  if(button){const wait=Math.max(0,(manualAt.get(room.repository)||0)-now());button.disabled=wait>0||busy||now()<ratePause||now()<backoff;button.textContent=wait?"Espera "+Math.ceil(wait/1000)+" s":"Actualizar"}
