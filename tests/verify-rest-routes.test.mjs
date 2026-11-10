@@ -31,8 +31,10 @@ test("custom WebGL renderer adds view-dependent highlights to the plastic finish
 });
 
 test("resting employees stand to leave the chair and sit back at their workstation",()=>{
- assert.match(renderer,/away:travel>\.08/);
+ assert.match(renderer,/away:travel>\.001/);
+ assert.match(renderer,/lift:Math\.max\(0,Math\.min\(1,travel\/\.5,\(oneWay-travel\)\/\.5\)\)/);
  assert.match(renderer,/walkLift=route\.away\?\.14:0/);
  assert.match(renderer,/liftFactor=Math\.max\(0,Math\.min\(1,\(baseY-\.35\)\/\.53\)\)/);
  assert.match(renderer,/route\.away\?Math\.sin\(seconds\*2\.2\+worker\.index\)\*\.008:0/);
+ assert.match(renderer,/if\(worker\.state==="st-w"\)\{monitorShift=/);
 });
