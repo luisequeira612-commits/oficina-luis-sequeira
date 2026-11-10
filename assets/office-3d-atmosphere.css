@@ -1,0 +1,78 @@
+/* Lightweight visual finish for the connected WebGL2 office. No scene or storage changes. */
+.office-3d-overview{
+  border-color:#647B91;
+  box-shadow:inset 0 1px 0 #FFFFFF22,0 16px 32px #10233835;
+  background:radial-gradient(ellipse at 50% 42%,#29445F 0%,#1B3047 55%,#142437 100%);
+}
+.office-3d-overview::before{
+  content:"";
+  position:absolute;
+  z-index:1;
+  inset:0;
+  pointer-events:none;
+  opacity:.12;
+  background-image:linear-gradient(#A9D4F5 1px,transparent 1px),linear-gradient(90deg,#A9D4F5 1px,transparent 1px);
+  background-size:38px 38px;
+  mask-image:radial-gradient(ellipse at center,#000 10%,transparent 86%);
+}
+.office-3d-overview::after{
+  content:"VISTA 3D · EXPLORABLE";
+  position:absolute;
+  z-index:1;
+  left:12px;
+  bottom:54px;
+  padding:5px 8px;
+  border:1px solid #B7D7F033;
+  border-radius:6px;
+  background:#102338B8;
+  color:#D9EAF8;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.12em;
+  pointer-events:none;
+}
+.office-3d-overview canvas{position:relative;z-index:0}
+.office-3d-room-nav{counter-reset:room;scrollbar-width:thin;scrollbar-color:#9CB5CC66 transparent}
+.office-3d-room-nav button{
+  counter-increment:room;
+  position:relative;
+  overflow:hidden;
+  border-color:#C8DCEC55;
+  border-bottom-color:#07152299;
+  background:linear-gradient(145deg,#1C3853F2,#102338E8);
+  box-shadow:0 5px 12px #07152255,inset 0 1px 0 #FFFFFF20;
+  transition:background .16s ease,border-color .16s ease,transform .16s ease;
+}
+.office-3d-room-nav button::before{
+  content:counter(room,decimal-leading-zero) " /";
+  display:inline-block;
+  margin-right:6px;
+  color:#A9CBE7;
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.08em;
+}
+.office-3d-room-nav button:nth-child(4n+1){border-left:3px solid #68B8D8}
+.office-3d-room-nav button:nth-child(4n+2){border-left:3px solid #D9A65B}
+.office-3d-room-nav button:nth-child(4n+3){border-left:3px solid #77C49B}
+.office-3d-room-nav button:nth-child(4n){border-left:3px solid #B49BDD}
+.office-3d-room-nav button:focus-visible{outline:3px solid #B8E0FF;outline-offset:2px}
+.office-3d-room-nav button:active{transform:translateY(1px)}
+.office-3d-controls button{
+  border-color:#B7D7F055;
+  background:linear-gradient(145deg,#24415CEB,#102338F2);
+  box-shadow:0 5px 12px #07152255,inset 0 1px 0 #FFFFFF20;
+}
+.office-3d-controls .office-3d-hint{
+  border-color:#B7D7F033;
+  background:#102338CC;
+  color:#E1EFFB;
+}
+@media(max-width:420px){
+  .office-3d-overview::after{left:8px;bottom:48px;font-size:8px}
+  .office-3d-room-nav button{min-height:36px;padding:5px 8px;font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){
+  .office-3d-room-nav button{transition:none}
+  .office-3d-room-nav button:active{transform:none}
+}
