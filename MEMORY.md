@@ -846,5 +846,14 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - El renderer escucha `webglcontextlost` y `webglcontextrestored`. Si Android/navegador interrumpe WebGL, cancela el frame pendiente, reinicia la muestra FPS y muestra un aviso visible que confirma que los proyectos siguen guardados y pide cerrar/reabrir la escena para reconstruirla.
 - No intenta reutilizar recursos GPU invalidados ni dibujar sobre un contexto perdido. Retira los listeners al limpiar y evita forzar otra pérdida de contexto si ya se perdió.
 - Añade prueba de regresión. Renderer actualizado a caché v76; se ajustaron las pruebas de versión y carga del script.
-- No modifica localStorage, esquema de datos, geometría, trabajadores, dependencias, APIs ni backend. CI pendiente.
+- No modifica localStorage, esquema de datos, geometría, trabajadores, dependencias, APIs ni backend. El head final `438da1990cfef2734024b0133762f5cd6a16d30d` pasó CI [42918106390](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42918106390); PR #57 fusionado mediante squash en `cea4452c57beb9f8e5bca8e0f046b06d2239f01d`. La CI de main y el despliegue Pages [42918160989](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42918160989) terminaron en success.
 - Fuente: inspección del ciclo de vida WebGL y PR #57, 2026-11-10.
+
+
+## PR #58 — reducir trabajo de maquetación de etiquetas de trabajadores (10 de noviembre de 2026)
+
+- Rama `perf/throttle-worker-nameplate-layout`, basada en main después del merge de PR #57.
+- Las etiquetas HTML de los trabajadores (posición, detección de solapamientos, visibilidad y clases de estado) se recalculan como máximo cada 100 ms, en vez de cada frame del renderizador. El render WebGL mantiene su cadencia actual; no se cambia geometría, cámara, resolución, animaciones ni persistencia.
+- Añade una prueba que verifica el límite de frecuencia. Sin dependencias, APIs, backend ni cambios de esquema.
+- Pendiente de CI y revisión antes de fusionar. La mejora de FPS debe medirse en el Tecno Pova 4; la CI solo valida la lógica.
+- Fuente: inspección de `assets/office-3d.js` y prueba de regresión, 2026-11-10.
