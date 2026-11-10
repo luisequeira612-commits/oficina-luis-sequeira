@@ -87,7 +87,7 @@ function open({container,roomName,workers=[]}){
  const gl=canvas.getContext("webgl2",{alpha:false,antialias:false,powerPreference:"low-power"});
  if(!gl){const note=document.createElement("p");note.className="office-3d-error";note.textContent="Este navegador no ofrece WebGL 2 en este momento. Se muestra la vista alternativa.";container.appendChild(note);return false}
  try{
-  const p=program(gl),scene=buildScene(workers),buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,scene.data,gl.STATIC_DRAW);
+  const p=program(gl),scene=buildScene(workers),buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,scene.data,gl.DYNAMIC_DRAW);
   const stride=0,loc=(name)=>gl.getAttribLocation(p,name);gl.useProgram(p);
   const ap=loc("aPosition"),an=loc("aNormal"),ac=loc("aColor");
   gl.enableVertexAttribArray(ap);gl.vertexAttribPointer(ap,3,gl.FLOAT,false,stride,0);
