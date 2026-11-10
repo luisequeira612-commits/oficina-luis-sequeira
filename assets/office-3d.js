@@ -237,16 +237,16 @@ function buildScene(workers,roomName=""){
   box(x-.19,.43,z+1.00,.32,.14,.43,[.13,.16,.19]);box(x+.19,.43,z+1.00,.32,.14,.43,[.13,.16,.19]);
   box(x-.19,.352,z+1.00,.325,.035,.435,[.075,.09,.12]);box(x+.19,.352,z+1.00,.325,.035,.435,[.075,.09,.12]);
   const legsEnd=positions.length;
-  taperBox(x,1.29,z+1,.96,.66,.70,.46,shirt);box(x,1.56,z+1.238,.035,.34,.025,[.96,.94,.84]);box(x,1.625,z+1.18,.34,.075,.035,[.96,.94,.84]);box(x,1.22,z+1.238,.58,.035,.025,[.96,.94,.84]);
-  if(index%3===1){taperBox(x,1.30,z+1.255,.42,.34,.48,.025,[.13,.20,.28]);box(x,1.51,z+1.278,.09,.12,.018,[.88,.73,.35])}else if(index%3===2){for(let k=0;k<2;k++)sphere(x,1.48-k*.16,z+1.27,.025,.025,.018,[.94,.88,.68],6,4)}else{box(x-.25,1.44,z+1.25,.12,.14,.025,[.91,.91,.86]);box(x+.25,1.44,z+1.25,.12,.14,.025,[.91,.91,.86])}
+  taperBox(x,1.29,z+1,.96,.66,.70,.46,shirt);box(x,1.56,z+.642,.035,.34,.025,[.96,.94,.84]);box(x,1.625,z+.70,.34,.075,.035,[.96,.94,.84]);box(x,1.22,z+.642,.58,.035,.025,[.96,.94,.84]);
+  if(index%3===1){taperBox(x,1.30,z+.635,.42,.34,.48,.025,[.13,.20,.28]);box(x,1.51,z+.615,.09,.12,.018,[.88,.73,.35])}else if(index%3===2){for(let k=0;k<2;k++)sphere(x,1.48-k*.16,z+.625,.025,.025,.018,[.94,.88,.68],6,4)}else{box(x-.25,1.44,z+.645,.12,.14,.025,[.91,.91,.86]);box(x+.25,1.44,z+.645,.12,.14,.025,[.91,.91,.86])}
   const headStart=positions.length;cyl(x,1.68,z+.99,.17,.20,skin,16);roundedCylinder(x,2.02,z+.99,.365,.61,skin,24);
-  let studY=2.49;if(hairStyle==="short"){sphere(x,2.29,z+.94,.36,.14,.31,hairColor,14,7);box(x,2.25,z+1.235,.54,.12,.08,hairColor)}else if(hairStyle==="curly"){studY=2.58;sphere(x,2.32,z+.94,.37,.18,.32,hairColor,14,8);for(let k=0;k<7;k++){const q=k*Math.PI*2/7;sphere(x+Math.cos(q)*.27,2.36,z+.94+Math.sin(q)*.24,.105,.11,.105,hairColor,8,5)}}else if(hairStyle==="long"){sphere(x,2.31,z+.94,.37,.15,.32,hairColor,14,7);sphere(x-.30,2.03,z+.99,.12,.38,.18,hairColor,10,7);sphere(x+.30,2.03,z+.99,.12,.38,.18,hairColor,10,7)}else{studY=2.68;sphere(x,2.31,z+.94,.37,.15,.32,hairColor,14,7);sphere(x,2.47,z+.69,.15,.17,.15,hairColor,10,7)}cyl(x,studY,z+.99,.135,.12,skin,16);
+  let studY=2.49;if(hairStyle==="short"){sphere(x,2.29,z+.94,.36,.14,.31,hairColor,14,7);box(x,2.25,z+.72,.54,.12,.08,hairColor)}else if(hairStyle==="curly"){studY=2.58;sphere(x,2.32,z+.94,.37,.18,.32,hairColor,14,8);for(let k=0;k<7;k++){const q=k*Math.PI*2/7;sphere(x+Math.cos(q)*.27,2.36,z+.94+Math.sin(q)*.24,.105,.11,.105,hairColor,8,5)}}else if(hairStyle==="long"){sphere(x,2.31,z+.94,.37,.15,.32,hairColor,14,7);sphere(x-.30,2.03,z+.99,.12,.38,.18,hairColor,10,7);sphere(x+.30,2.03,z+.99,.12,.38,.18,hairColor,10,7)}else{studY=2.68;sphere(x,2.31,z+.94,.37,.15,.32,hairColor,14,7);sphere(x,2.47,z+.69,.15,.17,.15,hairColor,10,7)}cyl(x,studY,z+.99,.135,.12,skin,16);
   if(index===3||index===7){box(x,2.40,z+.98,.70,.09,.68,[.78,.18,.13]);box(x,2.42,z+1.01,.72,.035,.69,[.95,.72,.25])}
   if(index===2){sphere(x-.24,2.18,z+.98,.075,.075,.075,[.94,.72,.22],9,6);sphere(x+.24,2.18,z+.98,.075,.075,.075,[.94,.72,.22],9,6)}
   if(index===4){segment([x-.36,2.02,z+.99],[x-.40,2.28,z+.98],.035,[.22,.25,.29],8);sphere(x-.40,2.28,z+.98,.075,.075,.075,[.22,.25,.29],9,6)}
   if(index===6){sphere(x+.32,2.12,z+.98,.085,.12,.08,[.82,.28,.43],9,6);sphere(x+.32,2.12,z+1.06,.045,.055,.025,[.98,.76,.78],8,5)}
   // Printed face: individual expressions are built from tiny molded ink-like geometry on the curved front.
-  const ink=[.075,.055,.045],faceZ=z+1.351,eyeY=2.055;
+  const ink=[.075,.055,.045],faceZ=z+.625,eyeY=2.055;
   sphere(x-.12,eyeY,faceZ,.046,.052,.024,ink,12,7);sphere(x+.12,eyeY,faceZ,.046,.052,.024,ink,12,7);
   if(index%5===1){segment([x+.075,eyeY,faceZ+.012],[x+.165,eyeY,faceZ+.012],.014,skin,7)}
   if(index%5===2){segment([x-.18,2.13,faceZ],[x-.07,2.15,faceZ],.014,ink,7);segment([x+.07,2.15,faceZ],[x+.18,2.13,faceZ],.014,ink,7)}
