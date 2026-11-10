@@ -145,7 +145,7 @@
 - Los acentos se asignan de forma determinista por orden de proyecto; las habitaciones de la columna izquierda y derecha se orientan hacia el corredor compartido.
 - Se añade geometría procedural al buffer WebGL 2 existente; no se añaden modelos, texturas, recursos externos ni dependencias.
 - No se modifica la cámara, los trabajadores, proyectos, estados, localStorage ni esquemas persistentes. La prueba de rendimiento en el Tecno Pova 4 sigue pendiente.
-- PR [#18](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/18), rama `feat/3d-room-entrances-and-identity`; CI pendiente.
+- PR [#18](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/18), rama `feat/3d-room-entrances-and-identity`; fusionado mediante squash en `9e7a20ecb98e68773213522272e0df7f992bcca7`. CI [42781735657](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42781735657): validate success.
 - Fuente: implementación del renderer y prueba automatizada, 2026-11-10.
 
 
@@ -154,6 +154,6 @@
 - App Guardi usa un emblema tipo escudo; Canal de YouTube, un símbolo de reproducción y una pequeña línea de edición; Tema Nova Launcher, un teléfono con elementos orbitales; BABYMONSTER Chart, barras de ranking y un motivo musical. Los proyectos creados por el usuario reciben una composición modular neutra.
 - Los motivos son iconografía geométrica original y abstracta, no logotipos oficiales ni imágenes descargadas. Se construyen con las primitivas del renderer WebGL 2 existente.
 - Sin nuevas dependencias, texturas, recursos externos, APIs, backend o servicios de pago. No cambia la cámara, los trabajadores, datos de proyectos, `localStorage` ni su esquema.
-- Prueba de regresión: `tests/verify-project-themed-rooms.test.mjs`. Rama `feat/project-themed-3d-rooms`; pendiente de PR/CI.
+- Prueba de regresión: `tests/verify-project-themed-rooms.test.mjs`. PR [#19](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/19), fusionado mediante squash en `74636403ce0936ddcf05ef0beec4a03c3fbca88c`; CI [42783094539](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42783094539): validate success.
 - Compatibilidad y rendimiento en Tecno Pova 4 todavía sin prueba física.
 - Fuente: revisión del renderer y nombres de proyectos actuales del repositorio, 2026-11-10.
