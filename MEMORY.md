@@ -366,3 +366,14 @@
 
 
 Nota de implementación adicional: los chips de proyecto muestran ahora solo el nombre, las placas de empleados se mantienen dentro del viewport con un ajuste vertical básico para evitar colisiones, y el estado `st-t` se distingue en rojo como «Te toca». Fuente: revisión de la petición A/B, 2026-11-10.
+
+
+## C — rutas seguras, código animado y postura — 10 de noviembre de 2026
+
+- Continúa la implementación directa en <code>main</code> sobre el head <code>3e6cb6a939c143f77d94b0fe24a466d323c9fd53</code>.
+- <code>assets/office-3d.js</code> añade una ruta procedural acotada para <code>st-r</code>: cada trabajador usa un corredor seguro según su fila y pasa por puntos de café/reunión antes de regresar a su puesto; la interpolación es suave y la orientación se sugiere mediante pequeños desplazamientos de cabeza/brazos, sin introducir física ni dependencias.
+- Los monitores de cada puesto ahora contienen varias líneas geométricas de código que se desplazan horizontalmente durante <code>st-w</code>/<code>st-r</code>; no se usan texturas ni assets externos.
+- Se mantiene <code>prefers-reduced-motion</code>; el movimiento ambiental se omite cuando está activo.
+- Prueba de regresión añadida en <code>tests/verify-3d-worker-activity.test.mjs</code> para rutas, monitores y animación de código.
+- Pendiente de verificación: estado del workflow disparado por estos commits y comprobación visual/rendimiento en el Tecno Pova 4. La herramienta disponible para workflows asociada a commits solo devuelve ejecuciones de pull request, por lo que no se debe interpretar una lista vacía como «CI no ejecutó».
+- D sigue pendiente: fuentes <code>data/agentes.json</code>, <code>data/proyectos.json</code>, <code>data/tareas.json</code> y sincronización adicional de commits/workflows; no se modifica todavía el esquema <code>oficina-luis-sequeira-v1</code>.
