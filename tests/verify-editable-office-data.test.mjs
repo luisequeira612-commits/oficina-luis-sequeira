@@ -7,8 +7,11 @@ const projects=JSON.parse(readFileSync(new URL("../data/proyectos.json",import.m
 const tasks=JSON.parse(readFileSync(new URL("../data/tareas.json",import.meta.url),"utf8"));
 const live=readFileSync(new URL("../assets/github-live.js",import.meta.url),"utf8");
 
-test("editable office data contains the nine named employees and four projects",()=>{
- assert.equal(agents.version,1);assert.equal(agents.employees.length,9);
+test("editable office data contains ten named employees with exact gender parity and four projects",()=>{
+ assert.equal(agents.version,1);assert.equal(agents.employees.length,10);
+ assert.equal(agents.employees.filter(x=>x.gender==="woman").length,5);
+ assert.equal(agents.employees.filter(x=>x.gender==="man").length,5);
+ assert.ok(agents.employees.some(x=>x.id==="rafael"&&x.skinTone==="deep"));
  assert.equal(projects.version,1);assert.equal(projects.projects.length,4);
  const ids=new Set(agents.employees.map(x=>x.id));
  assert.ok(projects.projects.every(x=>(x.employeeIds||[]).every(id=>ids.has(id))));
