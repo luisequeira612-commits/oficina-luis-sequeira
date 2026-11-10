@@ -33,3 +33,15 @@ test("employee detail shows the actual assigned GitHub workflow as current task"
  assert.match(view,/const source=Array\.from\(rooms\.querySelectorAll\("\.ag"\)\)\.find\(agent=>agent\.dataset\.agentId===w\.id\)/);
  assert.match(view,/state==="st-s"\?"ÉXITO":state==="st-f"\?"FALLO"/);
 });
+
+test("local project data can be exported in the existing version-1 JSON schemas",()=>{
+ const html=readFileSync(new URL("../index.html",import.meta.url),"utf8");
+ assert.match(html,/id="export-office-data"/);
+ assert.match(html,/oficina-datos-exportados\.json/);
+ assert.match(html,/format:"oficina-data-export-v1"/);
+ assert.match(html,/"agentes\.json":\{version:1,employees:Array\.from\(employees\.values\(\)\)\}/);
+ assert.match(html,/"proyectos\.json":\{version:1,projects\}/);
+ assert.match(html,/data\/tareas\.json no se modifica/);
+ assert.match(html,/window\.OfficeDataExport=\{build:buildEditableDataExport\}/);
+ assert.match(html,/oficina-luis-sequeira-v1/);
+});

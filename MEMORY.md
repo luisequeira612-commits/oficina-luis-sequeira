@@ -468,3 +468,13 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Publicación del ajuste de ficha: run [42861981257](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42861981257), validate + deploy success. Publicación del marcador: run [42862523325](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42862523325), validate + deploy success.
 - Nota: algunos despliegues intermedios fallaron por concurrencia entre despliegues de Pages; los runs anteriores indicados confirman que ambos heads funcionales quedaron publicados. No se modifica el esquema `oficina-luis-sequeira-v1`, ni se añaden backend, dependencias o credenciales.
 - Fuente: código, pruebas y logs GitHub Actions, 2026-11-10.
+
+
+## Exportación manual de datos de proyectos — 10 de noviembre de 2026
+
+- Se añadió un botón «Exportar datos» a la Oficina. Genera una única descarga JSON (oficina-datos-exportados.json) con data/agentes.json y data/proyectos.json reconstruidos desde los proyectos y empleados que están actualmente guardados en la instalación local.
+- El formato conserva version: 1 y los campos existentes (id, name, role, gender, skinTone, hair, shirt, repository, employeeIds). Incluye instrucciones para copiar cada objeto exportado al archivo correspondiente en GitHub.
+- data/tareas.json se deja explícitamente intacto para no sobrescribir tareas futuras o datos no cargados por la interfaz.
+- No cambia oficina-luis-sequeira-v1, no hay escritura remota, autenticación, backend, dependencias ni llamadas adicionales a GitHub. La exportación es manual y el usuario debe actualizar los dos JSON desde GitHub.
+- Prueba de regresión añadida en tests/verify-editable-office-data.test.mjs para proteger el formato y la preservación de tareas.json.
+- Fuente: cambios en index.html y pruebas, 2026-11-10.

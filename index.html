@@ -23,7 +23,7 @@ main{max-width:1040px;margin:0 auto;padding:8px 16px 28px}
 .summary img{width:42px;height:45px;object-fit:contain;flex:none}
 .summary p{margin:0;font-size:14px;color:var(--text)}
 h2{font-size:17px;margin:20px 0 10px;font-weight:700}
-.project-form{display:flex;gap:8px;align-items:flex-start;margin:0 0 18px}
+.project-form{display:flex;gap:8px;align-items:flex-start;margin:0 0 18px}.office-export-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:-8px 0 16px}.office-export-row p{margin:0;color:var(--muted);font-size:12px}
 .project-form input{min-width:0;flex:1;height:44px;border:1px solid #AAB4C0;border-radius:10px;padding:8px 12px;color:var(--text);background:#fff}
 .validation{min-height:18px;color:var(--red);font-size:12px;margin:5px 0 0}
 .rooms{display:grid;grid-template-columns:1fr;gap:14px}
@@ -103,6 +103,7 @@ footer{max-width:1040px;margin:0 auto;padding:0 16px 24px;color:var(--muted);fon
 </div>
 <button type="submit">Agregar</button>
 </form>
+<div class="office-export-row"><button type="button" class="secondary" id="export-office-data">Exportar datos</button><p id="office-export-status" role="status" aria-live="polite">Descarga los proyectos y empleados para actualizarlos en GitHub.</p></div>
 <div class="rooms" id="rooms" aria-live="polite"></div>
 </section>
 </main>
@@ -464,6 +465,50 @@ function removeAgent(agentId,role){
  rooms.forEach(room=>{room.agents=room.agents.filter(agent=>agent.id!==agentId)});
  states.delete(agentId);save();render();
 }
+function buildEditableDataExport(){
+ const employees=new Map();
+ const projects=rooms.map(room=>({
+  id:room.id,
+  name:room.name,
+  repository:room.repository||null,
+  employeeIds:room.agents.map(agent=>{
+   if(!employees.has(agent.id))employees.set(agent.id,{
+    id:agent.id,name:agent.name||agent.role,role:agent.role,
+    gender:agent.gender||"person",skinTone:agent.skinTone||"medium",
+    hair:agent.hair||"short",shirt:agent.shirt||"blue"
+   });
+   return agent.id;
+  })
+ }));
+ return {
+  format:"oficina-data-export-v1",exportedAt:new Date().toISOString(),
+  instructions:[
+   "Copia files.agentes.json en data/agentes.json.",
+   "Copia files.proyectos.json en data/proyectos.json.",
+   "data/tareas.json no se modifica y debe conservarse."
+  ],
+  files:{
+   "agentes.json":{version:1,employees:Array.from(employees.values())},
+   "proyectos.json":{version:1,projects}
+  }
+ };
+}
+function downloadEditableData(){
+ const status=document.getElementById("office-export-status");
+ try{
+  const payload=JSON.stringify(buildEditableDataExport(),null,2)+"\n";
+  const blob=new Blob([payload],{type:"application/json;charset=utf-8"});
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement("a");
+  link.href=url;link.download="oficina-datos-exportados.json";
+  document.body.appendChild(link);link.click();link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+  if(status)status.textContent="Exportación descargada. Actualiza data/agentes.json y data/proyectos.json en GitHub; conserva data/tareas.json.";
+ }catch(_){if(status)status.textContent="No se pudo generar la descarga. Revisa el espacio disponible e inténtalo otra vez."}
+}
+const exportButton=document.getElementById("export-office-data");
+if(exportButton)exportButton.addEventListener("click",downloadEditableData);
+window.OfficeDataExport={build:buildEditableDataExport};
 form.addEventListener("submit",event=>{
  event.preventDefault();
  const name=nameInput.value.trim();
