@@ -519,3 +519,5 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Fuente: `assets/office-3d.js`, `assets/office-view.css`, `assets/office-view.js`, 2026-11-10.
 
 - Ajuste de regresión y caché: el test de vista abierta todavía exigía el texto antiguo «Entrar · nombre» en los botones de proyecto. Se actualizó para comprobar chips compactos y su etiqueta abreviada. La hoja `office-view.css` recibió una nueva clave de caché para que los avatares circulares y el carril de chips se actualicen en móvil.
+
+- Se alinearon las dos aserciones de la prueba del HUD móvil con `office-view.css?v=46`; la prueba del carril de chips ya pasa y el runner había detectado solo la versión de caché antigua en estas expectativas.
