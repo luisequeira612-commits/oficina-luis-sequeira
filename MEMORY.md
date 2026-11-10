@@ -626,3 +626,12 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - El cuerpo completo del minifigurín gira para mirar en la dirección de marcha. La rotación transforma también las normales a partir de una copia base, manteniendo iluminación coherente y evitando acumulación de errores entre frames. Monitores y escritorios permanecen fijos.
 - Se actualizan pruebas de rutas, orientación y normalización de caché; office-3d.js pasa a v66. No se modifica localStorage, el esquema de datos, los proyectos, la integración de GitHub Actions ni el hosting.
 - Fuente: observación de Luis en conversación y revisión de assets/office-3d.js y pruebas, 2026-11-10. Pendiente CI y confirmación visual de Luis de los nuevos recorridos.
+
+
+### Cierre de rutas multidireccionales — 10 de noviembre de 2026
+
+- La primera ejecución de CI encontró tres aserciones de pruebas que aún esperaban la declaración anterior de la ruta y la ubicación de la constante speed; el motor pasó la comprobación de sintaxis. Se actualizaron las expectativas y una prueba adicional que aún esperaba la variable route declarada como const.
+- Corrección de naturalidad: el personaje conserva la orientación frontal mientras permanece en el escritorio y solo gira cuando realmente inicia el desplazamiento. En la pausa de café conserva la orientación de llegada; al regresar gira hacia el puesto.
+- Validación final [42895621448](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42895621448): validate y deploy success. La suite completa de Node pasó en validate; GitHub Pages publicó el commit de código/pruebas `b6fd0791da547eede61a083cb21fd0dc32802add`.
+- El cambio de movimiento queda desplegado, pero la nueva ruta y el giro aún necesitan confirmación visual de Luis en el Tecno Pova 4. Los 30 FPS confirmados corresponden a la versión anterior; no atribuir esa medición a esta nueva versión hasta que se vuelva a comprobar en el dispositivo.
+- Fuente: GitHub Actions run 42895621448 y confirmación del usuario sobre 30 FPS en la versión anterior, 2026-11-10.
