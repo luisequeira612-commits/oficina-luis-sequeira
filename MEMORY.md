@@ -363,3 +363,6 @@
 - Corrección: invalidar la caché de CSS y ambos scripts con `?v=42` en `index.html`, y añadir una prueba de regresión que exige la versión nueva y las reglas de posicionamiento.
 - No se cambia lógica de empleados, almacenamiento, datos, estados ni renderer.
 - Fuente: diagnóstico del reporte del usuario y revisión de `main`, 2026-11-10.
+
+
+Nota de implementación adicional: los chips de proyecto muestran ahora solo el nombre, las placas de empleados se mantienen dentro del viewport con un ajuste vertical básico para evitar colisiones, y el estado `st-t` se distingue en rojo como «Te toca». Fuente: revisión de la petición A/B, 2026-11-10.
