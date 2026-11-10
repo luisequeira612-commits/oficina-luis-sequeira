@@ -667,3 +667,11 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - PR #46 reúne el cambio de coherencia de actividad real con trabajadores sentados y el reloj mural decorativo en un solo cambio basado en main. PR #44 se cerró como supersedido, sin fusionarse por separado; PR #45 se cerró como intento apilado sustituido.
 - La validación de la corrección de trabajadores había pasado previamente en [42900787830](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42900787830): 92/92 pruebas, cero fallos. PR #46 necesita su propia ejecución completa contra main.
 - No fusionar sin autorización; el modo de autonomía continúa en review.
+
+
+## PR #47 — consolidación y validación final (10 de noviembre de 2026)
+
+- PR vigente: [#47](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/47), base main. Reúne la corrección de actividad sentada y el reloj mural decorativo.
+- Primera CI [42901154869](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42901154869): una única prueba todavía esperaba caché v67; se actualizó la aserción a v68.
+- Validación final [42901271575](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42901271575): validate success, 93/93 pruebas, cero fallos. Deploy se omitió correctamente en pull_request.
+- Sin merge ni publicación: autonomía review. Pendiente revisión visual/FPS en Tecno Pova 4.
