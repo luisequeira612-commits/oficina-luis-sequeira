@@ -4,9 +4,9 @@ import { readFileSync } from "node:fs";
 const renderer=readFileSync(new URL("../assets/office-3d.js",import.meta.url),"utf8");
 const css=readFileSync(new URL("../assets/office-view.css",import.meta.url),"utf8");
 test("resting workers use clear inter-column aisles and return to their own desk",()=>{
- assert.match(renderer,/const laneX=col===0\?-1\.82:col===1\?1\.82:5\.48/);
+ assert.match(renderer,/const stationX=col===0\?-1\.82:col===1\?1\.82:5\.48/);
  assert.match(renderer,/restZ:2\.0\+row\*\.72/);
- assert.match(renderer,/rest=\[worker\.laneX,worker\.restZ\],path=\[start,lane,rest\]/);
+ assert.match(renderer,/rest=\[worker\.laneX,worker\.restZ\],station=\[worker\.stationX,worker\.restZ\],path=\[start,lane,rest,station\]/);
  assert.match(renderer,/const returning=phase>=oneWay\+dwell/);
  assert.match(renderer,/const speed=1\.0,dwell=3\.8/);
  assert.match(renderer,/for\(const stationX of \[-1\.82,1\.82,5\.48\]\)/);
@@ -15,6 +15,8 @@ test("resting workers use clear inter-column aisles and return to their own desk
 });
 test("resting workers pause at the break point and animate their legs",()=>{
  assert.match(renderer,/paused:true/);
+ assert.match(renderer,/Math\.atan2\(route\.dx,route\.dz\)/);
+ assert.match(renderer,/scene\.baseNormals\[i\]/);
  assert.match(renderer,/route\.paused\?\.012/);
  assert.match(renderer,/Math\.sin\(stridePhase\)\*\.085/);
 });
