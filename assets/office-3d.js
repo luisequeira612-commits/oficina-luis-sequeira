@@ -191,10 +191,10 @@ function buildScene(workers,roomName=""){
   // Break points are mounted on the back wall and reached via the gaps between desk columns.
   for(const stationX of [-1.82,1.82,5.48]){
    box(stationX,1.08,1.45,.34,.92,.30,[.23,.32,.39]);
-   box(stationX,1.13,-1.265,.25,.48,.035,[.12,.22,.29]);
-   box(stationX,1.28,-1.245,.15,.055,.018,[.18,.83,.74]);
-   box(stationX-.085,.87,-1.245,.06,.12,.018,[.78,.85,.89]);
-   box(stationX+.085,.87,-1.245,.06,.12,.018,[.78,.85,.89]);
+   box(stationX,1.13,1.265,.25,.48,.035,[.12,.22,.29]);
+   box(stationX,1.28,1.245,.15,.055,.018,[.18,.83,.74]);
+   box(stationX-.085,.87,1.245,.06,.12,.018,[.78,.85,.89]);
+   box(stationX+.085,.87,1.245,.06,.12,.018,[.78,.85,.89]);
    box(stationX,1.58,1.45,.18,.055,.24,[.88,.70,.38]);
   }
  }
@@ -297,7 +297,7 @@ function buildScene(workers,roomName=""){
   // Mirror each complete workstation toward the open viewing side. Reverse triangle winding and normals to preserve WebGL culling and lighting.
   for(let i=workstationStart;i<positions.length;i+=9){for(let v=0;v<9;v+=3){positions[i+v+2]=-positions[i+v+2];normals[i+v+2]=-normals[i+v+2]}for(const array of [positions,normals,colors])for(let k=0;k<3;k++){const a=i+3+k,b=i+6+k,temp=array[a];array[a]=array[b];array[b]=temp}}
   const laneX=col===0?-1.82:col===1?1.82:5.48;
-  workerRanges.push({start:workerStart,end:positions.length,legsStart,legsEnd,bodyStart:legsEnd,bodyEnd,headStart,headEnd,armsStart,armsEnd,handsStart,handsEnd,monitorStart,monitorEnd,state:worker.state,index,employeeId:worker.id||"",name:worker.name||worker.role||"Agente",role:worker.role||"Puesto",roomId:worker.roomId||"",x,z:-z,laneX,restZ:3.2});
+  workerRanges.push({start:workerStart,end:positions.length,legsStart,legsEnd,bodyStart:legsEnd,bodyEnd,headStart,headEnd,armsStart,armsEnd,handsStart,handsEnd,monitorStart,monitorEnd,state:worker.state,index,employeeId:worker.id||"",name:worker.name||worker.role||"Agente",role:worker.role||"Puesto",roomId:worker.roomId||"",x,z:-z,laneX,restZ:2.0+row*.72});
  });
  // Layered ceiling fixtures: recessed rails and three pendant lamps with bright diffusers.
  box(0,3.72,-.5,4.8,.08,.7,[0.34,0.41,0.47]);
