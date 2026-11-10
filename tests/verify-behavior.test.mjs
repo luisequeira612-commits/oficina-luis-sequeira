@@ -200,4 +200,3 @@ test("connected 3D overview falls back to the existing accessible project sectio
   assert.ok(officeScript.includes("renderMap()});"), "restores the connected overview when a room closes");
 });
 
-});
