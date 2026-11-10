@@ -47,3 +47,12 @@
 .room-station .room-chair{z-index:0}
 .room-station .room-station-label{z-index:4}
 @media(prefers-reduced-motion:reduce){.room-station .room-worker-avatar,.room-station .room-worker-avatar *{animation:none!important}}
+
+/* Keep room avatars in sync with the live worker state shown on their cards. */
+.room-station.st-w .room-worker-avatar{animation:hw-work .55s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 85%}
+.room-station.st-w .room-worker-avatar .hw-arms{animation:hw-type .3s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 20%}
+.room-station.st-t .room-worker-avatar{animation:hw-think 1.8s ease-in-out infinite}
+.room-station.st-t .room-worker-avatar .hw-head{transform:translate(1px,-1px)}
+.room-station.st-a .room-worker-avatar .hw-arms{animation:hw-wait 1.1s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 10%}
+.room-station.st-r .room-worker-avatar{animation:hw-rest 2.4s ease-in-out infinite}
+.room-station.st-r .room-worker-avatar .hw-head{transform:rotate(5deg);transform-origin:32px 25px}
