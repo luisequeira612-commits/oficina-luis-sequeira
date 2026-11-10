@@ -458,3 +458,13 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Se añadió prueba para exigir que el código recorra los elementos `.office-worker-tag` del contenedor y rechace el uso de `workerTags.forEach`.
 - El primer run del test falló por una expectativa antigua que fijaba `office-3d.js?v=50`; se ajustó el test para aceptar claves de caché versionadas. Run [42861098181](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42861098181): 75 pruebas y validate success; deploy Pages success el 10 de noviembre de 2026 a las 17:04 UTC. El cambio de código está publicado; la prueba real en el Tecno Pova 4 sigue pendiente.
 - Fuente: reporte de error del usuario y lectura del motor/test en `main`, 2026-11-10.
+
+## Precisión de tarea actual y estados visuales — 10 de noviembre de 2026
+
+- `assets/github-live.js` ahora escribe `data-current-task` únicamente en el empleado asignado al workflow queued/in_progress, usando el nombre del workflow de GitHub Actions; no confunde el estado genérico con la tarea.
+- `assets/office-view.js` vuelve a leer el empleado desde el DOM al abrir la ficha, para mostrar los datos más recientes. La ficha distingue TRABAJANDO, PENSANDO, TE TOCA, ÉXITO, FALLO y DESCANSANDO; si no hay ejecución activa muestra «Sin tarea en curso».
+- Se corrigió una rama duplicada `st-a` en `assets/office-3d.js`: el marcador azul de pensamiento ahora corresponde a `st-t`, y el marcador amarillo de decisión pendiente sigue en `st-a`.
+- Commits directos a `main`: `fb7c6400`, `2c196020`, `61dbaa05`, `ebf397ed` (tarea/ficha y regresión), `2dfa7f73`, `063bd008`, `22d16afd` (marcador de pensamiento y regresión).
+- Publicación del ajuste de ficha: run [42861981257](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42861981257), validate + deploy success. Publicación del marcador: run [42862523325](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42862523325), validate + deploy success.
+- Nota: algunos despliegues intermedios fallaron por concurrencia entre despliegues de Pages; los runs anteriores indicados confirman que ambos heads funcionales quedaron publicados. No se modifica el esquema `oficina-luis-sequeira-v1`, ni se añaden backend, dependencias o credenciales.
+- Fuente: código, pruebas y logs GitHub Actions, 2026-11-10.
