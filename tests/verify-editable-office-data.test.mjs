@@ -24,4 +24,3 @@ test("GitHub activity assigns one worker per active run and keeps history",()=>{
 test("commit polling also runs after a 304 workflow validation",()=>{
  assert.match(live,/let workflowFresh=false/);assert.match(live,/response\.status===304.*workflowFresh=true/);assert.match(live,/if\(workflowFresh\)/s);
 });
-});
