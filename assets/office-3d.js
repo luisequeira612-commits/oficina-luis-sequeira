@@ -21,8 +21,8 @@ function buildScene(workers){
  const addTri=(a,b,c,color)=>{const ux=b[0]-a[0],uy=b[1]-a[1],uz=b[2]-a[2],vx=c[0]-a[0],vy=c[1]-a[1],vz=c[2]-a[2];let nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx,l=Math.hypot(nx,ny,nz)||1;nx/=l;ny/=l;nz/=l;for(const p of [a,b,c]){positions.push(...p);normals.push(nx,ny,nz);colors.push(...color)}};
  const quad=(a,b,c,d,color)=>{addTri(a,b,c,color);addTri(a,c,d,color)};
  const box=(x,y,z,w,h,d,color)=>{const x0=x-w/2,x1=x+w/2,y0=y-h/2,y1=y+h/2,z0=z-d/2,z1=z+d/2;quad([x0,y1,z1],[x1,y1,z1],[x1,y1,z0],[x0,y1,z0],color);quad([x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1],color);quad([x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1],color);quad([x1,y0,z0],[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],color);quad([x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0],color);quad([x1,y0,z1],[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],color)};
- const sphere=(cx,cy,cz,rx,ry,rz,color,segments=9,rings=6)=>{for(let r=0;r<rings;r++){const p0=-Math.PI/2+Math.PI*r/rings,p1=-Math.PI/2+Math.PI*(r+1)/rings;for(let s=0;s<segments;s++){const t0=2*Math.PI*s/segments,t1=2*Math.PI*(s+1)/segments;const pt=(p,t)=>[cx+rx*Math.cos(p)*Math.cos(t),cy+ry*Math.sin(p),cz+rz*Math.cos(p)*Math.sin(t)];const a=pt(p0,t0),b=pt(p0,t1),c=pt(p1,t1),d=pt(p1,t0);quad(a,b,c,d,color)}}};
- const cyl=(x,y,z,r,h,color,seg=8)=>{for(let i=0;i<seg;i++){const a=i*2*Math.PI/seg,b=(i+1)*2*Math.PI/seg;const p1=[x+Math.cos(a)*r,y-h/2,z+Math.sin(a)*r],p2=[x+Math.cos(b)*r,y-h/2,z+Math.sin(b)*r],p3=[x+Math.cos(b)*r,y+h/2,z+Math.sin(b)*r],p4=[x+Math.cos(a)*r,y+h/2,z+Math.sin(a)*r];quad(p1,p2,p3,p4,color);addTri([x,y+h/2,z],p4,p3,color);addTri([x,y-h/2,z],p2,p1,color)}};
+ const sphere=(cx,cy,cz,rx,ry,rz,color,segments=9,rings=6)=>{for(let r=0;r<rings;r++){const p0=-Math.PI/2+Math.PI*r/rings,p1=-Math.PI/2+Math.PI*(r+1)/rings;for(let s=0;s<segments;s++){const t0=2*Math.PI*s/segments,t1=2*Math.PI*(s+1)/segments;const pt=(p,t)=>[cx+rx*Math.cos(p)*Math.cos(t),cy+ry*Math.sin(p),cz+rz*Math.cos(p)*Math.sin(t)];const a=pt(p0,t0),b=pt(p0,t1),c=pt(p1,t1),d=pt(p1,t0);quad(a,d,c,b,color)}}};
+ const cyl=(x,y,z,r,h,color,seg=8)=>{for(let i=0;i<seg;i++){const a=i*2*Math.PI/seg,b=(i+1)*2*Math.PI/seg;const p1=[x+Math.cos(a)*r,y-h/2,z+Math.sin(a)*r],p2=[x+Math.cos(b)*r,y-h/2,z+Math.sin(b)*r],p3=[x+Math.cos(b)*r,y+h/2,z+Math.sin(b)*r],p4=[x+Math.cos(a)*r,y+h/2,z+Math.sin(a)*r];quad(p1,p4,p3,p2,color);addTri([x,y+h/2,z],p3,p4,color);addTri([x,y-h/2,z],p1,p2,color)}};
  const wood=[0.43,0.25,0.14],woodTop=[0.64,0.42,0.25],metal=[0.22,0.28,0.34],wall=[0.76,0.81,0.85],wallDark=[0.48,0.57,0.66],floor=[0.62,0.56,0.46],screen=[0.18,0.66,0.88],chair=[0.17,0.29,0.42],plant=[0.17,0.43,0.27];
  // Room shell: open front and right for a clear game-like cutaway.
  box(0,-0.18,0,12,.36,10,floor);box(0,2,-5,12,4,.22,wall);box(-6,2,0,.22,4,10,wallDark);
@@ -73,13 +73,14 @@ function buildScene(workers){
  return {data,count:positions.length/3,positionLength:positions.length,normalLength:normals.length};
 }
 function open({container,roomName,workers=[]}){
+ if(typeof container._office3dCleanup==="function")container._office3dCleanup();
  container.replaceChildren();container.classList.remove("is-active");
  const canvas=document.createElement("canvas");canvas.setAttribute("aria-label","Escena 3D de "+roomName);
  const gl=canvas.getContext("webgl2",{alpha:false,antialias:false,powerPreference:"low-power"});
  if(!gl){const note=document.createElement("p");note.className="office-3d-error";note.textContent="Este navegador no ofrece WebGL 2 en este momento. Se muestra la vista alternativa.";container.appendChild(note);return false}
  try{
   const p=program(gl),scene=buildScene(workers),buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,scene.data,gl.STATIC_DRAW);
-  const stride=9*4,loc=(name)=>gl.getAttribLocation(p,name);gl.useProgram(p);
+  const stride=0,loc=(name)=>gl.getAttribLocation(p,name);gl.useProgram(p);
   const ap=loc("aPosition"),an=loc("aNormal"),ac=loc("aColor");
   gl.enableVertexAttribArray(ap);gl.vertexAttribPointer(ap,3,gl.FLOAT,false,stride,0);
   gl.enableVertexAttribArray(an);gl.vertexAttribPointer(an,3,gl.FLOAT,false,stride,scene.positionLength*4);
