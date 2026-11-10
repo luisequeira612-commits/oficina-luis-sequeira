@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<title>Oficina de Luis Sequeira</title>
+<style>
+:root{color-scheme:light;--bg:#fff;--surface:#F4F5F7;--border:#E5E7EB;--text:#1F2937;--muted:#5B6472;--blue:#0067C6;--blue-dark:#004A91;--blue-deep:#004E9A;--red:#C92A40;font-family:ui-rounded,system-ui,sans-serif;font-weight:400}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-size:14px;line-height:1.45}
+button,input{font:inherit}
+button{min-height:44px;border:1px solid var(--blue-dark);border-bottom:4px solid var(--blue-dark);border-radius:10px;background:var(--blue);color:#fff;padding:8px 13px;font-weight:700;cursor:pointer}
+button:active{transform:translateY(1px);border-bottom-width:3px}
+button.secondary{background:#fff;color:var(--blue-deep);border-color:#B8C6D5;border-bottom-color:#8CA2B8}
+button.danger{background:#fff;color:var(--red);border-color:#E7AAB3;border-bottom-color:#D77C89}
+button:focus-visible,input:focus-visible{outline:3px solid #80BFFF;outline-offset:2px}
+button:disabled{opacity:.55;cursor:not-allowed}
+header{max-width:1040px;margin:0 auto;padding:18px 16px 10px;display:flex;align-items:center;gap:12px}
+.brand-mark{width:44px;height:48px;object-fit:contain;flex:none}
+h1{font-size:clamp(20px,5vw,26px);line-height:1.2;margin:0;font-weight:700;letter-spacing:-.3px}
+main{max-width:1040px;margin:0 auto;padding:8px 16px 28px}
+.summary{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:12px 14px;margin:4px 0 18px}
+.summary img{width:42px;height:45px;object-fit:contain;flex:none}
+.summary p{margin:0;font-size:14px;color:var(--text)}
+h2{font-size:17px;margin:20px 0 10px;font-weight:700}
+.project-form{display:flex;gap:8px;align-items:flex-start;margin:0 0 18px}
+.project-form input{min-width:0;flex:1;height:44px;border:1px solid #AAB4C0;border-radius:10px;padding:8px 12px;color:var(--text);background:#fff}
+.validation{min-height:18px;color:var(--red);font-size:12px;margin:5px 0 0}
+.rooms{display:grid;grid-template-columns:1fr;gap:14px}
+.room{border:1px solid var(--border);border-radius:14px;padding:13px;background:#fff;min-width:0}
+.room-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.room-title{font-size:16px;font-weight:700;overflow-wrap:anywhere}
+.room-actions{display:flex;align-items:center;gap:5px;flex:none}
+.room-count{font-size:12px;color:var(--muted);white-space:nowrap}
+.room-remove{width:44px;min-width:44px;padding:0;font-size:18px}
+.agents{display:grid;grid-template-columns:repeat(auto-fit,minmax(76px,1fr));gap:12px 8px;align-items:start}
+.ag{width:76px;max-width:100%;text-align:center;justify-self:center;min-width:0}
+.ag svg{display:block;width:64px;height:70px;margin:0 auto 3px;overflow:visible}
+.ag .ft,.ag .fa,.ag .zz,.ag .ce{opacity:0}
+.ag .pup{transition:transform .3s}
+.ag .body{transform-box:fill-box;transform-origin:50% 100%}
+.st-w .body{animation:bb .5s ease-in-out infinite alternate}
+.st-w .hl{animation:tp .26s ease-in-out infinite alternate}
+.st-w .hr{animation:tp .26s ease-in-out .13s infinite alternate}
+.st-t .ft{opacity:1}
+.st-t .pup{transform:translate(1.5px,-2.2px)}
+.st-a .fa{opacity:1;animation:pu 1s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.st-a .body{animation:sw 1.2s ease-in-out infinite alternate}
+.st-r .zz{opacity:1;animation:fz 2s ease-in-out infinite}
+.st-r .eyes{opacity:0}
+.st-r .ce{opacity:1}
+@keyframes bb{to{transform:translateY(-1.5px)}}
+@keyframes tp{to{transform:translateY(-2.5px)}}
+@keyframes pu{50%{transform:scale(1.15)}}
+@keyframes sw{from{transform:rotate(-2deg)}to{transform:rotate(2deg)}}
+@keyframes fz{0%{transform:translateY(2px);opacity:0}50%{opacity:1}100%{transform:translateY(-4px);opacity:0}}
+.agent-role{font-size:12px;line-height:1.25;overflow-wrap:anywhere}
+.agent-state{font-size:11px;line-height:1.3;color:var(--muted);min-height:15px}
+.agent-remove{display:block;width:44px;min-height:44px;margin:1px auto 0;padding:0;border:0;background:transparent;color:var(--muted);font-size:16px}
+.agent-remove:focus-visible{outline:3px solid #80BFFF}
+.add-agent{margin-top:12px}
+.empty{font-size:13px;color:var(--muted);padding:4px 0}
+footer{max-width:1040px;margin:0 auto;padding:0 16px 24px;color:var(--muted);font-size:12px}
+@media(min-width:680px){.rooms{grid-template-columns:repeat(2,minmax(0,1fr))}.summary{padding:14px 16px}}
+@media(prefers-reduced-motion:reduce){.ag *{animation:none!important}}
+</style>
+</head>
+<body>
+<header>
+<img class="brand-mark" src="assets/guardi-mark.svg" alt="Guardi">
+<h1>Oficina de Luis Sequeira</h1>
+</header>
+<main>
+<section class="summary" aria-live="polite" aria-atomic="true">
+<img src="assets/guardi-mark.svg" alt="" aria-hidden="true">
+<p id="summary-text">Todos descansan por ahora.</p>
+</section>
+<section aria-labelledby="projects-heading">
+<h2 id="projects-heading">Proyectos</h2>
+<form class="project-form" id="project-form" novalidate>
+<div style="flex:1;min-width:0">
+<label for="project-name" style="display:block;font-size:12px;color:var(--muted);margin:0 0 4px">Nuevo proyecto</label>
+<input id="project-name" name="project-name" maxlength="40" autocomplete="off" placeholder="Nombre del proyecto" aria-describedby="project-error">
+<p class="validation" id="project-error" role="alert"></p>
+</div>
+<button type="submit">Agregar</button>
+</form>
+<div class="rooms" id="rooms" aria-live="polite"></div>
+</section>
+</main>
+<footer>Simulación. En la versión real, los estados vendrán de GitHub.</footer>
+<script>
+(function(){
+"use strict";
+const STORAGE_KEY="oficina-luis-sequeira-v1";
+const ROLE_COLORS={
+  "Desarrollo":{c:"#534AB7",d:"#3C3489",l:"#AFA9EC"},
+  "Diseño":{c:"#D4537E",d:"#993556",l:"#F4C0D1"},
+  "Revisión":{c:"#1D9E75",d:"#0F6E56",l:"#9FE1CB"},
+  "Escritor":{c:"#BA7517",d:"#854F0B",l:"#FAC775"},
+  "Community":{c:"#D85A30",d:"#993C1D",l:"#F5C4B3"}
+};
+const ROLES=Object.keys(ROLE_COLORS);
+const STATES={
+  w:["st-w","Escribiendo"],t:["st-t","Pensando"],a:["st-a","Esperando tu OK"],r:["st-r","Descansando"]
+};
+const CHARACTER_SVG = {
+  "Desarrollo": `<svg viewBox="0 0 64 70" width="64" height="70" aria-hidden="true">
+<ellipse cx="32" cy="33" rx="19" ry="21" fill="#3C3489"/>
+<g class="body">
+<ellipse cx="32" cy="30" rx="19" ry="21" fill="#534AB7"/>
+<ellipse cx="32" cy="40" rx="11" ry="8" fill="#AFA9EC"/>
+<g class="eyes">
+<circle cx="25" cy="26" r="6" fill="#fff"/>
+<circle cx="39" cy="26" r="6" fill="#fff"/>
+<g class="pup">
+<circle cx="25.5" cy="27" r="3" fill="#111827"/>
+<circle cx="39.5" cy="27" r="3" fill="#111827"/>
+<circle cx="26.5" cy="25.8" r="1" fill="#fff"/>
+<circle cx="40.5" cy="25.8" r="1" fill="#fff"/>
+</g>
+</g>
+<g class="ce"><path d="M20 27Q25 31 30 27M34 27Q39 31 44 27" fill="none" stroke="#1F2937" stroke-width="2" stroke-linecap="round"/></g>
+<path d="M28 33Q32 31 36 33Q35 38 32 39Q29 38 28 33Z" fill="#2D3748"/>
+</g>
+<rect x="5" y="50" width="54" height="13" rx="3" fill="#A07A52"/>
+<rect x="5" y="50" width="54" height="4" rx="2" fill="#8B5E3C"/>
+<rect x="23" y="42" width="18" height="9" rx="2" fill="#4B5563"/>
+<circle cx="32" cy="46.5" r="1.6" fill="#9CA3AF"/>
+<ellipse class="hl" cx="25" cy="52" rx="4" ry="3" fill="#534AB7"/>
+<ellipse class="hr" cx="39" cy="52" rx="4" ry="3" fill="#534AB7"/>
+<g class="ft">
+<circle cx="45" cy="16" r="1.6" fill="#fff" stroke="#94A3B8" stroke-width=".8"/>
+<ellipse cx="53" cy="9" rx="9" ry="6" fill="#fff" stroke="#94A3B8" stroke-width=".8"/>
+<circle cx="49" cy="9" r="1.3" fill="#64748B"/>
+<circle cx="53" cy="9" r="1.3" fill="#64748B"/>
+<circle cx="57" cy="9" r="1.3" fill="#64748B"/>
+</g>
+<g class="fa">
+<circle cx="53" cy="11" r="8" fill="#EF9F27"/>
+<rect x="52" y="6" width="2" height="6" rx="1" fill="#fff"/>
+<circle cx="53" cy="14.5" r="1.2" fill="#fff"/>
+</g>
+<g class="zz"><path d="M46 6h7l-7 7h7" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+</svg>`,
+  "Diseño": `<svg viewBox="0 0 64 70" width="64" height="70" aria-hidden="true">
+<ellipse cx="32" cy="33" rx="19" ry="21" fill="#993556"/>
+<g class="body">
+<ellipse cx="32" cy="30" rx="19" ry="21" fill="#D4537E"/>
+<ellipse cx="32" cy="40" rx="11" ry="8" fill="#F4C0D1"/>
+<g class="eyes">
+<circle cx="25" cy="26" r="6" fill="#fff"/>
+<circle cx="39" cy="26" r="6" fill="#fff"/>
+<g class="pup">
+<circle cx="25.5" cy="27" r="3" fill="#111827"/>
+<circle cx="39.5" cy="27" r="3" fill="#111827"/>
+<circle cx="26.5" cy="25.8" r="1" fill="#fff"/>
+<circle cx="40.5" cy="25.8" r="1" fill="#fff"/>
+</g>
+</g>
+<g class="ce"><path d="M20 27Q25 31 30 27M34 27Q39 31 44 27" fill="none" stroke="#1F2937" stroke-width="2" stroke-linecap="round"/></g>
+<path d="M28 33Q32 31 36 33Q35 38 32 39Q29 38 28 33Z" fill="#2D3748"/>
+</g>
+<rect x="5" y="50" width="54" height="13" rx="3" fill="#A07A52"/>
+<rect x="5" y="50" width="54" height="4" rx="2" fill="#8B5E3C"/>
+<rect x="23" y="42" width="18" height="9" rx="2" fill="#4B5563"/>
+<circle cx="32" cy="46.5" r="1.6" fill="#9CA3AF"/>
+<ellipse class="hl" cx="25" cy="52" rx="4" ry="3" fill="#D4537E"/>
+<ellipse class="hr" cx="39" cy="52" rx="4" ry="3" fill="#D4537E"/>
+<g class="ft">
+<circle cx="45" cy="16" r="1.6" fill="#fff" stroke="#94A3B8" stroke-width=".8"/>
+<ellipse cx="53" cy="9" rx="9" ry="6" fill="#fff" stroke="#94A3B8" stroke-width=".8"/>
+<circle cx="49" cy="9" r="1.3" fill="#64748B"/>
+<circle cx="53" cy="9" r="1.3" fill="#64748B"/>
+<circle cx="57" cy="9" r="1.3" fill="#64748B"/>
+</g>
+<g class="fa">
+<circle cx="53" cy="11" r="8" fill="#EF9F27"/>
+<rect x="52" y="6" width="2" height="6" rx="1" fill="#fff"/>
+<circle cx="53" cy="14.5" r="1.2" fill="#fff"/>
+</g>
+<g class="zz"><path d="M46 6h7l-7 7h7" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+</svg>`,
+  "Revisión": `<svg viewBox="0 0 64 70" width="64" height="70" aria-hidden="true">
+<ellipse cx="32" cy="33" rx="19" ry="21" fill="#0F6E56"/>
+<g class="body">
+<ellipse cx="32" cy="30" rx="19" ry="21" fill="#1D9E75"/>
+<ellipse cx="32" cy="40" rx="11" ry="8" fill="#9FE1CB"/>
+<g class="eyes">
+<circle cx="25" cy="26" r="6" fill="#fff"/>
+<circle cx="39" cy="26" r="6" fill="#fff"/>
+<g class="pup">
+<circle cx="25.5" cy="27" r="3" fill="#111827"/>
+<circle cx="39.5" cy="27" r="3" fill="#111827"/>
+<circle cx="26.5" cy="25.8" r="1" fill="#fff"/>
+<circle cx="40.5" cy="25.8" r="1" fill="#fff"/>
+</g>
+</g>
+<g class="ce"><path d="M20 27Q25 31 30 27M34 27Q39 31 44 27" fill="none" stroke="#1F2937" stroke-width="2" stroke-linecap="round"/></g>
+<path d="M28 33Q32 31 36 33Q35 38 32 39Q29 38 28 33Z" fill="#2D3748"/>
+</g>
+<rect x="5" y="50" width="54" height="13" rx="3" fill="#A07A52"/>
+<rect x="5" y="50" width="54" height="4" rx="2" fill="#8B5E3C"/>
+<rect x="23" y="42" width="18" height="9" rx="2" fill="#4B5563"/>
+<circle cx="32" cy="46.5" r="1.6" fill="#9CA3AF"/>
+<ellipse class="hl" cx="25" cy="52" rx="4" ry="3" fill="#1D9E75"/>
+<ellipse class="hr" cx="39" cy="52" rx="4" ry="3" fill="#1D9E75"/>
+<g class="ft">
+<circle cx="45" cy="16" r="1.6" fill="#fff" stroke="#94A3B8" stroke-width=".8"/>
+<ellipse cx="53" cy="9" rx="9" ry="6" fill="#fff" stroke="#94A3B8" stroke-width=".8"/>
+<circle cx="49" cy="9" r="1.3" fill="#64748B"/>
+<circle cx="53" cy="9" r="1.3" fill="#64748B"/>
+<circle cx="57" cy="9" r="1.3" fill="#64748B"/>
+</g>
+<g class="fa">
+<circle cx="53" cy="11" r="8" fill="#EF9F27"/>
+<rect x="52" y="6" width="2" height="6" rx="1" fill="#fff"/>
+<circle cx="53" cy="14.5" r="1.2" fill="#fff"/>
+</g>
+<g class="zz"><path d="M46 6h7l-7 7h7" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+</svg>`,
+  "Escritor": `<svg viewBox="0 0 64 70" width="64" height="70" aria-hidden="true">
+<ellipse cx="32" cy="33" rx="19" ry="21" fill="#854F0B"/>
+<g class="body">
+<ellipse cx="32" cy="30" rx="19" ry="21" fill="#BA7517"/>
+<ellipse cx="32" cy="40" rx="11" ry="8" fill="#FAC775"/>
+<g class="eyes">
+<circle cx="25" cy="26" r="6" fill="#fff"/>
+<circle cx="39" cy="26" r="6" fill="#fff"/>
+<g class="pup">
+<circle cx="25.5" cy="27" r="3" fill="#111827"/>
+<circle cx="39.5" cy="27" r="3" fill="#111827"/>
+<circle cx="26.5" cy="25.8" r="1" fill="#fff"/>
+<circle cx="40.5" cy="25.8" r="1" fill="#fff"/>
+</g>
+</g>
+<g class="ce"><path d="M20 27Q25 31 30 27M34 27Q39 31 44 27" fill="none" stroke="#1F2937" stroke-width="2" stroke-linecap="round"/></g>
+<path d="M28 33Q32 31 36 33Q35 38 32 39Q29 38 28 33Z" fill="#2D3748"/>
+</g>
+<rect x="5" y="50" width="54" height="13" rx="3" fill="#A07A52"/>
+<rect x="5" y="50" width="54" height="4" rx="2" fill="#8B5E3C"/>
+<rect x="23" y="42" width="18" height="9" rx="2" fill="#4B5563"/>
+<circle cx="32" cy="46.5" r="1.6" fill="#9CA3AF"/>
+<ellipse class="hl" cx="25" cy="52" rx="4" ry="3" fill="#BA7517"/>
+<ellipse class="hr" cx="39" cy="52" rx="4" ry="3" fill="#BA7517"/>
+<g class="ft">
+<circle cx="45" cy="16" r="1.6" fill="#fff" stroke="#94A3B8" stroke-width=".8"/>
+<ellipse cx="53" cy="9" rx="9" ry="6" fill="#fff" stroke="#94A3B8" stroke-width=".8"/>
+<circle cx="49" cy="9" r="1.3" fill="#64748B"/>
+<circle cx="53" cy="9" r="1.3" fill="#64748B"/>
+<circle cx="57" cy="9" r="1.3" fill="#64748B"/>
+</g>
+<g class="fa">
+<circle cx="53" cy="11" r="8" fill="#EF9F27"/>
+<rect x="52" y="6" width="2" height="6" rx="1" fill="#fff"/>
+<circle cx="53" cy="14.5" r="1.2" fill="#fff"/>
+</g>
+<g class="zz"><path d="M46 6h7l-7 7h7" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+</svg>`,
+  "Community": `<svg viewBox="0 0 64 70" width="64" height="70" aria-hidden="true">
+<ellipse cx="32" cy="33" rx="19" ry="21" fill="#993C1D"/>
+<g class="body">
+<ellipse cx="32" cy="30" rx="19" ry="21" fill="#D85A30"/>
+<ellipse cx="32" cy="40" rx="11" ry="8" fill="#F5C4B3"/>
+<g class="eyes">
+<circle cx="25" cy="26" r="6" fill="#fff"/>
+<circle cx="39" cy="26" r="6" fill="#fff"/>
+<g class="pup">
+<circle cx="25.5" cy="27" r="3" fill="#111827"/>
+<circle cx="39.5" cy="27" r="3" fill="#111827"/>
+<circle cx="26.5" cy="25.8" r="1" fill="#fff"/>
+<circle cx="40.5" cy="25.8" r="1" fill="#fff"/>
+</g>
+</g>
+<g class="ce"><path d="M20 27Q25 31 30 27M34 27Q39 31 44 27" fill="none" stroke="#1F2937" stroke-width="2" stroke-linecap="round"/></g>
+<path d="M28 33Q32 31 36 33Q35 38 32 39Q29 38 28 33Z" fill="#2D3748"/>
+</g>
+<rect x="5" y="50" width="54" height="13" rx="3" fill="#A07A52"/>
+<rect x="5" y="50" width="54" height="4" rx="2" fill="#8B5E3C"/>
+<rect x="23" y="42" width="18" height="9" rx="2" fill="#4B5563"/>
+<circle cx="32" cy="46.5" r="1.6" fill="#9CA3AF"/>
+<ellipse class="hl" cx="25" cy="52" rx="4" ry="3" fill="#D85A30"/>
+<ellipse class="hr" cx="39" cy="52" rx="4" ry="3" fill="#D85A30"/>
+<g class="ft">
+<circle cx="45" cy="16" r="1.6" fill="#fff" stroke="#94A3B8" stroke-width=".8"/>
+<ellipse cx="53" cy="9" rx="9" ry="6" fill="#fff" stroke="#94A3B8" stroke-width=".8"/>
+<circle cx="49" cy="9" r="1.3" fill="#64748B"/>
+<circle cx="53" cy="9" r="1.3" fill="#64748B"/>
+<circle cx="57" cy="9" r="1.3" fill="#64748B"/>
+</g>
+<g class="fa">
+<circle cx="53" cy="11" r="8" fill="#EF9F27"/>
+<rect x="52" y="6" width="2" height="6" rx="1" fill="#fff"/>
+<circle cx="53" cy="14.5" r="1.2" fill="#fff"/>
+</g>
+<g class="zz"><path d="M46 6h7l-7 7h7" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+</svg>`
+};
+function makeId(){return (typeof crypto!=="undefined"&&crypto.randomUUID)?crypto.randomUUID():"id-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,9)}
+function initialRooms(){return [
+{id:makeId(),name:"App Guardi",agents:["Desarrollo","Revisión","Diseño"].map(role=>({id:makeId(),role,source:null}))},
+{id:makeId(),name:"Canal de YouTube",agents:["Escritor","Diseño"].map(role=>({id:makeId(),role,source:null}))},
+{id:makeId(),name:"Tema Nova Launcher",agents:["Diseño"].map(role=>({id:makeId(),role,source:null}))}
+]}
+function validData(value){
+ if(!value||value.version!==1||!Array.isArray(value.rooms))return false;
+ return value.rooms.every(room=>room&&typeof room.id==="string"&&typeof room.name==="string"&&room.name.length>0&&room.name.length<=40&&Array.isArray(room.agents)&&room.agents.length<=6&&room.agents.every(agent=>agent&&typeof agent.id==="string"&&ROLES.includes(agent.role)));
+}
+function loadRooms(){
+ try{const raw=localStorage.getItem(STORAGE_KEY);if(raw===null)return initialRooms();const parsed=JSON.parse(raw);return validData(parsed)?parsed.rooms:initialRooms()}
+ catch(_){return initialRooms()}
+}
+let rooms=loadRooms();
+const states=new Map();
+const roomsEl=document.getElementById("rooms");
+const summaryEl=document.getElementById("summary-text");
+const form=document.getElementById("project-form");
+const nameInput=document.getElementById("project-name");
+const errorEl=document.getElementById("project-error");
+function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify({version:1,rooms}))}catch(_){/* Storage may be unavailable; the page remains usable. */}}
+function pick(){var x=Math.random();return x<.45?"w":x<.7?"t":x<.85?"a":"r";}
+function stateFor(id){if(!states.has(id))states.set(id,pick());return states.get(id)}
+function updateSummary(){
+ const all=rooms.flatMap(room=>room.agents);
+ const working=all.filter(agent=>["w","t"].includes(stateFor(agent.id))).length;
+ const waiting=all.filter(agent=>stateFor(agent.id)==="a").length;
+ if(all.length===0||all.every(agent=>stateFor(agent.id)==="r")){summaryEl.textContent="Todos descansan por ahora.";return}
+ const a=working===1?"personaje":"personajes";
+ const b=waiting===1?"espera":"esperan";
+ summaryEl.textContent="Hay "+working+" "+a+" trabajando y "+waiting+" "+b+" tu OK.";
+}
+function makeCharacter(agent){
+ const wrap=document.createElement("div");wrap.className="ag";wrap.dataset.agentId=agent.id;
+ const state=stateFor(agent.id);
+ wrap.classList.add(STATES[state][0]);
+ const holder=document.createElement("div");
+ holder.innerHTML=CHARACTER_SVG[agent.role];
+ const svg=holder.firstElementChild;
+ wrap.appendChild(svg);
+ const role=document.createElement("div");role.className="agent-role";role.textContent=agent.role;wrap.appendChild(role);
+ const status=document.createElement("div");status.className="agent-state";status.textContent=STATES[state][1];status.dataset.status="true";wrap.appendChild(status);
+ const remove=document.createElement("button");remove.type="button";remove.className="agent-remove";remove.textContent="×";remove.setAttribute("aria-label","Quitar personaje "+agent.role);remove.title="Quitar personaje";
+ remove.addEventListener("click",()=>removeAgent(agent.id,agent.role));
+ wrap.appendChild(remove);
+ return wrap;
+}
+function render(){
+ roomsEl.replaceChildren();
+ rooms.forEach(room=>{
+  const card=document.createElement("section");card.className="room";
+  const head=document.createElement("div");head.className="room-head";
+  const title=document.createElement("div");title.className="room-title";title.textContent=room.name;
+  const actions=document.createElement("div");actions.className="room-actions";
+  const count=document.createElement("span");count.className="room-count";
+  const working=room.agents.filter(agent=>["w","t"].includes(stateFor(agent.id))).length;
+  count.textContent=working+" trabajando";
+  const removeRoom=document.createElement("button");removeRoom.type="button";removeRoom.className="danger room-remove";removeRoom.textContent="×";removeRoom.setAttribute("aria-label","Eliminar proyecto "+room.name);removeRoom.title="Eliminar proyecto";
+  removeRoom.addEventListener("click",()=>{if(confirm('¿Eliminar el proyecto "'+room.name+'"?')){room.agents.forEach(a=>states.delete(a.id));rooms=rooms.filter(item=>item.id!==room.id);save();render() }});
+  actions.append(count,removeRoom);head.append(title,actions);card.appendChild(head);
+  if(room.agents.length){
+   const grid=document.createElement("div");grid.className="agents";
+   room.agents.forEach(agent=>grid.appendChild(makeCharacter(agent)));
+   card.appendChild(grid);
+  }else{const empty=document.createElement("p");empty.className="empty";empty.textContent="Todavía no hay personajes en este proyecto.";card.appendChild(empty)}
+  if(room.agents.length<6){
+   const add=document.createElement("button");add.type="button";add.className="secondary add-agent";add.textContent="Añadir personaje";
+   add.addEventListener("click",()=>addAgent(room.id));card.appendChild(add);
+  }
+  roomsEl.appendChild(card);
+ });
+ updateSummary();
+}
+function addAgent(roomId){
+ const room=rooms.find(item=>item.id===roomId);if(!room||room.agents.length>=6)return;
+ const used=new Set(room.agents.map(agent=>agent.role));
+ const role=ROLES.find(item=>!used.has(item))||ROLES[0];
+ const agent={id:makeId(),role,source:null};room.agents.push(agent);states.set(agent.id,pick());save();render();
+}
+function removeAgent(agentId,role){
+ if(!confirm("¿Quitar el personaje "+role+"?"))return;
+ rooms.forEach(room=>{room.agents=room.agents.filter(agent=>agent.id!==agentId)});
+ states.delete(agentId);save();render();
+}
+form.addEventListener("submit",event=>{
+ event.preventDefault();
+ const name=nameInput.value.trim();
+ if(!name){errorEl.textContent="Escribe un nombre para el proyecto";nameInput.focus();return}
+ if(name.length>40){errorEl.textContent="El nombre admite un máximo de 40 caracteres";return}
+ const room={id:makeId(),name,agents:["Desarrollo","Diseño"].map(role=>({id:makeId(),role,source:null}))};
+ rooms.push(room);save();nameInput.value="";errorEl.textContent="";render();nameInput.focus();
+});
+nameInput.addEventListener("input",()=>{if(nameInput.value.length>0)errorEl.textContent=""});
+render();
+const reducedMotion=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+window.setInterval(()=>{
+ rooms.forEach(room=>room.agents.forEach(agent=>{
+  if(Math.random()<.35)states.set(agent.id,pick());
+ }));
+ document.querySelectorAll(".ag[data-agent-id]").forEach(el=>{
+  const state=stateFor(el.dataset.agentId);
+  el.classList.remove("st-w","st-t","st-a","st-r");el.classList.add(STATES[state][0]);
+  const status=el.querySelector('[data-status="true"]');if(status)status.textContent=STATES[state][1];
+ });
+ document.querySelectorAll(".room").forEach((el,index)=>{
+  const room=rooms[index];if(!room)return;
+  const count=el.querySelector(".room-count");
+  if(count)count.textContent=room.agents.filter(agent=>["w","t"].includes(stateFor(agent.id))).length+" trabajando";
+ });
+ updateSummary();
+},reducedMotion?5200:2600);
+})();
+</script>
+</body>
+</html>
