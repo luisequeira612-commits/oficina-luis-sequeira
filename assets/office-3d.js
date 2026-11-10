@@ -151,7 +151,7 @@ function buildScene(workers,roomName=""){
  workers.forEach((worker,index)=>{
   const col=index%cols,row=Math.floor(index/cols),x=(col-(cols-1)/2)*(count>=7?3.65:4.1),z=rows===1?-1.55:count>=7?-3.0+row*2.75:-2.8+row*2.4;
   // Subtle layered contact shadows ground the workstation and chair on the floor.
-  shadow(x,z+.18,1.78,1.12);shadow(x,z+1.55,.78,.72);
+  shadow(x,z+.18,1.78,1.12);shadow(x,z+1.55,.78,.72);if(worker.selected)sphere(x,.045,z+.84,1.12,.035,.82,[1,.76,.24],14,3);
   // desk, legs, monitor, illuminated display, stand, keyboard, mouse and desktop tower.
   sphere(x,.012,z+.28,1.5,.008,.72,[0.24,0.25,0.25],12,3);
   box(x,.92,z,2.65,.18,1.15,woodTop);for(const dx of [-1.12,1.12])for(const dz of [-.42,.42])box(x+dx,.47,z+dz,.11,.82,.11,wood);

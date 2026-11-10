@@ -51,7 +51,7 @@ function openRoom(card,selectedEmployeeId=""){
  }
  floor.append(wallBack,wallSide,furniture);scene.appendChild(floor);
  const threeD=document.getElementById("office-3d");
- const workerData=agents.map(workerDataFor);
+ const workerData=agents.map(agent=>({...workerDataFor(agent),selected:Boolean(selectedEmployeeId&&agent.dataset.agentId===selectedEmployeeId)}));
  const rendered3D=Boolean(threeD&&window.Office3D&&window.Office3D.open({container:threeD,roomName:name,workers:workerData}));
  scene.classList.toggle("room-scene-fallback-hidden",rendered3D);
  if(typeof dialog.showModal==="function")dialog.showModal();
