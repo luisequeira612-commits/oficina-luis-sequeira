@@ -845,6 +845,6 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Rama: `fix/webgl-context-loss-fallback`, basada en main después del merge de PR #56.
 - El renderer escucha `webglcontextlost` y `webglcontextrestored`. Si Android/navegador interrumpe WebGL, cancela el frame pendiente, reinicia la muestra FPS y muestra un aviso visible que confirma que los proyectos siguen guardados y pide cerrar/reabrir la escena para reconstruirla.
 - No intenta reutilizar recursos GPU invalidados ni dibujar sobre un contexto perdido. Retira los listeners al limpiar y evita forzar otra pérdida de contexto si ya se perdió.
-- Añade prueba de regresión. URL del renderer invalidada con query `ctx=1` manteniendo la versión v75 para compatibilidad con las expectativas existentes.
+- Añade prueba de regresión. Renderer actualizado a caché v76; se ajustaron las pruebas de versión y carga del script.
 - No modifica localStorage, esquema de datos, geometría, trabajadores, dependencias, APIs ni backend. CI pendiente.
 - Fuente: inspección del ciclo de vida WebGL y PR #57, 2026-11-10.
