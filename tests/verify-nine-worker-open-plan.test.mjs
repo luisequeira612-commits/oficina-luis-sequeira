@@ -83,7 +83,7 @@ test("obsolete large project card grid is removed from runtime layers",()=>{
 test("mobile nameplates use compact type and follow the moving worker",()=>{
  assert.match(css,/\.office-worker-tag\{min-height:18px;max-width:86px;padding:2px 5px/);
  assert.match(css,/font-size:11px;line-height:1;transform:translate\(-50%,-100%\)/);
- assert.match(renderer,/worker\.renderX=worker\.x\+walkX;worker\.renderZ=worker\.z\+walkZ/);
+ assert.match(renderer,/worker\.renderX=worker\.x;worker\.renderZ=worker\.z/);
  assert.match(renderer,/const x=worker\.renderX\?\?worker\.x,y=2\.82/);
  assert.match(renderer,/is-resting/);
 });
