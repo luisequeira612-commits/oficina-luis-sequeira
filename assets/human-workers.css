@@ -1,0 +1,31 @@
+.ag .legacy-bird-avatar{display:none!important}
+.ag svg.human-worker{display:block;width:64px;height:70px;margin:0 auto 3px;overflow:visible}
+.hw-skin{fill:#C98E68}
+.human-worker[data-skin-tone="light"] .hw-skin{fill:#F0C7A5}
+.human-worker[data-skin-tone="medium"] .hw-skin{fill:#C98E68}
+.human-worker[data-skin-tone="deep"] .hw-skin{fill:#87543D}
+.hw-hair{fill:#382A27}
+.human-worker[data-hair="long"] .hw-hair{fill:#382A27}
+.human-worker[data-hair="curly"] .hw-hair{fill:#241D1B}
+.human-worker[data-hair="tied"] .hw-hair{fill:#5A3828}
+.hw-shirt{fill:#386A9B;stroke:#274C70;stroke-width:1}
+.human-worker[data-shirt="blue"] .hw-shirt{fill:#386A9B;stroke:#274C70}
+.human-worker[data-shirt="coral"] .hw-shirt{fill:#C96F69;stroke:#934B49}
+.human-worker[data-shirt="teal"] .hw-shirt{fill:#438A7D;stroke:#2D665C}
+.human-worker[data-shirt="mustard"] .hw-shirt{fill:#C69A43;stroke:#8E6B2D}
+.human-worker[data-shirt="plum"] .hw-shirt{fill:#86658F;stroke:#5E4666}
+.hw-arms{stroke-width:1}
+.hw-shoes{fill:#344354}
+.ag.st-w .human-worker{animation:hw-work .55s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 85%}
+.ag.st-w .human-worker .hw-arms{animation:hw-type .3s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 20%}
+.ag.st-t .human-worker{animation:hw-think 1.8s ease-in-out infinite}
+.ag.st-t .human-worker .hw-head{transform:translate(1px,-1px)}
+.ag.st-a .human-worker .hw-arms{animation:hw-wait 1.1s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 10%}
+.ag.st-r .human-worker{animation:hw-rest 2.4s ease-in-out infinite}
+.ag.st-r .human-worker .hw-head{transform:rotate(5deg);transform-origin:32px 25px}
+@keyframes hw-work{to{transform:translateY(-1.5px)}}
+@keyframes hw-type{to{transform:rotate(-4deg) translateY(-1px)}}
+@keyframes hw-think{50%{transform:translateY(-1px)}}
+@keyframes hw-wait{to{transform:translateY(-1px) rotate(3deg)}}
+@keyframes hw-rest{50%{transform:translateY(1px)}}
+@media(prefers-reduced-motion:reduce){.ag .human-worker,.ag .human-worker *{animation:none!important;transition:none!important}}

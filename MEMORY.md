@@ -61,3 +61,14 @@
 - Siguiente paso incremental: al tocar un bloque del mapa se abre un diálogo accesible con habitación isométrica CSS, suelo, paredes, ventana, planta y puestos de trabajo derivados de los roles existentes.
 - El diálogo enlaza con la tarjeta existente para gestión detallada; no modifica datos guardados, agentes, roles ni estados.
 - No introduce dependencias, APIs, backend ni esquema de eventos. Es una maqueta 2.5D, no un motor 3D WebGL.
+
+
+## Primera implementación de trabajadores humanos estilo Tycoon — 10 de noviembre de 2026
+- Se inicia la fase aprobada por el usuario para sustituir visualmente las aves por personas animadas, manteniendo intactas las cinco plantillas SVG originales en el HTML como referencia/fallback oculto.
+- Los avatares humanos se generan en el navegador con SVG y CSS propios, sin dependencias, imágenes externas, API, almacenamiento nuevo ni cambios al esquema localStorage.
+- El elenco se asigna en orden global alternando mujer/hombre; con un número impar, la diferencia inevitable es de una persona. Los tonos de piel recorren tres paletas (clara, media y oscura), junto con variedad de peinados y ropa.
+- Los cuatro estados existentes (trabajando, pensando, esperando OK y descansando) tienen animaciones humanas específicas y respetan movimiento reducido.
+- La asignación visual depende del orden actual de los trabajadores en pantalla; no se persiste identidad, género ni apariencia en datos de agentes.
+- La diversidad visual no pretende certificar etnia ni asociar rasgos a identidades. El estilo es una primera versión 2D tipo Tycoon dentro de la UI existente; la integración de personas 3D/escena WebGL queda fuera de alcance.
+- Rama: `feat/human-tycoon-workers`; pendiente de CI y revisión.
+- Fuente: decisión explícita del usuario, conversación del 2026-11-10.
