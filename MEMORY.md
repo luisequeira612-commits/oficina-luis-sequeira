@@ -702,3 +702,12 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Cambio en PR #47, rama `feat/office-seated-clock-main`. La ejecución [42902848275](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42902848275) terminó con validate success y chequeo de contenido success; deploy se omitió correctamente en pull_request.
 - La inspección en el Tecno Pova 4 sigue pendiente; no afirmar impacto FPS ni legibilidad visual definitiva sin la prueba en dispositivo.
 - Fuente: renderer, HTML, pruebas y commits de la rama, 2026-11-10.
+
+
+## Interfaz compacta de monitores en PR #47 — 10 de noviembre de 2026
+
+- Se refinó el área de pantalla de cada estación con una barra superior oscura y una barra lateral turquesa; las siete líneas de código animadas se desplazaron para dejar espacio a la interfaz.
+- Son dos primitivas geométricas adicionales por monitor (18 en la oficina de nueve puestos), dentro del mismo buffer compartido y del único draw call existente. No se añadieron texturas, materiales, animaciones ni dependencias.
+- Caché del renderer actualizada a `office-3d.js?v=70`; pruebas de monitores, teclado, ratón y reloj actualizadas.
+- Cambio añadido al PR #47. La CI de este nuevo head debe pasar antes de cualquier merge. La legibilidad y los FPS aún requieren confirmación física en el Tecno Pova 4.
+- Fuente: renderer y pruebas del PR #47, 2026-11-10.
