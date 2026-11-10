@@ -523,3 +523,18 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Se alinearon las dos aserciones de la prueba del HUD móvil con `office-view.css?v=46`; la prueba del carril de chips ya pasa y el runner había detectado solo la versión de caché antigua en estas expectativas.
 
 - Se actualizó también la prueba `verify-3d-room-entrances.test.mjs`: conserva la comprobación de que cada proyecto se puede abrir, ahora mediante el nuevo chip compacto en vez del antiguo botón alto «Entrar ·».
+
+
+## Corrección de tarjetas y HUD móvil — 10 de noviembre de 2026
+
+- Se eliminó el contenedor HTML `#office-map`, el generador JavaScript de mosaicos `.office-tile` y sus reglas CSS de tarjetas 3D. La hoja inferior «Proyectos» sigue mostrando la lista existente, sus puestos y la acción de entrar; la tira de chips de la escena conserva la navegación directa.
+- Se ajustó el encuadre de la cámara de la oficina para calcular la distancia a partir de la relación de aspecto y del ancho de la sala, recalculándola al cambiar orientación/tamaño. El botón de casa restaura el encuadre. El foco de empleado acerca la cámara a la altura de la cabeza.
+- Se redujeron las etiquetas flotantes a 11 px con padding pequeño, se anclan sobre la cabeza y usan la posición animada del trabajador durante el paseo. Se distinguen estados trabajando, descansando/en espera y te toca.
+- Se recolocó la barra de controles en la esquina inferior derecha, sobre la barra de equipo, con botones de 44 px. Se conservan los controles de zoom, rotación, casa, arrastre con un dedo y pellizco; el botón de ayuda «?» existente mantiene su aviso temporal.
+- Al abrir la ficha del empleado, la tira de chips se colapsa; la ficha puede cerrarse con X o tocando fuera. Se conservan nombre, rol, estado, tarea e historial.
+- Se aumentó la visibilidad geométrica de ojos y sonrisas, pero el renderer continúa siendo WebGL2 propio: no usa Three.js, `MeshStandardMaterial` ni `CanvasTexture`. La ruta de descanso sigue sin un sistema de detección de colisiones/obstáculos; no afirmar que evita todos los muebles.
+- Archivos principales: `index.html`, `assets/office-view.css`, `assets/office-view.js`, `assets/office-3d.js`. Se actualizaron pruebas de regresión y validación de sintaxis para ambos controladores.
+- Commits directos a `main`: [5f5ea153](https://github.com/luisequeira612-commits/oficina-luis-sequeira/commit/5f5ea15319d84798d257c10a341a2fef3b4d75cf), [5e6bfcb4](https://github.com/luisequeira612-commits/oficina-luis-sequeira/commit/5e6bfcb49522951dc388cf2147943cd0de497846), [88993731](https://github.com/luisequeira612-commits/oficina-luis-sequeira/commit/88993731a39f69718d7347dcdfb2b7504ae0cfa8), [89ca16b6](https://github.com/luisequeira612-commits/oficina-luis-sequeira/commit/89ca16b6d361c38f8a87b08fc4b3d2e34d401162), [99863dc5](https://github.com/luisequeira612-commits/oficina-luis-sequeira/commit/99863dc5ca74979e541e9f5b518eb7ba67d1902b), [7bceb89a](https://github.com/luisequeira612-commits/oficina-luis-sequeira/commit/7bceb89a2a7b94492eeb77030f740903bea77570), [7800da92](https://github.com/luisequeira612-commits/oficina-luis-sequeira/commit/7800da92bbf9a4ee27de0fbfd5057e5621058efa).
+- El run [42879234529](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42879234529) terminó con validate y deploy en `success`; Pages publicó el head de código y pruebas. No se hizo una prueba visual/táctil real en el Tecno Pova 4, no se midió FPS y no se inspeccionó la consola de un navegador móvil.
+- Esta pasada no implementa todavía JSON editables ni modifica el sondeo de GitHub Actions; quedan expresamente fuera de alcance hasta la confirmación del usuario.
+- Fuente: código, pruebas y logs de GitHub Actions, 2026-11-10.
