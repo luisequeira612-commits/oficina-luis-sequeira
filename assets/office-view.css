@@ -39,3 +39,11 @@
 .room-dialog-foot button{flex:none;min-height:44px}
 @media(max-width:420px){.room-dialog{padding:12px}.room-scene{height:230px}.room-dialog-foot{align-items:stretch;flex-direction:column}.room-dialog-foot button{width:100%}}
 @media(prefers-reduced-motion:reduce){.room-dialog::backdrop{backdrop-filter:none}}
+
+/* Reuse the exact workforce avatars inside their corresponding room stations. */
+.room-station .room-worker-avatar{position:absolute;left:50%;bottom:27px;z-index:1;width:42px;height:46px;margin:0;overflow:visible;transform:translateX(-50%);pointer-events:none}
+.room-station .room-desk{z-index:2}
+.room-station .room-screen{z-index:3}
+.room-station .room-chair{z-index:0}
+.room-station .room-station-label{z-index:4}
+@media(prefers-reduced-motion:reduce){.room-station .room-worker-avatar,.room-station .room-worker-avatar *{animation:none!important}}
