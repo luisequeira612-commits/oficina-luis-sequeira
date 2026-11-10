@@ -58,3 +58,11 @@ test("direct employee selection highlights the worker in the actual WebGL scene"
   assert.match(view, /selected:Boolean\(selectedEmployeeId&&agent\.dataset\.agentId===selectedEmployeeId\)/);
   assert.match(renderer, /if\(worker\.selected\)sphere\(x,\.045,z\+\.84,1\.12,\.035,\.82,\[1,\.76,\.24\]/);
 });
+
+
+test("the deployed HTML requests the fresh stylesheet that positions floating 3D nameplates", () => {
+  assert.match(html, /office-view\.css\?v=42/);
+  assert.match(css, /\.office-worker-tags\{position:absolute/);
+  assert.match(css, /\.office-worker-tag\{position:absolute/);
+  assert.match(renderer, /container\.appendChild\(workerTags\)/);
+});
