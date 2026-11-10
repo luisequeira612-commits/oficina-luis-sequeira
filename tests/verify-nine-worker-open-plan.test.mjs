@@ -38,3 +38,17 @@ test("minifigure appearance follows the employee profile metadata", () => {
   assert.match(workers, /employee\?\.hair/);
   assert.match(workers, /employee\?\.shirt/);
 });
+
+
+test("floating nameplates are projected from each worker and select their own project employee", () => {
+  assert.match(renderer, /className="office-worker-tags"/);
+  assert.match(renderer, /className="office-worker-tag"/);
+  assert.match(renderer, /worker\.tag\.style\.left/);
+  assert.match(renderer, /worker\.tag\.style\.top/);
+  assert.match(renderer, /onSelectRoom\(worker\.roomId,worker\.employeeId\)/);
+  assert.match(renderer, /employeeId:worker\.id\|\|""/);
+  assert.match(view, /openRoom\(card,selectedEmployeeId=""\)/);
+  assert.match(view, /onSelectRoom:\(id,employeeId\)/);
+  assert.match(view, /is-selected-worker/);
+  assert.match(css, /\.office-worker-tag\{/);
+});
