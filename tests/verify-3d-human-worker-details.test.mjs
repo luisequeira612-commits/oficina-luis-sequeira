@@ -91,5 +91,5 @@ test("3D view exposes measured render FPS instead of claiming the frame cap is d
   assert.match(renderer,/Fotogramas por segundo medidos/);
   assert.match(renderer,/fpsFrames\+\+/);
   assert.match(renderer,/fpsFrames\*1000\/Math\.max\(1,timestamp-fpsWindowStart\)/);
-  assert.match(renderer,/measured>=30\?"good":measured>=24?"warn":"low"/);
+  assert.match(renderer,/measured>=30\?"good":measured>=24\?"warn":"low"/);
 });
