@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "employees": [
+    {"id":"valeria","name":"Valeria","role":"Desarrollo","gender":"woman","skinTone":"light","hair":"long","shirt":"coral"},
+    {"id":"mateo","name":"Mateo","role":"Desarrollo","gender":"man","skinTone":"medium","hair":"short","shirt":"blue"},
+    {"id":"camila","name":"Camila","role":"Diseño","gender":"woman","skinTone":"deep","hair":"curly","shirt":"teal"},
+    {"id":"diego","name":"Diego","role":"Revisión","gender":"man","skinTone":"light","hair":"short","shirt":"mustard"},
+    {"id":"aisha","name":"Aisha","role":"Diseño","gender":"woman","skinTone":"deep","hair":"tied","shirt":"plum"},
+    {"id":"noah","name":"Noah","role":"Desarrollo","gender":"man","skinTone":"light","hair":"curly","shirt":"blue"},
+    {"id":"mei","name":"Mei","role":"Diseño","gender":"woman","skinTone":"light","hair":"tied","shirt":"coral"},
+    {"id":"amir","name":"Amir","role":"Community","gender":"man","skinTone":"medium","hair":"short","shirt":"teal"},
+    {"id":"elena","name":"Elena","role":"Desarrollo","gender":"woman","skinTone":"medium","hair":"long","shirt":"mustard"}
+  ]
+}
