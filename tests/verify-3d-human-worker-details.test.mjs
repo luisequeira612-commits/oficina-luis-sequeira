@@ -46,6 +46,10 @@ test("3D worker activity is seated and route-free",()=>{
  assert.match(renderer,/worker.renderX=worker.x;worker.renderZ=worker.z/);
  assert.match(renderer,/monitorShift/);
 });
+test("workstation keyboard has a compact two-row key layout and mouse wheel",()=>{
+ assert.ok(renderer.includes("for(let row=0;row<2;row++)for(let key=0;key<5;key++)"));
+ assert.ok(renderer.includes("box(x+.62,1.052,z+.12,.014,.006,.035"));
+});
 test("FPS meter remains measured and cache versions are current",()=>{
  assert.match(renderer,/className="office-3d-fps"/);
  assert.ok(renderer.includes("fpsFrames++"));
