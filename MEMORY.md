@@ -317,3 +317,12 @@
 - No cambia la geometría, los estados reales, GitHub Actions ni la persistencia.
 - Se añade `tests/verify-3d-portrait-camera.test.mjs`.
 - Fuente: `assets/office-3d.js` y prueba de regresión, 2026-11-10.
+
+
+## PR #39 — sombras de contacto procedurales para la sala Tycoon — 10 de noviembre de 2026
+
+- Añade sombras de contacto discretas bajo cada puesto de trabajo, cada silla y el rincón lounge. Se construyen con anillos geométricos concéntricos y tonos opacos escalonados, para dar sensación de apoyo y separación respecto al suelo sin texturas ni shadow maps.
+- El coste geométrico es pequeño y fijo por elemento; no requiere iluminación dinámica, dependencias, modelos, texturas, APIs, backend ni servicios de pago.
+- No modifica cámara, personajes, estados reales, integración de GitHub Actions, datos ni almacenamiento persistente. Se conserva la alternativa CSS.
+- Se añade `tests/verify-3d-contact-shadows.test.mjs` y se actualiza la versión de caché del renderer a v39.
+- Fuente: cambio procedural en `assets/office-3d.js` y prueba de regresión, 2026-11-10.
