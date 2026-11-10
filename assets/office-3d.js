@@ -68,6 +68,7 @@ function buildScene(workers,roomName=""){
  // Floor planks and rugs.
  for(let i=-5;i<6;i++)box(i*.98,-.005,0,.018,.012,9.6,[0.72,0.65,0.55]);
  box(0,.025,1.7,9,.05,3.2,[0.31,0.38,0.43]);
+ box(0,.056,1.7,8.8,.018,.10,themeColor);
  const count=Math.max(1,workers.length),cols=count>3?2:count,rows=Math.ceil(count/cols),workerRanges=[];
  workers.forEach((worker,index)=>{
   const col=index%cols,row=Math.floor(index/cols),x=(col-(cols-1)/2)*4.1,z=rows===1?-1.55:-2.8+row*2.4;
@@ -88,6 +89,18 @@ function buildScene(workers,roomName=""){
   // Desk lamp and plant accessories.
   box(x-1.05,1.05,z-.38,.18,.16,.18,metal);box(x-1.05,1.38,z-.38,.08,.58,.08,metal);box(x-1.05,1.7,z-.38,.48,.16,.3,[0.82,0.68,0.38]);
   cyl(x+1.02,.34,z-.35,.24,.55,[0.45,0.25,0.15]);for(let leaf=0;leaf<5;leaf++)sphere(x+1.02+Math.cos(leaf*1.26)*.18,.78+(leaf%2)*.12,z-.35+Math.sin(leaf*1.26)*.18,.18,.36,.14,plant,7,5);
+  // Small themed desk objects repeat the room identity at workstation scale.
+  if(projectTheme==="guardi"){
+   box(x-.78,1.06,z+.12,.34,.08,.30,[0.18,0.31,0.45]);sphere(x-.78,1.16,z+.12,.09,.09,.08,themeColor,7,5);
+  }else if(projectTheme==="video"){
+   box(x-.78,1.06,z+.12,.36,.10,.30,[0.76,0.18,0.22]);for(let stripe=0;stripe<3;stripe++)box(x-.90+stripe*.12,1.12,z+.12,.06,.025,.31,[0.91,0.91,0.91]);
+  }else if(projectTheme==="launcher"){
+   box(x-.78,1.17,z+.12,.22,.34,.06,[0.16,0.22,0.31]);box(x-.78,1.18,z+.085,.16,.24,.018,[0.35,0.60,0.77]);sphere(x-.78,1.05,z+.075,.025,.025,.02,[0.92,0.95,0.98],6,4);
+  }else if(projectTheme==="charts"){
+   for(let bar=0;bar<4;bar++)box(x-.92+bar*.10,1.06+(bar%3)*.06,z+.12,.07,.12+(bar%3)*.12,.12,bar%2?themeColor:[0.37,0.60,0.76]);
+  }else{
+   box(x-.78,1.06,z+.12,.34,.08,.30,themeColor);box(x-.78,1.12,z+.12,.22,.025,.06,[0.91,0.94,0.97]);
+  }
   // Seated low-poly worker: torso, head, hair, arms, legs and shoes.
   const skin=tone[worker.tone]||tone.medium,shirt=shirtByName[worker.shirt]||shirts[index%shirts.length],hairColor=hairColors[index%hairColors.length],hairStyle=worker.hair||"short",workerStart=positions.length;
   box(x,1.27,z+1.0,.62,.78,.36,shirt);sphere(x,1.98,z+.98,.34,.38,.32,skin,10,7);
