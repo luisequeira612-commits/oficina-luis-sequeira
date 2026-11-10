@@ -73,7 +73,7 @@ function paintNotice(){
  else{notice.hidden=true;notice.textContent=""}
 }
 function paint(){rooms.forEach(paintRoom);paintSummary();paintActivity();paintNotice()}
-function ids(){return rooms.filter(x=>validRepo(x.repository)).map(x=>x.repository)}
+function ids(){return Array.from(new Set(rooms.filter(x=>validRepo(x.repository)).map(x=>x.repository)))}
 function idleGap(){return Math.max(GLOBAL_GAP,Math.floor(IDLE_CYCLE/Math.max(1,ids().length)))}
 function plan(room,delay){due.set(room.repository,now()+delay)}
 function schedule(delay){
@@ -108,7 +108,7 @@ async function request(room){
    backoff=now()+Math.max(retry,reset>now()?reset-now():0,Math.min(900000,30000*Math.pow(2,backoffCount-1)));
    e.error="GitHub rechazó la consulta ("+response.status+"). Reintento a las "+at(backoff)+".";
    cache[room.repository]=e;save();
-  }else if(response.status===404){e.error="Repositorio no encontrado, privado o Actions no disponible.";cache[room.repository]=e;save()}
+  }else if(response.status===404){e.error="Repositorio no encontrado, privado o Actions no disponible.";cache[room.repository]=e;save();plan(room,1800000)}
   else if(!response.ok)throw new Error("GitHub respondió con el error "+response.status+".");
   else{
    const data=await response.json();if(!Array.isArray(data.workflow_runs))throw new Error("Respuesta de GitHub no válida.");
