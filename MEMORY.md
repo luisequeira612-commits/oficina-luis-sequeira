@@ -94,3 +94,12 @@
 - Los resultados son efímeros en memoria del navegador; no se modifica `localStorage`, el esquema de proyectos/agentes ni se añaden dependencias, tokens, backend o servicios de pago.
 - La lista acredita PR reales, pero no atribuye su autoría a agentes IA ni muestra pasos internos. Las animaciones de trabajadores siguen siendo simuladas.
 - PR [#12](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/12), rama `feat/github-pull-request-visibility`; pendiente de CI.
+
+
+## Prototipo de oficina 3D real — 10 de noviembre de 2026
+- Cambio de dirección confirmado por el usuario: el objetivo ya no es una cámara isométrica fija; solicita entorno 3D real con rotación de cámara, zoom y exploración desde distintos ángulos.
+- Primera fase técnica: renderizador WebGL 2 autocontenido, sin CDN, librería externa, modelos descargados, API ni servicio de pago. Geometría procedural local para sala, escritorios, monitores iluminados, teclados, ratones, torres, sillas, lámparas, plantas y figuras humanas low-poly.
+- Controles previstos: arrastre para orbitar, gesto de pellizco/zoom, desplazamiento táctil y controles explícitos de acercar/alejar/restablecer. Reducir pixel ratio para limitar carga GPU y mantener la escena alternativa CSS si WebGL 2 no está disponible.
+- La escena obtiene roles y estados efímeros de los trabajadores ya renderizados; no cambia identidad ni datos persistidos. Se conserva localStorage `oficina-luis-sequeira-v1` sin cambios.
+- Límite: la compatibilidad WebGL 2 y el rendimiento real en el Tecno Pova 4 todavía deben probarse físicamente; no se afirmará que está validado en ese dispositivo antes de la prueba.
+- Fuente: decisión explícita del usuario en conversación, 2026-11-10; documentación oficial Three.js WebGLRenderer (WebGL 2) y Babylon.js capabilities consultada el 2026-11-10. Se opta por un renderer mínimo propio para evitar añadir dependencia/CDN a esta app estática.

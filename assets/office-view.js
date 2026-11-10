@@ -44,6 +44,14 @@ function openRoom(card){
   const empty=document.createElement("p");empty.className="room-empty";empty.textContent="Aún no hay puestos ocupados. Puedes añadir personajes desde la tarjeta del proyecto.";furniture.appendChild(empty);
  }
  floor.append(wallBack,wallSide,furniture);scene.appendChild(floor);
+ const threeD=document.getElementById("office-3d");
+ const workerData=agents.map(agent=>{
+  const avatar=agent.querySelector(".human-worker");
+  const state=Array.from(agent.classList).find(name=>/^st-[wtar]$/.test(name))||"st-r";
+  return {role:agent.querySelector(".agent-role")?.textContent?.trim()||"Puesto",state,gender:avatar?.dataset.gender||"person",tone:avatar?.dataset.skinTone||"medium"};
+ });
+ const rendered3D=Boolean(threeD&&window.Office3D&&window.Office3D.open({container:threeD,roomName:name,workers:workerData}));
+ scene.classList.toggle("room-scene-fallback-hidden",rendered3D);
  if(typeof dialog.showModal==="function")dialog.showModal();
  else {dialog.setAttribute("open","");close.focus()}
 }
@@ -73,6 +81,7 @@ function renderMap(){
 }
 close.addEventListener("click",()=>dialog.close());
 dialog.addEventListener("click",event=>{if(event.target===dialog)dialog.close()});
+dialog.addEventListener("close",()=>{const threeD=document.getElementById("office-3d");if(threeD&&typeof threeD._office3dCleanup==="function")threeD._office3dCleanup();if(threeD)threeD.classList.remove("is-active");scene.classList.remove("room-scene-fallback-hidden")});
 go.addEventListener("click",()=>{
  if(!selectedCard)return;
  dialog.close();

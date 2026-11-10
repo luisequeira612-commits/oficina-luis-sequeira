@@ -135,3 +135,19 @@ test("public GitHub pull requests are visible without credentials or background 
   assert.doesNotMatch(html, /pulls\?state=open[^\n]*setInterval/, "pull request requests are not polled in the background");
   assert.doesNotMatch(html, /Authorization\s*:/i, "no GitHub token is added");
 });
+
+
+test("real 3D room prototype uses WebGL2 locally and preserves the CSS fallback", () => {
+  mustContain('src="assets/office-3d.js" defer', "local WebGL2 room renderer");
+  mustContain('id="office-3d"', "3D room canvas container");
+  const renderer = readFileSync(new URL("../assets/office-3d.js", import.meta.url), "utf8");
+  assert.ok(renderer.includes('getContext("webgl2"'), "uses an actual WebGL2 context");
+  assert.ok(renderer.includes("uProjection") && renderer.includes("uView"), "uses perspective and view matrices");
+  assert.ok(renderer.includes("pointerdown") && renderer.includes("lastPinch"), "supports touch camera controls");
+  assert.ok(renderer.includes("Alejar cámara") && renderer.includes("Acercar cámara"), "provides accessible zoom controls");
+  assert.ok(renderer.includes("box(x,1.65,z-.36,1.12,.78,.14,metal)"), "scene geometry includes visible computer monitors");
+  assert.ok(officeScript.includes("window.Office3D.open"), "room dialog opens the 3D scene");
+  assert.ok(officeScript.includes("room-scene-fallback-hidden"), "keeps the CSS room as a fallback");
+  assert.ok(officeScript.includes("threeD._office3dCleanup()"), "stops the WebGL render loop when the room closes");
+  assert.doesNotMatch(renderer, /https?:\/\//, "3D renderer has no external runtime requests");
+});
