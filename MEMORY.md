@@ -400,3 +400,14 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Pruebas: <code>tests/verify-editable-office-data.test.mjs</code> cubre asignación, historial, offline y 304+commits. <code>tests/verify-3d-worker-activity.test.mjs</code> se ajustó a la implementación actual de rutas acotadas (<code>sampleRoute</code>).
 - El workflow disparado por el commit <code>db7f0aaa6b961c83e61506635885e51b9e807111</code> falló por una aserción regresiva antigua sobre <code>st-r</code>, no por esta integración D; se corrigió en <code>c6957193c79290676751c7b097813d5abf702798</code>. El siguiente workflow, run <code>42845703644</code>, está en cola al registrar esta memoria y aún no se debe declarar Pages publicado.
 - Fuente: inspección de <code>assets/github-live.js</code>, pruebas y workflows GitHub Actions, 2026-11-10.
+
+## D — pulido de conectividad e historial GitHub — 10 de noviembre de 2026
+
+- Se corrigió la asignación explícita de agentId al guardar ejecuciones completadas que no tenían asignación previa. La asignación usa la misma regla determinista de los runs activos y queda persistida en runAssignments, evitando que una tarea completada aparezca en más de una ficha.
+- La lectura de commits ahora toma solo la primera línea real del mensaje mediante separación CRLF/LF; se evita que los mensajes multilínea se muestren completos en tarjetas pequeñas.
+- El aviso global de conectividad se muestra tanto cuando el navegador declara offline como cuando la consulta falla por error de red aunque navigator.onLine todavía sea true. El texto aclara que se conserva la última información disponible.
+- Se ampliaron las regresiones en tests/verify-editable-office-data.test.mjs para historial por empleado, respuesta 304 con commits, aviso offline/red y resumen de commits.
+- Commits directos a main: 443a64b6, c019b321, 182fd476, 25c0937f, 0d32571b.
+- Verificación: la herramienta GitHub disponible para consultar workflows por SHA solo devuelve ejecuciones asociadas a pull requests; los checks combinados consultados no devolvieron estados. Por tanto, no se afirma que CI haya pasado ni que Pages esté actualizado a estos últimos commits. Requiere comprobar Actions/Pages desde GitHub.
+- Restricciones preservadas: sin backend, credenciales, nuevas dependencias, escritura remota de JSON ni cambios al esquema oficina-luis-sequeira-v1.
+- Fuente: revisión de assets/github-live.js, tests/verify-editable-office-data.test.mjs y estado consultable de commits, 2026-11-10.
