@@ -8,7 +8,7 @@ test("3D workers use original brick-built minifigure proportions", () => {
   assert.ok(renderer.includes("Classic minifigure proportions"), "uses compact, readable minifigure geometry");
   assert.ok(renderer.includes("Classic minifigure"), "supports varied hair and accessories");
   assert.ok(renderer.includes("taperBox(x,1.29"), "keeps a block-built torso");
-  assert.ok(renderer.includes("printed shirt details"), "retains a role marker");
+  assert.ok(renderer.includes("taperBox(x,1.30"), "adds a printed vest detail");
   assert.ok(renderer.includes("workerRanges.push"), "keeps worker geometry inside the existing animation range");
 });
 
