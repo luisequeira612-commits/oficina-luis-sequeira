@@ -8,5 +8,5 @@ test("3D office includes a compact analog wall clock made from shared-buffer geo
  assert.ok(renderer.includes("for(let mark=0;mark<12;mark++)"));
  assert.ok(renderer.includes("Fixed 10:10 hands are decorative geometry, not a live clock reading."));
  assert.ok(renderer.includes("segment([clockX,clockY,clockFaceZ+.045]"));
- assert.ok(page.includes("office-3d.js?v=75"));
+ assert.ok(page.includes("office-3d.js?v=76"));
 });
