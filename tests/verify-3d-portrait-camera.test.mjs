@@ -8,6 +8,7 @@ test("portrait canvases receive a wider initial camera distance", () => {
   assert.match(renderer, /baseRadius\*Math\.max\(1,1\.22\/aspect\)/);
   assert.match(renderer, /initialRadius=baseRadius\*Math\.max/);
   assert.match(renderer, /cameraFitDone=true/);
+  assert.match(renderer, /Math.abs\(aspect-cameraAspect\)>\.025/);
 });
 
 test("recenter restores the aspect-fitted camera and mobile zoom range", () => {
