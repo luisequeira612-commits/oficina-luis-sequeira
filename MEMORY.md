@@ -39,3 +39,11 @@
 - Los estados de personajes siguen siendo simulados; solo los estados del panel GitHub Actions representan ejecuciones reales.
 - No se crea aún un esquema de eventos ni se atribuye actividad interna a agentes. Eso requerirá instrumentación específica y aprobación del usuario antes de introducir persistencia o nuevos esquemas.
 - Autonomía: PR para revisión, sin merge automático.
+
+
+## Vista isométrica explorable — 10 de noviembre de 2026
+- Primer prototipo visual de la oficina híbrida: mapa CSS con perspectiva ligera, mosaicos por proyecto y navegación táctil/teclado hacia la tarjeta existente.
+- El mapa deriva sus datos del DOM renderizado y no introduce campos, claves de localStorage ni esquema de eventos.
+- La vista actual de tarjetas se conserva como detalle y alternativa accesible; el prototipo no se presenta como telemetría de agentes ni como motor 3D WebGL.
+- Se respetan las preferencias de movimiento reducido y se marca el proyecto seleccionado con estado accesible.
+- Rama de trabajo: `feat/isometric-office-overview`; pendiente CI y revisión.
