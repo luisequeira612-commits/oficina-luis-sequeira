@@ -838,3 +838,13 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Renderer actualizado a caché v75; se ajustan las pruebas de caché existentes y la regresión verifica el reinicio de la ventana de FPS.
 - Sin cambios en geometría, cámara, ritmo de animación en primer plano, almacenamiento, dependencias, APIs ni backend. Head final `79bc74226dcc9b7a8b67eaa26fa32547f9fab6e4` pasó CI en [42916646044](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42916646044): sintaxis, invariantes y contenido requerido success. Main merge commit `398ff20c8dbaaa4d8255f2e812d38474ddb5a28b` pasó validate y deploy Pages en [42916694142](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42916694142).
 - Fuente: inspección del handler de visibilidad y medidor FPS de `assets/office-3d.js`, 2026-11-10.
+
+
+## PR #57 — fallback seguro ante pérdida de contexto WebGL (10 de noviembre de 2026)
+
+- Rama: `fix/webgl-context-loss-fallback`, basada en main después del merge de PR #56.
+- El renderer escucha `webglcontextlost` y `webglcontextrestored`. Si Android/navegador interrumpe WebGL, cancela el frame pendiente, reinicia la muestra FPS y muestra un aviso visible que confirma que los proyectos siguen guardados y pide cerrar/reabrir la escena para reconstruirla.
+- No intenta reutilizar recursos GPU invalidados ni dibujar sobre un contexto perdido. Retira los listeners al limpiar y evita forzar otra pérdida de contexto si ya se perdió.
+- Añade prueba de regresión. URL del renderer invalidada con query `ctx=1` manteniendo la versión v75 para compatibilidad con las expectativas existentes.
+- No modifica localStorage, esquema de datos, geometría, trabajadores, dependencias, APIs ni backend. CI pendiente.
+- Fuente: inspección del ciclo de vida WebGL y PR #57, 2026-11-10.
