@@ -66,12 +66,12 @@ function paintRoom(room){
  if(button){const wait=Math.max(0,(manualAt.get(room.repository)||0)-now());button.disabled=wait>0||busy||now()<ratePause||now()<backoff;button.textContent=wait?"Espera "+Math.ceil(wait/1000)+" s":"Actualizar"}
  const assignedId=assignedAgent(room,e);
  card.querySelectorAll(".ag[data-agent-id]").forEach(worker=>{
-  worker.classList.remove("st-w","st-t","st-a","st-r","is-success","is-failure","is-walking");
+  worker.classList.remove("st-w","st-t","st-a","st-r","is-success","is-failure");
   const prev=worker.dataset.githubState||"rest",isAssigned=worker.dataset.agentId===assignedId;
   worker.dataset.taskHistory=JSON.stringify(isAssigned?historyForAgent(room,e,assignedId):[]);
   worker.dataset.currentTask=isAssigned&&current?(current.name||current.display_title||("Ejecución GitHub #"+current.id)):"";
   const workerState=isAssigned?s:"rest";
-  if(workerState==="working"){worker.classList.add("st-w");if(prev!=="working")worker.classList.add("is-walking")}
+  if(workerState==="working"){worker.classList.add("st-w");}
   else if(workerState==="queued")worker.classList.add("st-a");
   else if(workerState==="success")worker.classList.add("st-r","is-success");
   else if(workerState==="failure")worker.classList.add("st-r","is-failure");
