@@ -26,11 +26,11 @@ test("worker animation separates head arms and typing hands",()=>{
 test("shared overview preserves worker ranges",()=>{
  assert.match(renderer,/const allWorkers=rooms.flatMap/);
  assert.match(renderer,/const workerRanges=scene.workerRanges/);
- assert.match(renderer,/workerRanges,count:positions.length/3/);
+ assert.match(renderer,/workerRanges,count:positions.length\/3/);
 });
 test("camera remains bounded and deliberate",()=>{
- assert.match(renderer,/target[0]=clamp(target[0]-dx*.018,-4.8,4.8)/);
- assert.match(renderer,/target[2]=clamp(target[2]+dy*.018,-7.5,7.5)/);
+ assert.match(renderer,/target\[0\]=clamp\(target\[0\]-dx\*\.018,-4\.8,4\.8\)/);
+ assert.match(renderer,/target\[2\]=clamp\(target\[2\]\+dy\*\.018,-7\.5,7\.5\)/);
  assert.match(renderer,/theta=clamp(theta+.14,-.35,1.78)/);
  assert.match(renderer,/Centrar oficina/);
 });
