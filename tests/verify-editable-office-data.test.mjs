@@ -15,5 +15,13 @@ test("editable office data contains the nine named employees and four projects",
  assert.equal(tasks.version,1);
 });
 test("GitHub live keeps conditional ETag polling and recent commits",()=>{
- assert.match(live,/If-None-Match/);assert.match(live,/commits\?per_page=5/);assert.match(live,/commitsEtag/);assert.match(live,/taskHistory/);
+ assert.match(live,/If-None-Match/);assert.match(live,/commits\?per_page=5/);assert.match(live,/commitsEtag/);assert.match(live,/taskHistory/);assert.match(live,/assignedAgent/);assert.match(live,/runAssignments/);
+});
+test("GitHub activity assigns one worker per active run and keeps history",()=>{
+ assert.match(live,/const assignedId=assignedAgent\(room,e\)/);assert.match(live,/historyForAgent\(room,e,assignedId\)/);
+ assert.match(live,/recordCompletedRuns\(e,previousRuns\)/);assert.match(live,/Sin conexión a GitHub/);
+});
+test("commit polling also runs after a 304 workflow validation",()=>{
+ assert.match(live,/let workflowFresh=false/);assert.match(live,/response\.status===304.*workflowFresh=true/);assert.match(live,/if\(workflowFresh\)/s);
+});
 });
