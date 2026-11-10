@@ -85,7 +85,8 @@ test("mobile and reduced-motion requirements remain present", () => {
   assert.match(html, /min-height:44px/);
   assert.match(html, /\.ag\{width:76px/);
   assert.match(html, /prefers-reduced-motion:reduce/);
-  assert.match(html, /reducedMotion\?5200:2600/);
+  assert.match(html, /assets\/github-live\.js/);
+  assert.doesNotMatch(html, /Math\.random\(\)<\.35/);
 });
 
 test("user-entered project names are rendered as text, not HTML", () => {
