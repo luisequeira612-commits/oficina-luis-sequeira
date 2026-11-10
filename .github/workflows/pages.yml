@@ -36,7 +36,7 @@ jobs:
           html = Path("index.html").read_text(encoding="utf-8")
           required = [
               "<title>Oficina de Luis Sequeira</title>",
-              "Simulación. En la versión real, los estados vendrán de GitHub.",
+              "Los personajes son una simulación; GitHub Actions muestra ejecuciones reales.",
               "oficina-luis-sequeira-v1",
               "App Guardi", "Canal de YouTube", "Tema Nova Launcher",
           ]

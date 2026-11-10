@@ -62,6 +62,7 @@ h2{font-size:17px;margin:20px 0 10px;font-weight:700}
 .add-agent{margin-top:12px}
 .empty{font-size:13px;color:var(--muted);padding:4px 0}
 footer{max-width:1040px;margin:0 auto;padding:0 16px 24px;color:var(--muted);font-size:12px}
+.repo-panel{margin:0 0 12px;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:10px;min-width:0}.repo-title{font-size:12px;font-weight:700;margin:0 0 7px}.repo-form{display:flex;gap:7px;align-items:center}.repo-form input{min-width:0;flex:1;height:40px;border:1px solid #AAB4C0;border-radius:8px;padding:7px 9px;background:#fff;color:var(--text)}.repo-form button{min-height:40px;padding:6px 10px}.repo-status{font-size:12px;color:var(--muted);margin:7px 0 0;overflow-wrap:anywhere}.repo-status a{color:var(--blue-deep);font-weight:700}.repo-status[data-kind="success"]{color:#0F6E56}.repo-status[data-kind="failure"]{color:var(--red)}.repo-status[data-kind="running"]{color:var(--blue-deep)}
 @media(min-width:680px){.rooms{grid-template-columns:repeat(2,minmax(0,1fr))}.summary{padding:14px 16px}}
 @media(prefers-reduced-motion:reduce){.ag *{animation:none!important}}
 </style>
@@ -89,7 +90,7 @@ footer{max-width:1040px;margin:0 auto;padding:0 16px 24px;color:var(--muted);fon
 <div class="rooms" id="rooms" aria-live="polite"></div>
 </section>
 </main>
-<footer>Simulación. En la versión real, los estados vendrán de GitHub.</footer>
+<footer>Los personajes son una simulación; GitHub Actions muestra ejecuciones reales.</footer>
 <script>
 (function(){
 "use strict";
@@ -299,20 +300,22 @@ const CHARACTER_SVG = {
 };
 function makeId(){return (typeof crypto!=="undefined"&&crypto.randomUUID)?crypto.randomUUID():"id-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,9)}
 function initialRooms(){return [
-{id:makeId(),name:"App Guardi",agents:["Desarrollo","Revisión","Diseño"].map(role=>({id:makeId(),role,source:null}))},
-{id:makeId(),name:"Canal de YouTube",agents:["Escritor","Diseño"].map(role=>({id:makeId(),role,source:null}))},
-{id:makeId(),name:"Tema Nova Launcher",agents:["Diseño"].map(role=>({id:makeId(),role,source:null}))}
+{id:makeId(),name:"App Guardi",repository:null,agents:["Desarrollo","Revisión","Diseño"].map(role=>({id:makeId(),role,source:null}))},
+{id:makeId(),name:"Canal de YouTube",repository:"luisequeira612-commits/capi-aventuras",agents:["Escritor","Diseño"].map(role=>({id:makeId(),role,source:null}))},
+{id:makeId(),name:"Tema Nova Launcher",repository:"luisequeira612-commits/jennie-ruby",agents:["Diseño"].map(role=>({id:makeId(),role,source:null}))}
 ]}
 function validData(value){
  if(!value||value.version!==1||!Array.isArray(value.rooms))return false;
- return value.rooms.every(room=>room&&typeof room.id==="string"&&typeof room.name==="string"&&room.name.length>0&&room.name.length<=40&&Array.isArray(room.agents)&&room.agents.length<=6&&room.agents.every(agent=>agent&&typeof agent.id==="string"&&ROLES.includes(agent.role)));
+ return value.rooms.every(room=>room&&typeof room.id==="string"&&typeof room.name==="string"&&room.name.length>0&&room.name.length<=40&&(room.repository===undefined||room.repository===null||(typeof room.repository==="string"&&/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(room.repository)))&&Array.isArray(room.agents)&&room.agents.length<=6&&room.agents.every(agent=>agent&&typeof agent.id==="string"&&ROLES.includes(agent.role)));
 }
+function migrateRooms(savedRooms){const defaults=initialRooms();return savedRooms.map(room=>room.repository===undefined?{...room,repository:defaults.find(item=>item.name===room.name)?.repository||null}:room)}
 function loadRooms(){
- try{const raw=localStorage.getItem(STORAGE_KEY);if(raw===null)return initialRooms();const parsed=JSON.parse(raw);return validData(parsed)?parsed.rooms:initialRooms()}
+ try{const raw=localStorage.getItem(STORAGE_KEY);if(raw===null)return initialRooms();const parsed=JSON.parse(raw);return validData(parsed)?migrateRooms(parsed.rooms):initialRooms()}
  catch(_){return initialRooms()}
 }
 let rooms=loadRooms();
 const states=new Map();
+const repoResults=new Map();
 const roomsEl=document.getElementById("rooms");
 const summaryEl=document.getElementById("summary-text");
 const form=document.getElementById("project-form");
@@ -345,6 +348,72 @@ function makeCharacter(agent){
  wrap.appendChild(remove);
  return wrap;
 }
+function makeRepoPanel(room){
+ const panel=document.createElement("section");panel.className="repo-panel";panel.setAttribute("aria-label","Estado de GitHub Actions");
+ const heading=document.createElement("p");heading.className="repo-title";heading.textContent="GitHub Actions";panel.appendChild(heading);
+ const form=document.createElement("form");form.className="repo-form";
+ const input=document.createElement("input");input.type="text";input.value=room.repository||"";input.placeholder="usuario/repositorio";input.maxLength=100;input.setAttribute("aria-label","Repositorio público de GitHub para "+room.name);input.autocomplete="off";
+ const saveButton=document.createElement("button");saveButton.type="submit";saveButton.textContent="Guardar";
+ form.append(input,saveButton);panel.appendChild(form);
+ const refreshButton=document.createElement("button");refreshButton.type="button";refreshButton.className="secondary";refreshButton.textContent="Actualizar";refreshButton.style.marginTop="7px";refreshButton.addEventListener("click",()=>refreshRepo(room.id));panel.appendChild(refreshButton);
+ const status=document.createElement("p");status.className="repo-status";status.setAttribute("role","status");status.setAttribute("aria-live","polite");status.dataset.repoStatus=room.id;panel.appendChild(status);
+ function paint(){
+  const result=repoResults.get(room.id);
+  if(!room.repository){status.textContent="Sin repositorio conectado.";status.dataset.kind="";return}
+  if(!result){status.textContent="Repositorio: "+room.repository+". Consultando…";status.dataset.kind="running";return}
+  status.textContent=result.message;status.dataset.kind=result.kind||"";
+  if(result.url){const link=document.createElement("a");link.href=result.url;link.target="_blank";link.rel="noopener noreferrer";link.textContent=" Ver ejecución";status.appendChild(link)}
+ }
+ form.addEventListener("submit",event=>{
+  event.preventDefault();
+  const value=input.value.trim();
+  if(value&&!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(value)){status.textContent="Usa el formato usuario/repositorio.";status.dataset.kind="failure";return}
+  room.repository=value||null;repoResults.delete(room.id);save();paint();
+  if(room.repository)refreshRepo(room.id);
+ });
+ paint();
+ return panel;
+}
+function repoStatusElement(roomId){return Array.from(document.querySelectorAll("[data-repo-status]")).find(element=>element.dataset.repoStatus===roomId)||null}
+function refreshRepo(roomId){
+ const room=rooms.find(item=>item.id===roomId);if(!room||!room.repository)return;
+ const status=repoStatusElement(roomId);
+ if(status){status.textContent="Consultando GitHub Actions…";status.dataset.kind="running"}
+ const requestedRepository=room.repository;
+ const url="https://api.github.com/repos/"+requestedRepository+"/actions/runs?per_page=1";
+ fetch(url,{headers:{Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"},cache:"no-store"})
+ .then(async response=>{
+  if(response.status===404)throw new Error("Repositorio no encontrado o privado.");
+  if(response.status===403||response.status===429)throw new Error("GitHub limitó las consultas públicas. Intenta más tarde.");
+  if(!response.ok)throw new Error("GitHub respondió con el error "+response.status+".");
+  return response.json();
+ })
+ .then(data=>{
+  if(rooms.find(item=>item.id===roomId)?.repository!==requestedRepository)return;
+  const run=Array.isArray(data.workflow_runs)?data.workflow_runs[0]:null;
+  if(!run){repoResults.set(roomId,{message:"No hay ejecuciones de GitHub Actions todavía.",kind:""});return}
+  let message;
+  let kind="";
+  if(run.status!=="completed"){message="En curso: "+(run.name||"GitHub Actions")+" ("+run.status+").";kind="running"}
+  else if(run.conclusion==="success"){message="Última ejecución correcta: "+(run.name||"GitHub Actions")+". ("+new Date(run.updated_at||run.created_at).toLocaleString()+")";kind="success"}
+  else if(run.conclusion==="failure"){message="La última ejecución falló: "+(run.name||"GitHub Actions")+". ("+new Date(run.updated_at||run.created_at).toLocaleString()+")";kind="failure"}
+  else if(run.conclusion==="cancelled"){message="La última ejecución fue cancelada."}
+  else if(run.conclusion==="timed_out"){message="La última ejecución agotó el tiempo límite.";kind="failure"}
+  else if(run.conclusion==="action_required"){message="La última ejecución requiere una acción manual.";kind="failure"}
+  else{message="Última ejecución: "+(run.conclusion||run.status||"estado desconocido")+".";
+  }
+  repoResults.set(roomId,{message,kind,url:run.html_url});
+ })
+ .catch(error=>{if(rooms.find(item=>item.id===roomId)?.repository===requestedRepository)repoResults.set(roomId,{message:error.message||"No se pudo consultar GitHub.",kind:"failure"})})
+ .finally(()=>{
+  const current=repoStatusElement(roomId);
+  if(!current||rooms.find(item=>item.id===roomId)?.repository!==requestedRepository)return;
+  const result=repoResults.get(roomId);
+  current.textContent=result?result.message:"No se pudo consultar GitHub.";
+  current.dataset.kind=result?.kind||"";
+  if(result?.url){const link=document.createElement("a");link.href=result.url;link.target="_blank";link.rel="noopener noreferrer";link.textContent=" Ver ejecución";current.appendChild(link)}
+ });
+}
 function render(){
  roomsEl.replaceChildren();
  rooms.forEach(room=>{
@@ -357,7 +426,7 @@ function render(){
   count.textContent=working+" trabajando";
   const removeRoom=document.createElement("button");removeRoom.type="button";removeRoom.className="danger room-remove";removeRoom.textContent="×";removeRoom.setAttribute("aria-label","Eliminar proyecto "+room.name);removeRoom.title="Eliminar proyecto";
   removeRoom.addEventListener("click",()=>{if(confirm('¿Eliminar el proyecto "'+room.name+'"?')){room.agents.forEach(a=>states.delete(a.id));rooms=rooms.filter(item=>item.id!==room.id);save();render() }});
-  actions.append(count,removeRoom);head.append(title,actions);card.appendChild(head);
+  actions.append(count,removeRoom);head.append(title,actions);card.appendChild(head);card.appendChild(makeRepoPanel(room));
   if(room.agents.length){
    const grid=document.createElement("div");grid.className="agents";
    room.agents.forEach(agent=>grid.appendChild(makeCharacter(agent)));
@@ -387,11 +456,12 @@ form.addEventListener("submit",event=>{
  const name=nameInput.value.trim();
  if(!name){errorEl.textContent="Escribe un nombre para el proyecto";nameInput.focus();return}
  if(name.length>40){errorEl.textContent="El nombre admite un máximo de 40 caracteres";return}
- const room={id:makeId(),name,agents:["Desarrollo","Diseño"].map(role=>({id:makeId(),role,source:null}))};
+ const room={id:makeId(),name,repository:null,agents:["Desarrollo","Diseño"].map(role=>({id:makeId(),role,source:null}))};
  rooms.push(room);save();nameInput.value="";errorEl.textContent="";render();nameInput.focus();
 });
 nameInput.addEventListener("input",()=>{if(nameInput.value.length>0)errorEl.textContent=""});
 render();
+rooms.filter(room=>room.repository).forEach(room=>refreshRepo(room.id));
 const reducedMotion=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 window.setInterval(()=>{
  rooms.forEach(room=>room.agents.forEach(agent=>{
