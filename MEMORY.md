@@ -438,3 +438,14 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Commit de implementación: ede29ecf. Se añadió `tests/verify-3d-script-loading.test.mjs` para proteger el orden y el diagnóstico; commit: 1474e8d3.
 - No se pudo consultar un identificador de ejecución push ni confirmar Pages con las acciones disponibles. No afirmar que el sitio publicado ya contiene el arreglo. Comprobar el deployment de `main` en Actions y la publicación de Pages antes de pedir una nueva prueba al usuario.
 - Fuente: `index.html`, `tests/verify-3d-script-loading.test.mjs`, 2026-11-10. La causa exacta del comportamiento del navegador sigue sin confirmarse.
+
+
+## Causa confirmada y corrección publicada del motor 3D — 10 de noviembre de 2026
+
+- Tras la confirmación de Luis de que el error persistía, se inspeccionaron los archivos de `main` y se consultaron los registros reales de GitHub Actions.
+- La primera validación sintáctica reveló un paréntesis sobrante en la expresión de desplazamiento de las líneas del monitor. Al corregirlo, el siguiente `node --check` detectó otro cierre sobrante al actualizar las etiquetas de trabajadores: `if(bubble)bubble.hidden=worker.state!=="st-w")})}`. Se corrigió a `if(bubble)bubble.hidden=worker.state!=="st-w"})}`.
+- Se añadió `node --check assets/office-3d.js` a la validación del workflow, se actualizó la referencia del motor a `office-3d.js?v=50` y se sincronizó el test de carga de scripts con esa versión.
+- Commits directos a `main`: `b1af312c` (primera expresión), `a5128905` (cache bust inicial), `e2cfd7f6` (validación sintáctica), `59aca5db` (cierre de etiqueta), `e52a42a2` (cache bust v50), `a7dcdbf5` (test actualizado).
+- Las ejecuciones intermedias fallaron de forma útil: primero por el segundo error de sintaxis y después porque el test todavía esperaba v48. Corregidos ambos, Actions run [42860316534](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42860316534) terminó `completed/success`: validación y despliegue de GitHub Pages exitosos, 2026-11-10 17:00:21 UTC.
+- No se ha verificado todavía la experiencia visual en el Tecno Pova 4. El usuario debe volver a probar únicamente ahora que el despliegue está confirmado; si persiste, pedir captura o mensaje exacto y seguir con diagnóstico del navegador publicado.
+- Fuente: `assets/office-3d.js`, `index.html`, `tests/verify-3d-script-loading.test.mjs`, `.github/workflows/pages.yml` y logs del workflow, 2026-11-10.
