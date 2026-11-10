@@ -26,7 +26,7 @@ test("motion remains reduced-motion aware", () => {
 });
 
 
-test("worker states map to visible behavior",()=>{assert.match(renderer,/worker\.state==="st-r"\)\{const walk=/);assert.match(renderer,/worker\.state==="st-a"\)\{bob=/);assert.match(renderer,/office-worker-typing-bubble/);assert.match(renderer,/worker\.state!=="st-w"/)});
+test("worker states map to visible behavior",()=>{assert.match(renderer,/worker\.state==="st-r"\)\{const route=sampleRoute/);assert.match(renderer,/worker\.state==="st-a"\)\{bob=/);assert.match(renderer,/office-worker-typing-bubble/);assert.match(renderer,/worker\.state!=="st-w"/)});
 
 
 test("resting workers use a bounded office route and monitors animate code",()=>{assert.match(renderer,/function sampleRoute\(worker,seconds\)/);assert.match(renderer,/routeCorridor/);assert.match(renderer,/worker\.monitorStart/);assert.match(renderer,/monitorShift/);assert.match(renderer,/codeRow<7/)});
