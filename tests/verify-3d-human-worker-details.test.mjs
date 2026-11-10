@@ -58,8 +58,9 @@ test("minifigures have a visible top stud, molded C-grip hands and vivid glossy 
 
 test("minifigure faces have distinct printed expressions and arms use articulated molded C-grips",()=>{
   assert.match(renderer,/const segment=\(a,b,r,color,seg=8\)/);
-  assert.match(renderer,/const ink=\[\.075,\.055,\.045\]/);
-  assert.match(renderer,/const ink=\[\.075,\.055,\.045\],faceZ=z\+\.625/,"face is placed on the negative-Z side, toward the monitor");
+  assert.match(renderer,/faceCanvas\.width=64;faceCanvas\.height=48/);
+  assert.match(renderer,/faceContext\.getImageData\(0,0,64,48\)/);
+  assert.match(renderer,/printFaceCanvas\(x,z,index,skin\)/,"printed expressions are generated on canvas and baked into the shared mesh");
   assert.match(renderer,/box\(x,1\.65,z-\.36,1\.12,\.78,\.14,metal\);box\(x,1\.65,z-\.265/,"monitor display faces the worker after workstation mirroring");
   assert.match(renderer,/theta=\.72/,"home camera keeps the open-room view");
   assert.match(renderer,/const workstationStart=positions\.length/,"workstation geometry is mirrored as one unit");
@@ -67,7 +68,6 @@ test("minifigure faces have distinct printed expressions and arms use articulate
   assert.match(renderer,/positions\[i\+v\+2\]=-positions\[i\+v\+2\]/,"mirroring reverses depth for every workstation vertex");
   assert.match(renderer,/theta=clamp\(theta\+\.14,-\.35,1\.78\)/,"rotation controls preserve bounded orbit");
   assert.match(renderer,/box\(x,1\.56,z\+\.642/,"torso print faces the same direction as the face");
-  assert.match(renderer,/const smile=\[\]/);
   assert.match(renderer,/index%5===4/);
   assert.match(renderer,/const shoulder=\[x\+side\*\.48,1\.49,z\+\.99\]/);
   assert.match(renderer,/for\(let k=0;k<=6;k\+\+\).*250\/6/);
