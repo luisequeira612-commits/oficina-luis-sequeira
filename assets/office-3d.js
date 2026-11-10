@@ -27,6 +27,30 @@ function buildScene(workers,roomName=""){
  box(0,-0.18,0,12,.36,10,floor);box(0,2,-5,12,4,.22,wall);box(-6,2,0,.22,4,10,wallDark);
  // Wall trim, windows and architectural light bands.
  box(0,3.88,-4.82,12,.12,.12,[0.88,0.91,0.94]);box(-5.82,2,0,.12,4,10,[0.60,0.68,0.74]);
+ // Structural corner piers, plinths and capitals give the cutaway room real architectural scale.
+ for(const cx of [-5.62,5.62]){
+  const cz=-4.62;
+  box(cx,1.98,cz,.38,3.92,.38,[0.48,0.56,0.63]);
+  box(cx,3.94,cz,.58,.16,.58,[0.68,0.74,0.79]);
+  box(cx,.16,cz,.54,.28,.54,[0.36,0.44,0.51]);
+ }
+ box(0,3.78,-4.68,11.5,.20,.34,[0.43,0.51,0.58]);
+ box(-5.66,3.78,0,.34,.20,9.3,[0.43,0.51,0.58]);
+ // Continuous skirting boards visually join the two solid walls to the floor.
+ box(0,.17,-4.78,11.5,.28,.12,[0.42,0.50,0.57]);
+ box(-5.78,.17,0,.12,.28,9.5,[0.42,0.50,0.57]);
+ // Recessed wall panels and narrow battens add depth without covering project displays.
+ for(const px of [-4.85,-4.35,3.15,3.65,4.15]){
+  box(px,2.02,-4.77,.055,2.95,.055,[0.64,0.70,0.75]);
+ }
+ for(const pz of [-3.9,-3.25,-2.6,-1.95,-1.3]){
+  box(-5.70,2.0,pz,.055,2.92,.055,[0.69,0.75,0.79]);
+ }
+ // A slim framed transition marks the workstation zone against the lounge floor.
+ box(0,.075,.05,8.9,.035,.08,[0.78,0.70,0.56]);
+ box(0,.075,3.35,8.9,.035,.08,[0.78,0.70,0.56]);
+ box(-4.45,.075,1.70,.08,.035,3.3,[0.78,0.70,0.56]);
+ box(4.45,.075,1.70,.08,.035,3.3,[0.78,0.70,0.56]);
  box(-2.6,2.25,-4.84,2.6,1.8,.08,[0.22,0.49,0.64]);box(-2.6,2.25,-4.77,2.38,1.58,.06,[0.43,0.72,0.82]);
  box(-2.6,2.25,-4.70,.08,1.7,.08,[0.86,0.91,0.94]);box(-2.6,2.25,-4.69,2.5,.08,.08,[0.86,0.91,0.94]);
  // Window sill, divided glass panes and a slim inner frame add architectural depth.
