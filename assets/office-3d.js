@@ -7,7 +7,7 @@ out vec3 vColor; out vec3 vNormal;
 void main(){vColor=aColor;vNormal=aNormal;gl_Position=uProjection*uView*vec4(aPosition,1.0);}`;
 const FRAG=`#version 300 es
 precision mediump float; in vec3 vColor; in vec3 vNormal; out vec4 outColor;
-void main(){vec3 n=normalize(vNormal);vec3 keyLight=normalize(vec3(-0.45,0.85,0.55));vec3 fillLight=normalize(vec3(0.72,0.42,-0.38));vec3 rimLight=normalize(vec3(-0.15,0.30,-0.92));float keyDiffuse=max(dot(n,keyLight),0.0);float fillDiffuse=max(dot(n,fillLight),0.0);float rimDiffuse=max(dot(n,rimLight),0.0);float hemisphere=0.5+0.5*n.y;float cavity=0.5+0.5*max(n.y,0.0);float specular=pow(max(dot(reflect(-keyLight,n),normalize(vec3(0.0,0.65,1.0))),0.0),24.0)*0.16;float shade=0.42+keyDiffuse*0.38+fillDiffuse*0.15+rimDiffuse*0.07+hemisphere*0.08+cavity*0.025+specular;outColor=vec4(vColor*shade,1.0);}`;
+void main(){vec3 n=normalize(vNormal);vec3 keyLight=normalize(vec3(-0.45,0.85,0.55));vec3 fillLight=normalize(vec3(0.72,0.42,-0.38));vec3 rimLight=normalize(vec3(-0.15,0.30,-0.92));float keyDiffuse=max(dot(n,keyLight),0.0);float fillDiffuse=max(dot(n,fillLight),0.0);float rimDiffuse=max(dot(n,rimLight),0.0);float hemisphere=0.5+0.5*n.y;float cavity=0.5+0.5*max(n.y,0.0);float specular=pow(max(dot(reflect(-keyLight,n),normalize(vec3(0.0,0.65,1.0))),0.0),24.0)*0.16;float shade=0.42+keyDiffuse*0.39+fillDiffuse*0.15+rimDiffuse*0.07+hemisphere*0.08+cavity*0.025+specular;outColor=vec4(vColor*shade,1.0);}`;
 const tone={light:[0.94,0.72,0.57],medium:[0.72,0.46,0.32],deep:[0.43,0.25,0.18]};
 const hair=[0.12,0.085,0.07],hairColors=[[0.09,0.065,0.055],[0.19,0.12,0.08],[0.30,0.20,0.13]],shirts=[[0.18,0.34,0.52],[0.72,0.31,0.28],[0.20,0.43,0.39],[0.65,0.48,0.19],[0.39,0.29,0.43]],shirtByName={blue:shirts[0],coral:shirts[1],teal:shirts[2],mustard:shirts[3],plum:shirts[4]};
 function mat4(){return new Float32Array(16)}
@@ -274,7 +274,7 @@ function open({container,roomName,workers=[],rooms=null,onSelectRoom=null,onSele
   gl.enableVertexAttribArray(ac);gl.vertexAttribPointer(ac,3,gl.FLOAT,false,stride,(scene.positionLength+scene.normalLength)*4);
   const up=gl.getUniformLocation(p,"uProjection"),uv=gl.getUniformLocation(p,"uView");
   gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);gl.cullFace(gl.BACK);gl.clearColor(.075,.12,.18,1);
-  const roomNav=rooms&&rooms.length?document.createElement("div"):null;if(roomNav){roomNav.className="office-3d-room-nav";rooms.forEach(room=>{const button=document.createElement("button");button.type="button";button.textContent=room.name;button.setAttribute("aria-label","Entrar en la habitación "+room.name);button.addEventListener("click",()=>{if(typeof onSelectRoom==="function")onSelectRoom(room.id)});roomNav.appendChild(button)})}
+  const roomNav=rooms&&rooms.length?document.createElement("div"):null;if(roomNav){roomNav.className="office-3d-room-nav";rooms.forEach(room=>{const button=document.createElement("button");button.type="button";button.textContent="Entrar · "+room.name;button.setAttribute("aria-label","Entrar en la habitación "+room.name);button.addEventListener("click",()=>{if(typeof onSelectRoom==="function")onSelectRoom(room.id)});roomNav.appendChild(button)})}
   const controls=document.createElement("div");controls.className="office-3d-controls";
   const hint=document.createElement("span");hint.className="office-3d-hint";hint.textContent="Arrastra para moverte · Pellizca para acercar · Usa ↶ ↷ para girar";
   const group=document.createElement("div");group.style.display="flex";group.style.gap="5px";
