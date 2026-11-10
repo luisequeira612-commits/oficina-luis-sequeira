@@ -5,7 +5,7 @@ const renderer=readFileSync(new URL("../assets/office-3d.js",import.meta.url),"u
 const css=readFileSync(new URL("../assets/office-view.css",import.meta.url),"utf8");
 test("resting workers use clear inter-column aisles and return to their own desk",()=>{
  assert.match(renderer,/const laneX=col===0\?-1\.82:col===1\?1\.82:5\.48/);
- assert.match(renderer,/restZ:-3\.2/);
+ assert.match(renderer,/restZ:3\.2/);
  assert.match(renderer,/rest=\[worker\.laneX,worker\.restZ\],path=\[start,lane,rest\]/);
  assert.match(renderer,/const returning=phase>=oneWay\+dwell/);
  assert.match(renderer,/const speed=\.82,dwell=3\.8/);
@@ -22,7 +22,7 @@ test("monitor remains attached to the desk while the employee moves",()=>{
  assert.match(renderer,/worker\.monitorStart\+1;i<worker\.monitorEnd;i\+=3\)scene\.data\[i\]=scene\.basePositions\[i\]/);
 });
 test("employee focus places the figure higher and leaves a scrollable details sheet",()=>{
- assert.match(renderer,/target=\[worker\.x,1\.12,worker\.z\+1\.05\]/);
+ assert.match(renderer,/target=\[worker\.x,1\.12,worker\.z-1\.05\]/);
  assert.match(css,/\.office-employee-card\{bottom:calc\(132px \+ env\(safe-area-inset-bottom\)\);max-height:27vh;overflow:auto/);
 });
 test("custom WebGL renderer adds view-dependent highlights to the plastic finish",()=>{
