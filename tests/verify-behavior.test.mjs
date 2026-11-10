@@ -81,7 +81,7 @@ test("BABYMONSTER Chart appears in required published project content", () => {
 
 test("isometric office overview explores existing projects without changing persisted data", () => {
   mustContain('href="assets/office-view.css"', "isometric office styles");
-  mustContain('src="assets/office-view.js" defer', "isometric office interaction");
+  mustContain('src="assets/office-view.js?v=27" defer', "isometric office interaction");
   mustContain('id="office-map"', "office map container");
   mustContain('id="office-3d-overview"', "connected 3D office overview container");
   mustContain('card.dataset.roomId=room.id', "stable room identity for map");
@@ -141,7 +141,7 @@ test("public GitHub pull requests are visible without credentials or background 
 
 
 test("real 3D room prototype uses WebGL2 locally and preserves the CSS fallback", () => {
-  mustContain('src="assets/office-3d.js" defer', "local WebGL2 room renderer");
+  mustContain('src="assets/office-3d.js?v=27" defer', "local WebGL2 room renderer");
   mustContain('id="office-3d"', "3D room canvas container");
   const renderer = readFileSync(new URL("../assets/office-3d.js", import.meta.url), "utf8");
   assert.ok(renderer.includes('getContext("webgl2"'), "uses an actual WebGL2 context");
