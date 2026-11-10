@@ -836,5 +836,5 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Al ocultarse la página, además de cancelar el frame pendiente, se reinician `fpsFrames` y `fpsWindowStart`. Al volver, el primer frame inicia una nueva ventana de medición.
 - Evita que el tiempo pasado en segundo plano se cuente como tiempo de renderizado y produzca una lectura FPS artificialmente baja al regresar a la oficina.
 - Renderer actualizado a caché v75; se ajustan las pruebas de caché existentes y la regresión verifica el reinicio de la ventana de FPS.
-- Sin cambios en geometría, cámara, ritmo de animación en primer plano, almacenamiento, dependencias, APIs ni backend. CI pendiente.
+- Sin cambios en geometría, cámara, ritmo de animación en primer plano, almacenamiento, dependencias, APIs ni backend. Head final `79bc74226dcc9b7a8b67eaa26fa32547f9fab6e4` pasó CI en [42916646044](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42916646044): sintaxis, invariantes y contenido requerido success. Main merge commit `398ff20c8dbaaa4d8255f2e812d38474ddb5a28b` pasó validate y deploy Pages en [42916694142](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42916694142).
 - Fuente: inspección del handler de visibilidad y medidor FPS de `assets/office-3d.js`, 2026-11-10.
