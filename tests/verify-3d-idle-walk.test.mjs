@@ -1,20 +1,17 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-const renderer = readFileSync(new URL("../assets/office-3d.js", import.meta.url), "utf8");
-test("waiting workers use a bounded ambient walk cycle", () => {
-  assert.match(renderer, /worker\.state==="st-r"/);
-  assert.match(renderer, /route=sampleRoute\(worker,seconds\)/);
-  assert.match(renderer, /walkZ=route\.z-worker\.z/);
-  assert.match(renderer, /speed=1\.0,dwell=3\.8/);
-  assert.match(renderer, /worker\.index\*2\.7/);
+const renderer=readFileSync(new URL("../assets/office-3d.js",import.meta.url),"utf8");
+test("resting workers remain seated and use only lightweight ambient motion",()=>{
+ assert.match(renderer,/worker.state==="st-r"/);
+ assert.match(renderer,/bob=Math.sin\(seconds\*1.8\+worker.index\)\*.008/);
+ assert.match(renderer,/body=Math.sin\(seconds\*1.4\+worker.index\)\*.006/);
+ assert.doesNotMatch(renderer,/sampleRoute/);
+ assert.doesNotMatch(renderer,/walkX|walkZ|walkLift/);
 });
-test("walking stays inside inter-column aisles and keeps equipment separate", () => {
-  assert.match(renderer, /const stationX=col===0\?-1\.82:col===1\?1\.82:5\.48/);
-  assert.match(renderer, /leftLaneX=col===0\?-5\.48:col===1\?-1\.82:1\.82/);
-  assert.match(renderer, /rightLaneX=col===0\?-1\.82:col===1\?1\.82:5\.48/);
-  assert.match(renderer, /armScale=worker\.state==="st-r"\?\.72:1/);
-  assert.match(renderer, /handScale=worker\.state==="st-r"\?\.72:1/);
-  assert.match(renderer, /prefers-reduced-motion/);
-  assert.doesNotMatch(renderer, /axis===2\?walkZ:0\)\}\)for\(let i=worker\.monitorStart/);
+test("desk animation does not translate the workstation or monitor",()=>{
+ assert.match(renderer,/worker.renderX=worker.x;worker.renderZ=worker.z/);
+ assert.match(renderer,/worker.monitorStart/);
+ assert.match(renderer,/scene.basePositions[i]/);
+ assert.doesNotMatch(renderer,/axis===2?walkZ/);
 });
