@@ -82,3 +82,23 @@
 
 .office-3d-status{margin:10px 0;padding:10px 12px;border:1px solid #D7A34A;border-radius:10px;background:#FFF8E8;color:#694B18;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
 .office-3d-status[hidden]{display:none}
+
+
+/* Immersive Tycoon mode: the connected office becomes the game viewport. */
+body.office-game-active{overflow:hidden;height:100dvh}
+body.office-game-active header,
+body.office-game-active main> :not(.office-overview),
+body.office-game-active footer{display:none!important}
+body.office-game-active main{display:block;max-width:none;margin:0;padding:0}
+body.office-game-active .office-overview{position:fixed;inset:0;z-index:1000;width:100vw;height:100dvh;min-height:100dvh;margin:0;padding:0;border:0;border-radius:0;overflow:hidden;background:#172435}
+body.office-game-active .office-overview h2,
+body.office-game-active .office-overview .office-hint,
+body.office-game-active #office-3d-status{display:none!important}
+body.office-game-active .office-3d-overview{position:absolute;inset:0;width:100%;height:100%;min-height:100%;border:0;border-radius:0}
+body.office-game-active .office-3d-room-nav{top:max(8px,env(safe-area-inset-top));left:8px;right:8px}
+body.office-game-active .office-3d-controls{left:8px;right:8px;bottom:max(8px,env(safe-area-inset-bottom))}
+body.office-game-active .office-3d-controls .office-3d-hint{max-width:55%}
+@media(max-width:420px){
+ body.office-game-active .office-3d-controls{align-items:flex-end}
+ body.office-game-active .office-3d-controls .office-3d-hint{max-width:48%;font-size:9px}
+}
