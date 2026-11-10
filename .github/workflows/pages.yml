@@ -27,6 +27,7 @@ jobs:
           Path("/tmp/oficina-app.js").write_text(scripts[0], encoding="utf-8")
           PY
           node --check /tmp/oficina-app.js
+          node --check assets/github-live.js
       - name: Verify approved character SVGs and UI invariants
         run: node --test tests/*.test.mjs
       - name: Check required page content
@@ -36,7 +37,7 @@ jobs:
           html = Path("index.html").read_text(encoding="utf-8")
           required = [
               "<title>Oficina de Luis Sequeira</title>",
-              "Simulación. En la versión real, los estados vendrán de GitHub.",
+              "<strong>Qué es real:</strong>",
               "oficina-luis-sequeira-v1",
               "App Guardi", "Canal de YouTube", "Tema Nova Launcher", "BABYMONSTER Chart",
           ]
