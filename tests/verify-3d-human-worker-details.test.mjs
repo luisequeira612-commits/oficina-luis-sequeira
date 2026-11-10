@@ -46,6 +46,12 @@ test("3D worker activity is seated and route-free",()=>{
  assert.match(renderer,/worker.renderX=worker.x;worker.renderZ=worker.z/);
  assert.match(renderer,/monitorShift/);
 });
+test("workstation monitors have compact editor chrome above animated code rows",()=>{
+ assert.ok(renderer.includes("Compact editor chrome makes each animated display read as a real work interface."));
+ assert.ok(renderer.includes("box(x,1.92,z-.245,.76,.028,.012,[0.16,0.23,0.30])"));
+ assert.ok(renderer.includes("box(x-.405,1.63,z-.245,.07,.43,.012,[0.12,0.62,0.66])"));
+ assert.ok(renderer.includes("x-.27+codeWidth/2"));
+});
 test("workstation keyboard has a compact two-row key layout and mouse wheel",()=>{
  assert.ok(renderer.includes("for(let row=0;row<2;row++)for(let key=0;key<5;key++)"));
  assert.ok(renderer.includes("box(x+.62,1.052,z+.12,.014,.006,.035"));
