@@ -15,6 +15,8 @@ test("polling is staggered, adaptive, visibility-aware and throttled",()=>{
  assert.match(js,/IDLE_CYCLE=240000/);
  assert.match(js,/ACTIVE_GAP=60000/);
  assert.match(js,/MANUAL_GAP=15000/);
+ assert.match(js,/manualAt\.get\(room\.repository\)/);
+ assert.match(js,/Array\.from\(new Set\(/);
  assert.match(js,/document\.visibilityState==="hidden"/);
  assert.match(js,/STALE=120000/);
 });
