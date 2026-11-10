@@ -160,7 +160,9 @@ test("real 3D room prototype uses WebGL2 locally and preserves the CSS fallback"
   assert.ok(renderer.includes("prefers-reduced-motion: reduce"), "disables 3D worker motion when reduced motion is requested");
   assert.ok(renderer.includes("rows===1?-1.55:-2.8+row*2.4"), "keeps a three-row workforce inside the room footprint");
   assert.ok(renderer.includes("function buildOfficeScene(rooms)"), "builds a multi-room 3D office");
-  assert.ok(renderer.includes("continuous shared corridor"), "connects project rooms with a shared corridor");
+  assert.ok(renderer.includes("central hallway"), "connects project rooms with a shared corridor");
+  assert.ok(renderer.includes("col===1"), "faces the two room columns toward the shared hallway");
+  assert.ok(renderer.includes("overviewRows=overviewMode?Math.ceil(rooms.length/2):1"), "scales the overview for multiple rows on mobile");
   assert.ok(renderer.includes("office-3d-room-nav"), "provides direct entry controls for each 3D room");
 });
 
