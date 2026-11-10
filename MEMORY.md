@@ -355,3 +355,11 @@
 - La corrección pasa la identidad seleccionada al renderer y añade un disco/anillo dorado procedural y discreto en el suelo del puesto seleccionado, visible en la escena WebGL 2 real.
 - No cambia persistencia, navegación, estados GitHub Actions ni dependencias.
 - Fuente: inspección posterior a PR #41, 2026-11-10.
+
+
+## Corrección urgente de etiquetas no visibles — 10 de noviembre de 2026
+
+- Tras el reporte del usuario de que no veía las etiquetas, la inspección encontró una causa concreta: `index.html` seguía solicitando `assets/office-view.css?v=40`, aunque la hoja con los estilos `.office-worker-tags` y `.office-worker-tag` se había actualizado en PR #41. En móviles/navegadores con caché, podía conservarse la hoja anterior, dejando las etiquetas sin posicionamiento absoluto y fuera del área visible.
+- Corrección: invalidar la caché de CSS y ambos scripts con `?v=42` en `index.html`, y añadir una prueba de regresión que exige la versión nueva y las reglas de posicionamiento.
+- No se cambia lógica de empleados, almacenamiento, datos, estados ni renderer.
+- Fuente: diagnóstico del reporte del usuario y revisión de `main`, 2026-11-10.
