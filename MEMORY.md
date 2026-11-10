@@ -72,3 +72,10 @@
 - La diversidad visual no pretende certificar etnia ni asociar rasgos a identidades. El estilo es una primera versión 2D tipo Tycoon dentro de la UI existente; la integración de personas 3D/escena WebGL queda fuera de alcance.
 - Rama: `feat/human-tycoon-workers`; pendiente de CI y revisión.
 - Fuente: decisión explícita del usuario, conversación del 2026-11-10.
+
+
+## Trabajadores humanos dentro de las habitaciones — 10 de noviembre de 2026
+- Continuación de la fase Tycoon: los interiores explorables reutilizan el mismo avatar humano de cada trabajador en su puesto de trabajo, en vez de mostrar escritorios vacíos.
+- El avatar se clona desde el personaje ya renderizado en la tarjeta, conservando tono de piel, peinado, ropa y estado animado; no se crean identidades ni datos duplicados.
+- Cambio exclusivamente visual: sin cambios de almacenamiento, roles, agentes, proyectos, APIs o dependencias.
+- Rama: `feat/human-workers-in-room-scenes`; pendiente de CI y revisión.
