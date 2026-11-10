@@ -24,3 +24,12 @@ test("GitHub activity assigns one worker per active run and keeps history",()=>{
 test("commit polling also runs after a 304 workflow validation",()=>{
  assert.match(live,/let workflowFresh=false/);assert.match(live,/response\.status===304.*workflowFresh=true/);assert.match(live,/if\(workflowFresh\)/s);assert.match(live,/split\(\/:?\\r\?\\n\/\)/);
 });
+
+
+test("employee detail shows the actual assigned GitHub workflow as current task",()=>{
+ assert.match(live,/worker\.dataset\.currentTask=isAssigned&&current\?/);
+ const view=readFileSync(new URL("../assets/office-view.js",import.meta.url),"utf8");
+ assert.match(view,/task:agent\.dataset\.currentTask\|\|"Sin tarea en curso"/);
+ assert.match(view,/const source=Array\.from\(rooms\.querySelectorAll\("\.ag"\)\)\.find\(agent=>agent\.dataset\.agentId===w\.id\)/);
+ assert.match(view,/state==="st-s"\?"ÉXITO":state==="st-f"\?"FALLO"/);
+});
