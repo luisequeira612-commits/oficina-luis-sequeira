@@ -21,3 +21,9 @@ test("3D engine download failure has a distinct visible diagnostic", () => {
   assert.match(html, /onerror="[^"]*office-3d-status/);
   assert.match(html, /No se pudo descargar assets\/office-3d\.js/);
 });
+
+test("worker tag bubbles iterate the tag elements inside their container", () => {
+  const engine = readFileSync(new URL("../assets/office-3d.js", import.meta.url), "utf8");
+  assert.match(engine, /function mountWorkerStateBubbles\(container,workerTags\)\{workerTags\.querySelectorAll\("\.office-worker-tag"\)\.forEach\(tag=>\{/);
+  assert.doesNotMatch(engine, /function mountWorkerStateBubbles\(container,workerTags\)\{workerTags\.forEach\(/);
+});
