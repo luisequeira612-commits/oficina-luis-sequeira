@@ -28,7 +28,7 @@ test("the overview combines project employees into one three-column open-plan ro
 test("employee cards show their names and roles and open the related project", () => {
   assert.match(view, /office-employee-roster/);
   assert.match(view, /worker\.name/);
-  assert.match(view, /openRoom\(target\)/);
+  assert.match(view, /selectEmployee\(worker\)/);
   assert.match(css, /\.office-roster-list/);
 });
 
@@ -45,18 +45,18 @@ test("floating nameplates are projected from each worker and select their own pr
   assert.match(renderer, /className="office-worker-tag"/);
   assert.match(renderer, /worker\.tag\.style\.left/);
   assert.match(renderer, /worker\.tag\.style\.top/);
-  assert.match(renderer, /onSelectRoom\(worker\.roomId,worker\.employeeId\)/);
+  assert.match(renderer, /onSelectWorker\(worker\)/);
   assert.match(renderer, /employeeId:worker\.id\|\|""/);
-  assert.match(view, /openRoom\(card,selectedEmployeeId=""\)/);
-  assert.match(view, /onSelectRoom:\(id,employeeId\)/);
-  assert.match(view, /is-selected-worker/);
+  assert.match(view, /office-employee-card/);
+  assert.match(view, /onSelectRoom:id=>/);
+  assert.match(view, /_office3dFocusWorker/);
   assert.match(css, /\.office-worker-tag\{/);
 });
 
 
 test("direct employee selection highlights the worker in the actual WebGL scene", () => {
-  assert.match(view, /selected:Boolean\(selectedEmployeeId&&agent\.dataset\.agentId===selectedEmployeeId\)/);
-  assert.match(renderer, /if\(worker\.selected\)sphere\(x,\.045,z\+\.84,1\.12,\.035,\.82,\[1,\.76,\.24\]/);
+  assert.match(view, /_office3dFocusWorker\(w\.id\)/);
+  assert.match(renderer, /container\._office3dFocusWorker=id=>/);
 });
 
 
