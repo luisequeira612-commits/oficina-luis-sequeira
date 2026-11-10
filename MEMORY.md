@@ -201,3 +201,12 @@
 - Geometría procedural del renderer WebGL 2. Sin modelos, texturas, dependencias, API, backend ni servicios de pago. Sin cambios a personajes, estados, cámara, localStorage o esquemas persistentes.
 - Prueba de regresión verifica los elementos arquitectónicos. La legibilidad visual, Pages y el rendimiento en el Tecno Pova 4 siguen pendientes de prueba real.
 - Fuente: PR y CI del repositorio, 2026-11-10.
+
+
+## PR #25 — mobiliario y detalles de oficina 3D — 10 de noviembre de 2026
+- Las estaciones incorporan cajoneras de dos niveles, bandeja de cableado bajo escritorio, apoyabrazos y soportes de silla, y detalles frontales de ventilación/estado en las torres de PC.
+- Se añade una pizarra mural de planificación con notas geométricas de color en la habitación.
+- Todo se genera con las primitivas del renderer WebGL 2 existente. Sin modelos, texturas, dependencias, APIs, backend ni servicios de pago.
+- No cambia la cámara, trabajadores, proyectos, estados, almacenamiento local ni esquema persistente; la alternativa CSS permanece intacta.
+- Prueba nueva: `tests/verify-3d-workstation-furniture.test.mjs`.
+- Fuente: cambios del renderer y pruebas del repositorio, 2026-11-10.
