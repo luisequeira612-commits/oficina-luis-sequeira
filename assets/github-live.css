@@ -1,0 +1,22 @@
+/* Datos reales de GitHub separados de la animación ambiental. */
+.activity-panel{margin:0 0 18px;padding:12px;border:1px solid var(--border);border-radius:14px;background:#fff}
+.activity-panel h2{margin:0 0 6px}.activity-note{margin:0 0 10px;color:var(--muted);font-size:12px}
+.github-rate-notice{margin:8px 0;padding:10px;border:1px solid #D7A34A;border-radius:9px;background:#FFF8E8;color:#694B18;font-size:12px}
+.github-rate-notice[hidden]{display:none}.github-activity-list{display:grid;gap:8px;list-style:none;margin:0;padding:0}
+.activity-empty{padding:10px 0;color:var(--muted);font-size:12px}
+.activity-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 8px;align-items:center;padding:9px;border:1px solid var(--border);border-radius:10px;background:#FAFBFC;min-width:0}
+.activity-item strong,.activity-item>span{min-width:0;overflow-wrap:anywhere}.activity-item strong{font-size:12px}
+.activity-item>span,.activity-item time{font-size:11px;color:var(--muted)}.activity-item .activity-state{font-weight:700;color:var(--blue-deep);text-align:right}
+.activity-item a{font-size:11px;font-weight:700;color:var(--blue-deep);justify-self:end}
+.repo-live-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:7px}.repo-live-actions button{margin:0!important}
+.repo-freshness{font-size:11px;color:var(--muted);font-weight:700}
+.repo-status[data-kind="running"]{color:var(--blue-deep)}.repo-status[data-kind="success"]{color:#0F6E56;font-weight:700}.repo-status[data-kind="failure"]{color:var(--red);font-weight:700}
+.repo-workflow-bubble{display:inline-block;max-width:100%;margin:5px 0 0;padding:5px 9px;border:1px solid #A9C7E8;border-radius:12px;background:#EFF7FF;color:#174A78;font-size:11px;overflow-wrap:anywhere;animation:github-bubble-in .22s ease-out}
+.repo-workflow-bubble[hidden]{display:none}
+.ag.is-walking{animation:github-walk-to-desk .8s ease-in-out}.ag.is-success svg{animation:github-celebrate .55s ease-in-out 3}
+.ag.is-failure svg{filter:drop-shadow(0 0 4px #D92D45)}.ag.is-failure .agent-state{color:var(--red);font-weight:800}.ag.is-success .agent-state{color:#0F6E56;font-weight:800}
+@keyframes github-walk-to-desk{0%{transform:translateX(-8px) translateY(2px)}45%{transform:translateX(4px) translateY(-3px)}100%{transform:translate(0)}}
+@keyframes github-celebrate{0%,100%{transform:translateY(0) rotate(0)}35%{transform:translateY(-5px) rotate(-5deg)}70%{transform:translateY(-2px) rotate(5deg)}}
+@keyframes github-bubble-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:420px){.activity-item{grid-template-columns:minmax(0,1fr) auto}.activity-item a{grid-column:2}}
+@media(prefers-reduced-motion:reduce){.ag.is-walking,.ag.is-success svg,.repo-workflow-bubble{animation:none!important}}
