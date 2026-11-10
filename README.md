@@ -10,7 +10,7 @@ Abre `index.html` en un navegador o publica el repositorio con GitHub Pages.
 - Los proyectos y roles se guardan en el almacenamiento local del navegador.
 - Los estados animados de los personajes siguen siendo una simulación local y no se guardan.
 - Cada proyecto puede vincularse a un repositorio público con el formato `usuario/repositorio`.
-- La Oficina consulta la última ejecución de GitHub Actions mediante la API pública de GitHub y permite actualizarla manualmente.
+- La Oficina consulta la última ejecución de GitHub Actions y las hasta tres PR abiertas más recientes mediante la API pública de GitHub. Las PR se consultan al abrir la página o al pulsar Actualizar; no se sondean en segundo plano.
 - Las tarjetas iniciales de Canal de YouTube y Tema Nova Launcher apuntan a sus repositorios conocidos. App Guardi queda sin vincular hasta que indiques su repositorio. Puedes cambiar o desconectar cualquiera.
 - La información local permanece en el dispositivo y navegador donde se creó.
 
@@ -18,9 +18,9 @@ Abre `index.html` en un navegador o publica el repositorio con GitHub Pages.
 
 La Fase B consulta `GET /repos/{owner}/{repo}/actions/runs?per_page=1` desde el navegador. No utiliza token, autenticación, backend, servidor propio ni dependencias externas.
 
-La consulta se realiza al abrir la página y cuando el usuario pulsa **Actualizar**; no hay sondeo continuo. GitHub aplica sus límites de solicitudes públicas no autenticadas. Si se alcanza el límite, la tarjeta muestra un aviso y se puede volver a intentar más tarde. Los repositorios privados o inexistentes no se pueden consultar.
+Las ejecuciones de Actions se consultan al abrir la página, al pulsar **Actualizar** y cada cinco minutos. Las PR abiertas se consultan al abrir la página y al pulsar **Actualizar**, pero no en el sondeo periódico para reducir el consumo de la cuota pública no autenticada. GitHub aplica límites de solicitudes públicas. Si se alcanza el límite, la tarjeta muestra un aviso y se puede volver a intentar más tarde. Los repositorios privados o inexistentes no se pueden consultar.
 
-El panel muestra el estado de la última ejecución y enlaza a su página en GitHub. Los personajes mantienen sus estados visuales simulados; no se presentan como agentes reales conectados a GitHub.
+El panel muestra el estado de la última ejecución y enlaza a su página en GitHub. También lista hasta tres PR abiertas recientes, con enlace a cada propuesta. Esto representa actividad real de GitHub, pero no identifica si una PR fue creada por una persona o por un agente. Los personajes mantienen sus estados visuales simulados; no se presentan como agentes reales conectados a GitHub.
 
 ## Tecnología y privacidad
 

@@ -61,7 +61,7 @@ h2{font-size:17px;margin:20px 0 10px;font-weight:700}
 .add-agent{margin-top:12px}
 .empty{font-size:13px;color:var(--muted);padding:4px 0}
 footer{max-width:1040px;margin:0 auto;padding:0 16px 24px;color:var(--muted);font-size:12px}
-.repo-panel{margin:0 0 12px;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:10px;min-width:0}.repo-title{font-size:12px;font-weight:700;margin:0 0 7px}.repo-form{display:flex;gap:7px;align-items:center}.repo-form input{min-width:0;flex:1;height:40px;border:1px solid #AAB4C0;border-radius:8px;padding:7px 9px;background:#fff;color:var(--text)}.repo-form button{min-height:40px;padding:6px 10px}.repo-status{font-size:12px;color:var(--muted);margin:7px 0 0;overflow-wrap:anywhere}.repo-status a{color:var(--blue-deep);font-weight:700}.repo-status[data-kind="success"]{color:#0F6E56}.repo-status[data-kind="failure"]{color:var(--red)}.repo-status[data-kind="running"]{color:var(--blue-deep)}
+.repo-panel{margin:0 0 12px;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:10px;min-width:0}.repo-title{font-size:12px;font-weight:700;margin:0 0 7px}.repo-form{display:flex;gap:7px;align-items:center}.repo-form input{min-width:0;flex:1;height:40px;border:1px solid #AAB4C0;border-radius:8px;padding:7px 9px;background:#fff;color:var(--text)}.repo-form button{min-height:40px;padding:6px 10px}.repo-status{font-size:12px;color:var(--muted);margin:7px 0 0;overflow-wrap:anywhere}.repo-status a{color:var(--blue-deep);font-weight:700}.repo-status[data-kind="success"]{color:#0F6E56}.repo-status[data-kind="failure"]{color:var(--red)}.repo-status[data-kind="running"]{color:var(--blue-deep)}.repo-pr-title{margin-top:12px}.repo-pr-status{font-size:12px;color:var(--muted);overflow-wrap:anywhere}.repo-pr-status[data-kind="running"]{color:var(--blue-deep)}.repo-pr-status[data-kind="failure"]{color:var(--red)}.repo-pr-count{margin:0 0 5px}.repo-pr-list{margin:0;padding-left:18px;display:grid;gap:5px}.repo-pr-list a{color:var(--blue-deep);font-weight:600;overflow-wrap:anywhere}
 @media(min-width:680px){.rooms{grid-template-columns:repeat(2,minmax(0,1fr))}.summary{padding:14px 16px}}
 @media(prefers-reduced-motion:reduce){.ag *{animation:none!important}}
 </style>
@@ -324,6 +324,7 @@ let rooms=loadRooms();
 applyMigrations();
 const states=new Map();
 const repoResults=new Map();
+const repoPullResults=new Map();
 const roomsEl=document.getElementById("rooms");
 const summaryEl=document.getElementById("summary-text");
 const form=document.getElementById("project-form");
@@ -368,14 +369,16 @@ function makeCharacter(agent){
  return wrap;
 }
 function makeRepoPanel(room){
- const panel=document.createElement("section");panel.className="repo-panel";panel.setAttribute("aria-label","Estado de GitHub Actions");
+ const panel=document.createElement("section");panel.className="repo-panel";panel.setAttribute("aria-label","Estado del repositorio en GitHub");
  const heading=document.createElement("p");heading.className="repo-title";heading.textContent="GitHub Actions";panel.appendChild(heading);
  const form=document.createElement("form");form.className="repo-form";
  const input=document.createElement("input");input.type="text";input.value=room.repository||"";input.placeholder="usuario/repositorio";input.maxLength=100;input.setAttribute("aria-label","Repositorio público de GitHub para "+room.name);input.autocomplete="off";
  const saveButton=document.createElement("button");saveButton.type="submit";saveButton.textContent="Guardar";
  form.append(input,saveButton);panel.appendChild(form);
- const refreshButton=document.createElement("button");refreshButton.type="button";refreshButton.className="secondary";refreshButton.textContent="Actualizar";refreshButton.style.marginTop="7px";refreshButton.addEventListener("click",()=>refreshRepo(room.id));panel.appendChild(refreshButton);
+ const refreshButton=document.createElement("button");refreshButton.type="button";refreshButton.className="secondary";refreshButton.textContent="Actualizar";refreshButton.style.marginTop="7px";refreshButton.addEventListener("click",()=>refreshRepo(room.id,true));panel.appendChild(refreshButton);
  const status=document.createElement("p");status.className="repo-status";status.setAttribute("role","status");status.setAttribute("aria-live","polite");status.dataset.repoStatus=room.id;panel.appendChild(status);
+ const prHeading=document.createElement("p");prHeading.className="repo-title repo-pr-title";prHeading.textContent="Pull requests abiertas";panel.appendChild(prHeading);
+ const prStatus=document.createElement("div");prStatus.className="repo-pr-status";prStatus.setAttribute("role","status");prStatus.setAttribute("aria-live","polite");prStatus.dataset.repoPrStatus=room.id;panel.appendChild(prStatus);
  function paint(){
   const result=repoResults.get(room.id);
   if(!room.repository){status.textContent="Sin repositorio conectado.";status.dataset.kind="";return}
@@ -387,14 +390,63 @@ function makeRepoPanel(room){
   event.preventDefault();
   const value=input.value.trim();
   if(value&&!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(value)){status.textContent="Usa el formato usuario/repositorio.";status.dataset.kind="failure";return}
-  room.repository=value||null;repoResults.delete(room.id);save();paint();
-  if(room.repository)refreshRepo(room.id);
+  room.repository=value||null;repoResults.delete(room.id);repoPullResults.delete(room.id);save();paint();paintRepoPullStatus(room.id);
+  if(room.repository)refreshRepo(room.id,true);
  });
  paint();
+ paintRepoPullStatus(room.id);
  return panel;
 }
 function repoStatusElement(roomId){return Array.from(document.querySelectorAll("[data-repo-status]")).find(element=>element.dataset.repoStatus===roomId)||null}
-function refreshRepo(roomId){
+function repoPullStatusElement(roomId){return Array.from(document.querySelectorAll("[data-repo-pr-status]")).find(element=>element.dataset.repoPrStatus===roomId)||null}
+function paintRepoPullStatus(roomId){
+ const current=repoPullStatusElement(roomId);
+ if(!current)return;
+ current.replaceChildren();
+ const room=rooms.find(item=>item.id===roomId);
+ if(!room||!room.repository){current.textContent="Sin repositorio conectado.";return}
+ const result=repoPullResults.get(roomId);
+ if(!result){current.textContent="Sin consultar todavía.";return}
+ if(result.message){current.textContent=result.message;current.dataset.kind=result.kind||"";return}
+ const items=Array.isArray(result.items)?result.items:[];
+ if(!items.length){current.textContent="No hay PR abiertas.";current.dataset.kind="";return}
+ const intro=document.createElement("p");intro.className="repo-pr-count";intro.textContent="Solicitudes abiertas recientes (máximo 3):";current.appendChild(intro);
+ const list=document.createElement("ul");list.className="repo-pr-list";
+ items.forEach(item=>{
+  const entry=document.createElement("li");
+  const label="#"+item.number+" · "+(item.user?.login||"autor desconocido")+(item.draft?" · borrador":"")+" — "+(item.title||"Sin título");
+  if(typeof item.html_url==="string"&&item.html_url.startsWith("https://github.com/")){
+   const link=document.createElement("a");link.href=item.html_url;link.target="_blank";link.rel="noopener noreferrer";link.textContent=label;entry.appendChild(link);
+  }else entry.textContent=label;
+  list.appendChild(entry);
+ });
+ current.appendChild(list);
+}
+function refreshPullRequests(roomId){
+ const room=rooms.find(item=>item.id===roomId);if(!room||!room.repository)return;
+ const requestedRepository=room.repository;
+ repoPullResults.set(roomId,{message:"Consultando pull requests…",kind:"running"});
+ paintRepoPullStatus(roomId);
+ const url="https://api.github.com/repos/"+requestedRepository+"/pulls?state=open&per_page=3&sort=updated&direction=desc";
+ fetch(url,{headers:{Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"},cache:"no-store"})
+ .then(async response=>{
+  if(response.status===404)throw new Error("Repositorio no encontrado o privado.");
+  if(response.status===403||response.status===429)throw new Error("GitHub limitó las consultas públicas. Intenta más tarde.");
+  if(!response.ok)throw new Error("GitHub respondió con el error "+response.status+".");
+  return response.json();
+ })
+ .then(data=>{
+  if(rooms.find(item=>item.id===roomId)?.repository!==requestedRepository)return;
+  if(!Array.isArray(data))throw new Error("GitHub devolvió una respuesta de PR no válida.");
+  repoPullResults.set(roomId,{items:data.slice(0,3)});
+ })
+ .catch(error=>{
+  if(rooms.find(item=>item.id===roomId)?.repository===requestedRepository)repoPullResults.set(roomId,{message:error.message||"No se pudieron consultar las PR.",kind:"failure"});
+ })
+ .finally(()=>paintRepoPullStatus(roomId));
+}
+function refreshRepo(roomId,includePullRequests=false){
+ if(includePullRequests)refreshPullRequests(roomId);
  const room=rooms.find(item=>item.id===roomId);if(!room||!room.repository)return;
  const status=repoStatusElement(roomId);
  if(status){status.textContent="Consultando GitHub Actions…";status.dataset.kind="running"}
@@ -480,7 +532,7 @@ form.addEventListener("submit",event=>{
 });
 nameInput.addEventListener("input",()=>{if(nameInput.value.length>0)errorEl.textContent=""});
 render();
-rooms.filter(room=>room.repository).forEach(room=>refreshRepo(room.id));
+rooms.filter(room=>room.repository).forEach(room=>refreshRepo(room.id,true));
 // Refresh real GitHub Actions activity every five minutes; manual refresh remains available.
 window.setInterval(()=>rooms.filter(room=>room.repository).forEach(room=>refreshRepo(room.id)),300000);
 const reducedMotion=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;

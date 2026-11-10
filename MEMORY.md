@@ -86,3 +86,11 @@
 - La corrección copia únicamente la clase efímera de estado (`st-w`, `st-t`, `st-a`, `st-r`) al puesto y aplica las mismas animaciones humanas dentro de la habitación.
 - La escena sigue leyendo el estado actual del DOM al abrirse; no añade persistencia ni telemetría. Respeta movimiento reducido.
 - Rama: `fix/room-worker-state-animations`; pendiente CI y revisión.
+
+
+## PR #12 — visibilidad de pull requests reales — 10 de noviembre de 2026
+- La Oficina muestra hasta tres PR abiertas recientes por repositorio público vinculado, con título, número, autor, indicador de borrador y enlace directo a GitHub.
+- Consulta la API pública `GET /repos/{owner}/{repo}/pulls?state=open&per_page=3&sort=updated&direction=desc` al abrir la página y al pulsar Actualizar; no añade sondeo periódico de PR. El sondeo de GitHub Actions existente continúa cada cinco minutos.
+- Los resultados son efímeros en memoria del navegador; no se modifica `localStorage`, el esquema de proyectos/agentes ni se añaden dependencias, tokens, backend o servicios de pago.
+- La lista acredita PR reales, pero no atribuye su autoría a agentes IA ni muestra pasos internos. Las animaciones de trabajadores siguen siendo simuladas.
+- PR [#12](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/12), rama `feat/github-pull-request-visibility`; pendiente de CI.
