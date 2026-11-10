@@ -51,7 +51,7 @@ test("persisted data is validated and corrupted storage falls back to defaults",
 });
 
 test("character states and summary are derived only from real GitHub Actions data", () => {
-  assert.match(githubLiveScript, /statusEl\.textContent=.*Trabajando/);
+  assert.match(githubLiveScript, /status\.textContent="Trabajando/);
   assert.match(githubLiveScript, /"Éxito"/);
   assert.match(githubLiveScript, /"Falló"/);
   assert.match(githubLiveScript, /"Descansando"/);
