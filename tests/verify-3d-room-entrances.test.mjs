@@ -6,7 +6,7 @@ const renderer = readFileSync(new URL("../assets/office-3d.js", import.meta.url)
 
 test("project navigation remains available above the shared open-plan office", () => {
   assert.match(renderer, /const accents=/, "project color accents remain in the shared room");
-  assert.match(renderer, /roomNav\.className="office-3d-room-nav"/, "the overview keeps room navigation controls");
+  assert.match(renderer, /roomNav\.className="office-3d-room-nav office-project-chip-strip"/, "the overview keeps room navigation controls");
   assert.match(renderer, /button\.className="office-project-chip"/, "the overview keeps compact project chips");
   assert.match(renderer, /button\.textContent=room\.name/, "each project remains directly accessible");
   assert.match(renderer, /onSelectRoom\(room\.id\)/, "navigation selects the corresponding project room");
