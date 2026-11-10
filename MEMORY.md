@@ -864,5 +864,5 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Rama `fix/bump-renderer-cache-after-nameplate-update`, basada en main después de PR #58.
 - Se actualiza la URL del renderizador en `index.html` de `office-3d.js?v=76` a `office-3d.js?v=77`, para que los navegadores descarguen el archivo modificado en PR #58 en vez de reutilizar una copia en caché.
 - Se actualizan las expectativas de caché en `tests/verify-3d-human-worker-details.test.mjs`, `tests/verify-3d-monitor-live-status.test.mjs`, `tests/verify-3d-office-wall-clock.test.mjs` y `tests/verify-3d-project-workstation-identity.test.mjs`. No cambia el comportamiento de la escena ni sus recursos gráficos.
-- Pendiente de CI y revisión antes de fusionar.
+- Head final `7ab12af24a3821d1a4f51f1f4218cbc8ae522a27` pasó CI [42918973474](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42918973474), sin hilos ni revisiones pendientes. PR #59 fusionado mediante squash en `be184389f9c9585adca498d0fc728f3e3aacfdf3`.
 - Fuente: revisión posterior al despliegue de PR #58, 2026-11-10.
