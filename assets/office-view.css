@@ -79,3 +79,6 @@
 .office-3d-room-nav{position:absolute;z-index:3;top:9px;left:9px;right:9px;display:flex;gap:6px;overflow-x:auto;padding:2px 2px 7px;pointer-events:auto}
 .office-3d-room-nav button{flex:none;min-height:38px;max-width:190px;padding:6px 10px;border:1px solid #FFFFFF66;border-bottom:3px solid #00000044;border-radius:9px;background:#14283DDD;color:#fff;font-size:11px;white-space:nowrap;backdrop-filter:blur(8px)}
 @media(max-width:420px){.office-3d-overview{height:48vh;min-height:280px}.office-3d-room-nav{top:6px;left:6px;right:6px}}
+
+.office-3d-status{margin:10px 0;padding:10px 12px;border:1px solid #D7A34A;border-radius:10px;background:#FFF8E8;color:#694B18;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+.office-3d-status[hidden]{display:none}
