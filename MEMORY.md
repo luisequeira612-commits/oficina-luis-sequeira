@@ -766,3 +766,14 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 
 - La primera CI [42905449263](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42905449263) pasó sintaxis y falló una prueba de identidad de proyecto que aún esperaba la caché v72. Se actualizó a v73; no falló la lógica de actualización de estado.
 - PR #50 fue fusionado mediante squash en `790e966700379e92d109ad4f7b5d1d34e17ac682` tras CI [42905544491](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42905544491) aprobada. El despliegue main [42905636359](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42905636359) terminó con validate y deploy success; renderer v73 publicado en GitHub Pages.
+
+
+## PR #51 — plantilla de diez trabajadores con paridad 5/5 (10 de noviembre de 2026)
+
+- PR [#51 Balance the office workforce at ten LEGO-style employees](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/51), rama `feat/balanced-ten-person-workforce`, base `main`.
+- Se añade a Rafael (hombre, tono de piel deep, cabello curly, camiseta plum) al equipo de App Guardi. La plantilla pasa de nueve a diez personas: cinco mujeres y cinco hombres.
+- Los archivos editables `data/agentes.json` y `data/proyectos.json` reflejan los diez perfiles y su asignación. El encabezado muestra diez empleados.
+- Las instalaciones existentes reciben a Rafael mediante una migración aditiva e idempotente con marcador `oficina-luis-sequeira-migrations-v1-balanced-workforce`. No se cambia el esquema `oficina-luis-sequeira-v1`, no se eliminan personajes ni proyectos y no se modifican los datos existentes de las nueve personas.
+- Se actualizan pruebas para verificar diez perfiles, paridad 5/5, asignación y encabezado. Sin dependencias, APIs, backend ni servicios de pago nuevos.
+- Estado al abrir PR: pendiente de CI y revisión del head final; no fusionar hasta comprobar pruebas y mergeabilidad.
+- Fuente: cambios de la rama y pruebas del repositorio, 2026-11-10.
