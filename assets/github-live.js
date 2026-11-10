@@ -11,45 +11,49 @@ function mins(t){return Math.max(0,Math.floor((now()-(t||now()))/60000))}
 function ago(t){const m=mins(new Date(t||0).getTime());return !t?"hora desconocida":m<1?"ahora":m<60?"hace "+m+" min":m<1440?"hace "+Math.floor(m/60)+" h":"hace "+Math.floor(m/1440)+" d"}
 function at(t){return new Date(t).toLocaleTimeString("es-NI",{hour:"2-digit",minute:"2-digit",hourCycle:"h23"})}
 function entry(room){return room.repository?cache[room.repository]:null}
-function active(e){return (e?.runs||[]).find(x=>x.status==="in_progress"||x.status==="queued")||null}
+function running(e){return (e?.runs||[]).find(x=>x.status==="in_progress")||null}
+function queued(e){return (e?.runs||[]).find(x=>x.status==="queued")||null}
+function active(e){return running(e)||queued(e)}
 function latest(e){return (e?.runs||[])[0]||null}
-function state(e){const a=active(e),r=latest(e);if(a)return "working";if(!r||r.status!=="completed")return "rest";if(["failure","timed_out","action_required"].includes(r.conclusion))return "failure";if(r.conclusion==="success"&&(e.celebrateUntil||0)>now())return "success";return "rest"}
+function state(e){const a=running(e),q=queued(e),r=latest(e);if(a)return "working";if(q)return "queued";if(!r||r.status!=="completed")return "rest";if(["failure","timed_out","action_required"].includes(r.conclusion))return "failure";if(r.conclusion==="success"&&(e.celebrateUntil||0)>now())return "success";return "rest"}
 function freshness(e){if(e?.error)return "No se pudo obtener";if(!e?.checkedAt)return "Consultando…";return now()-e.checkedAt<=STALE?"En vivo":"Desactualizado (hace "+mins(e.checkedAt)+" min)"}
 function paintRoom(room){
  const card=Array.from(document.querySelectorAll(".room[data-room-id]")).find(x=>x.dataset.roomId===room.id);if(!card)return;
- const e=entry(room),a=active(e),r=latest(e),s=state(e),status=card.querySelector("[data-repo-status]"),fresh=card.querySelector("[data-repo-freshness]"),bubble=card.querySelector("[data-repo-bubble]"),button=card.querySelector("[data-refresh-repo]");
+ const e=entry(room),a=running(e),q=queued(e),current=a||q,r=latest(e),s=state(e),status=card.querySelector("[data-repo-status]"),fresh=card.querySelector("[data-repo-freshness]"),bubble=card.querySelector("[data-repo-bubble]"),button=card.querySelector("[data-refresh-repo]");
  if(fresh)fresh.textContent=room.repository?freshness(e):"Sin repositorio";
  if(status){
-  status.dataset.kind=s==="working"?"running":s==="success"?"success":s==="failure"?"failure":"";
+  status.dataset.kind=s==="working"?"running":s==="queued"?"queued":s==="success"?"success":s==="failure"?"failure":"";
   if(!room.repository)status.textContent="Vincula un repositorio público.";
   else if(e?.error)status.textContent=e.error;
   else if(!e?.checkedAt)status.textContent="Esperando la primera consulta.";
   else if(a)status.textContent="Trabajando · "+(a.name||a.display_title||"GitHub Actions")+" · "+ago(a.run_started_at||a.created_at);
+  else if(q)status.textContent="En cola · "+(q.name||q.display_title||"GitHub Actions")+" · "+ago(q.created_at);
   else if(s==="success")status.textContent="Éxito · "+(r.name||r.display_title||"GitHub Actions");
   else if(s==="failure")status.textContent="Falló · "+(r.name||r.display_title||"GitHub Actions");
   else status.textContent=r?"Sin ejecuciones activas · última: "+(r.name||r.display_title||"GitHub Actions"):"Sin ejecuciones recientes. Descansando.";
   if(e?.checkedAt)status.textContent+=" · Datos de hace "+mins(e.fetchedAt||e.checkedAt)+" min";
  }
- if(bubble){bubble.hidden=!a;bubble.textContent=a?(a.name||a.display_title||"GitHub Actions"):""}
+ if(bubble){bubble.hidden=!current;bubble.textContent=current?(current.name||current.display_title||"GitHub Actions"):""}
  if(button){const wait=Math.max(0,(manualAt.get(room.repository)||0)-now());button.disabled=wait>0||busy||now()<ratePause||now()<backoff;button.textContent=wait?"Espera "+Math.ceil(wait/1000)+" s":"Actualizar"}
  card.querySelectorAll(".ag[data-agent-id]").forEach(worker=>{
   worker.classList.remove("st-w","st-t","st-a","st-r","is-success","is-failure","is-walking");
   const prev=worker.dataset.githubState||"rest";
   if(s==="working"){worker.classList.add("st-w");if(prev!=="working")worker.classList.add("is-walking")}
+  else if(s==="queued")worker.classList.add("st-a");
   else if(s==="success")worker.classList.add("st-r","is-success");
   else if(s==="failure")worker.classList.add("st-r","is-failure");
   else worker.classList.add("st-r");
   worker.dataset.githubState=s;
   const label=worker.querySelector('[data-status="true"]');
-  if(label)label.textContent=s==="working"?"Trabajando":s==="success"?"Éxito":s==="failure"?"Falló":"Descansando";
+  if(label)label.textContent=s==="working"?"Trabajando":s==="queued"?"En cola":s==="success"?"Éxito":s==="failure"?"Falló":"Descansando";
  });
  const count=card.querySelector(".room-count");if(count)count.textContent=room.agents.length+" "+(room.agents.length===1?"personaje":"personajes");
 }
 function paintSummary(){
- const linked=rooms.filter(x=>validRepo(x.repository)),unlinked=rooms.some(x=>!validRepo(x.repository)),states=linked.map(x=>state(entry(x))),working=states.filter(x=>x==="working").length,success=states.filter(x=>x==="success").length,failure=states.filter(x=>x==="failure").length;
+ const linked=rooms.filter(x=>validRepo(x.repository)),unlinked=rooms.some(x=>!validRepo(x.repository)),states=linked.map(x=>state(entry(x))),working=states.filter(x=>x==="working").length,queuedCount=states.filter(x=>x==="queued").length,success=states.filter(x=>x==="success").length,failure=states.filter(x=>x==="failure").length;
  const el=document.getElementById("summary-text");if(!el)return;
  if(!linked.length)el.textContent="Conecta repositorios de GitHub para ver actividad real.";else if(states.every(x=>x==="rest")&&unlinked)el.textContent="Hay proyectos sin repositorio vinculado; su estado real no se puede confirmar.";else if(states.every(x=>x==="rest"))el.textContent="Todos descansan por ahora.";
- else{const parts=[];if(working)parts.push(working+" "+(working===1?"proyecto trabajando":"proyectos trabajando"));if(success)parts.push(success+" "+(success===1?"éxito reciente":"éxitos recientes"));if(failure)parts.push(failure+" "+(failure===1?"proyecto con fallo":"proyectos con fallos"));el.textContent=parts.join(" · ")+"."}
+ else{const parts=[];if(working)parts.push(working+" "+(working===1?"proyecto trabajando":"proyectos trabajando"));if(queuedCount)parts.push(queuedCount+" "+(queuedCount===1?"proyecto en cola":"proyectos en cola"));if(success)parts.push(success+" "+(success===1?"éxito reciente":"éxitos recientes"));if(failure)parts.push(failure+" "+(failure===1?"proyecto con fallo":"proyectos con fallos"));el.textContent=parts.join(" · ")+"."}
 }
 function paintActivity(){
  if(!list)return;const all=[];
