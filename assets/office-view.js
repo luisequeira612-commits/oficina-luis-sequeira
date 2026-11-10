@@ -30,6 +30,8 @@ function openRoom(card){
  if(roles.length){
   roles.forEach((role,index)=>{
    const station=document.createElement("div");station.className="room-station";
+   const stateClass=Array.from(agents[index]?.classList||[]).find(className=>/^st-[wtar]$/.test(className));
+   if(stateClass)station.classList.add(stateClass);
    const desk=document.createElement("div");desk.className="room-desk";
    const screen=document.createElement("div");screen.className="room-screen";
    const chair=document.createElement("div");chair.className="room-chair";
