@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-54 -58 108 116" role="img" aria-label="Guardi">
+<ellipse cx="0" cy="2" rx="44" ry="50" fill="#136F8E"/>
+<ellipse cx="0" cy="-4" rx="44" ry="50" fill="#1F96BA"/>
+<ellipse cx="0" cy="25" rx="26" ry="19" fill="#F0A868"/>
+<ellipse cx="43" cy="14" rx="10" ry="25" transform="rotate(-10 43 14)" fill="#177C9C"/>
+<ellipse cx="-43" cy="14" rx="10" ry="25" transform="rotate(10 -43 14)" fill="#177C9C"/>
+<rect x="-38" y="-24" width="76" height="30" rx="15" fill="#1F2937"/>
+<path d="M-30 -31Q0 -42 30 -31" fill="none" stroke="#4FD0E8" stroke-width="8" stroke-linecap="round"/>
+<circle cx="-17" cy="-9" r="12" fill="#fff"/>
+<circle cx="17" cy="-9" r="12" fill="#fff"/>
+<circle cx="-17" cy="-8" r="6.5" fill="#111827"/>
+<circle cx="17" cy="-8" r="6.5" fill="#111827"/>
+<circle cx="-14.5" cy="-10.8" r="2.4" fill="#fff"/>
+<circle cx="19.5" cy="-10.8" r="2.4" fill="#fff"/>
+<path d="M-13 6Q0 0 13 6Q10 24 0 28Q-10 24-13 6Z" fill="#2D3748"/>
+<ellipse cx="-4" cy="11" rx="4.5" ry="2" fill="#4A5568"/>
+</svg>
