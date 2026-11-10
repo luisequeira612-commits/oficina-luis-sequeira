@@ -34,6 +34,8 @@ Las salas 3D se dibujan localmente con WebGL 2 y geometría procedural propia: e
 
 La vista general incorpora una capa de presentación CSS de bajo coste: retícula ambiental tenue, etiqueta de orientación y navegación de habitaciones numerada con acentos visuales. No añade geometría, efectos de iluminación física ni trabajo extra al renderizador WebGL; mantiene controles accesibles, adaptación móvil y respeto por movimiento reducido.
 
+Cada habitación del edificio conectado tiene ahora una entrada física orientada al pasillo central, con marco, dintel, placa de proyecto y alfombra de acceso generados como geometría procedural en WebGL 2. Los acentos ayudan a distinguir visualmente los espacios sin descargar modelos ni texturas.
+
 ## Fases
 
 - **Fase A:** simulación visual local y gestión de proyectos/personajes.
