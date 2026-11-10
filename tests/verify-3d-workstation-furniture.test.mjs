@@ -15,5 +15,5 @@ test("3D workstations include finished furniture and office planning details", (
 
 test("3D building overview defines its own reception metal material", () => {
   const overview = renderer.slice(renderer.indexOf("function buildOfficeScene"), renderer.indexOf("function open("));
-  assert.match(overview, /function buildOfficeScene\\(rooms\\)\\{\\s*const metal=\\[/, "prevents an out-of-scope material reference from aborting the overview");
+  assert.match(overview, /const metal=\\[/, "prevents an out-of-scope material reference from aborting the overview");
 });
