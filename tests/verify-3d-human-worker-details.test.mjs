@@ -84,3 +84,12 @@ test("minifigure heads have molded bevels, neck posts and separate short legs wi
   assert.match(renderer,/taperBox\(x-\.19,\.66,z\+\.83,\.34,\.31,\.40,\.34/);
   assert.match(renderer,/box\(x-\.19,\.352,z\+1\.00,\.325,\.035,\.435/);
 });
+
+
+test("3D view exposes measured render FPS instead of claiming the frame cap is device performance",()=>{
+  assert.match(renderer,/className="office-3d-fps"/);
+  assert.match(renderer,/Fotogramas por segundo medidos/);
+  assert.match(renderer,/fpsFrames\+\+/);
+  assert.match(renderer,/fpsFrames\*1000\/Math\.max\(1,timestamp-fpsWindowStart\)/);
+  assert.match(renderer,/measured>=30\?"good":measured>=24?"warn":"low"/);
+});

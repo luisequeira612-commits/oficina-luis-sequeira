@@ -590,3 +590,12 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Pruebas actualizadas: `verify-rest-routes.test.mjs`, `verify-3d-human-worker-details.test.mjs` y `verify-3d-worker-activity.test.mjs`. El workflow [42890087662](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42890087662) terminó validate y deploy en success.
 - Commits: [792c46bf](https://github.com/luisequeira612-commits/oficina-luis-sequeira/commit/792c46bf367cb940294ca5a18475cda959292ebe) (rutas y máquina), [006d3c85](https://github.com/luisequeira612-commits/oficina-luis-sequeira/commit/006d3c8531ee51098448101d39b6ddf5360eaa2c), [1c4e026d](https://github.com/luisequeira612-commits/oficina-luis-sequeira/commit/1c4e026d31602a206ba48495c9a2417e9b8e2ab4), [846b7156](https://github.com/luisequeira612-commits/oficina-luis-sequeira/commit/846b7156c64be1e70f49f18cf0dea8479c3edefc) (regresiones), y [dd3fe549](https://github.com/luisequeira612-commits/oficina-luis-sequeira/commit/dd3fe5497a0d06f7b0610ec1da8387ed54e9b825) (cache-bust v63).
 - Fuente: inspección de la geometría, rutas, pruebas y workflow, 2026-11-10.
+
+
+## Medidor de rendimiento real en pantalla — 10 de noviembre de 2026
+
+- Se añadió un indicador discreto de FPS en la vista 3D. Cuenta los frames efectivamente renderizados en ventanas de aproximadamente un segundo y presenta el resultado medido; no reutiliza el límite de 32 ms ni lo presenta como rendimiento real.
+- El indicador cambia de tono según el resultado: verde desde 30 FPS, amarillo entre 24 y 29, rojo por debajo de 24. La etiqueta no interrumpe tecnologías de asistencia (aria-live=off).
+- Se conserva el renderer WebGL2, el buffer compartido, los controles y el límite de cadencia existentes. No se añadieron dependencias, servicios, APIs, backend ni cambios de almacenamiento.
+- Se añadió prueba de regresión para el cálculo y los umbrales; el motor cambia a office-3d.js?v=64 para evitar caché antigua.
+- Fuente: assets/office-3d.js, assets/office-view.css, index.html y tests/verify-3d-human-worker-details.test.mjs, 2026-11-10.
