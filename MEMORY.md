@@ -449,3 +449,12 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Las ejecuciones intermedias fallaron de forma útil: primero por el segundo error de sintaxis y después porque el test todavía esperaba v48. Corregidos ambos, Actions run [42860316534](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42860316534) terminó `completed/success`: validación y despliegue de GitHub Pages exitosos, 2026-11-10 17:00:21 UTC.
 - No se ha verificado todavía la experiencia visual en el Tecno Pova 4. El usuario debe volver a probar únicamente ahora que el despliegue está confirmado; si persiste, pedir captura o mensaje exacto y seguir con diagnóstico del navegador publicado.
 - Fuente: `assets/office-3d.js`, `index.html`, `tests/verify-3d-script-loading.test.mjs`, `.github/workflows/pages.yml` y logs del workflow, 2026-11-10.
+
+## Error de ejecución workerTags — 10 de noviembre de 2026
+
+- Tras la corrección de sintaxis del motor 3D, el usuario reportó `TypeError: workerTags.forEach is not a function`.
+- Causa confirmada en `assets/office-3d.js`: `workerTags` es un elemento DOM (`div.office-worker-tags`), pero `mountWorkerStateBubbles()` lo trataba como un array y llamaba `workerTags.forEach()`. Se cambió a `workerTags.querySelectorAll(".office-worker-tag").forEach(...)`, recorriendo los botones reales dentro del contenedor.
+- Commits directos a `main`: [36a1cda2](https://github.com/luisequeira612-commits/oficina-luis-sequeira/commit/36a1cda22c6fc60669f70d74fbe941e34b79c144) (fix), [6526262c](https://github.com/luisequeira612-commits/oficina-luis-sequeira/commit/6526262cfe3d243b288954e326aedfe3799cd18d) (cache bust v51), [68e95b29](https://github.com/luisequeira612-commits/oficina-luis-sequeira/commit/68e95b29bf8f4a91e415bd404477e321d58164a8) (regression test).
+- Se añadió prueba para exigir que el código recorra los elementos `.office-worker-tag` del contenedor y rechace el uso de `workerTags.forEach`.
+- Pendiente al registrar: resultado de GitHub Actions y despliegue Pages del último commit; no declarar corregido en producción hasta confirmar validate/deploy.
+- Fuente: reporte de error del usuario y lectura del motor/test en `main`, 2026-11-10.
