@@ -120,3 +120,12 @@
 - Un observador de clases sincroniza los cambios de estado de las tarjetas con las animaciones 3D mientras la habitación permanece abierta; al cerrar la escena se liberan recursos y callbacks.
 - No cambia el balance global mujer/hombre, los datos persistentes, `localStorage`, ni se añade dependencia o servicio externo. Los estados continúan siendo simulación visual.
 - Fuente: revisión del flujo DOM y renderizador WebGL 2 del repositorio, 2026-11-10.
+
+
+## Vista general 3D con habitaciones conectadas — 10 de noviembre de 2026
+- La vista principal de la Oficina incorpora un edificio 3D compuesto por las habitaciones de los proyectos actuales, dispuestas junto a un pasillo común. Cada habitación reutiliza su escena detallada con escritorios, equipos y trabajadores; el pasillo conecta los frentes abiertos.
+- La cámara global permite orbitar, acercar/alejar y desplazar; los controles de entrada permiten abrir directamente cada habitación en su escena individual. La navegación sigue disponible mediante el mapa CSS si WebGL 2 no se inicia.
+- La geometría se compone localmente a partir de las habitaciones existentes; no se descargan modelos ni bibliotecas, no se añade dependencia, API o servicio de pago.
+- La vista general reutiliza los estados y apariencias actuales de los trabajadores y se reconstruye solo cuando cambia la lista de proyectos; los cambios de estado siguen sincronizándose sin recrear toda la escena.
+- No se modifican `localStorage`, `oficina-luis-sequeira-v1`, registros de proyectos/agentes ni esquemas persistentes. La prueba en el Tecno Pova 4 sigue pendiente.
+- Fuente: implementación del repositorio y dirección visual confirmada por el usuario, 2026-11-10.
