@@ -24,6 +24,7 @@ test("polling is staggered, adaptive, visibility-aware and throttled",()=>{
 test("the separate cache preserves project storage and ETags",()=>{
  assert.match(js,/oficina-luis-sequeira-github-cache-v1/);
  assert.match(js,/e\.etag/);
+ assert.match(js,/mins\(e\.fetchedAt\|\|e\.checkedAt\)/);
  assert.match(html,/oficina-luis-sequeira-v1/);
 });
 test("only GitHub run data controls labels; decoration is disclosed",()=>{
