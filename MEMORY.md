@@ -210,3 +210,11 @@
 - No cambia la cámara, trabajadores, proyectos, estados, almacenamiento local ni esquema persistente; la alternativa CSS permanece intacta.
 - Prueba nueva: `tests/verify-3d-workstation-furniture.test.mjs`.
 - Fuente: cambios del renderer y pruebas del repositorio, 2026-11-10.
+
+
+## Corrección de regresión — restaurar vista general 3D — 10 de noviembre de 2026
+- Se detectó que `buildOfficeScene()` usaba el identificador `metal` del mostrador de recepción sin declararlo en su propio ámbito. Ese identificador solo existía dentro de `buildScene()`; el error era capturado por el renderer y provocaba que `renderMap()` mostrara silenciosamente el mapa CSS alternativo.
+- Se declara el material local dentro de `buildOfficeScene()`, restaurando la construcción de la vista general 3D con recepción.
+- Prueba de regresión comprueba el ámbito del material.
+- No se modifica cámara, datos, almacenamiento local, habitaciones ni el renderer de interiores.
+- Fuente: inspección estática de `assets/office-3d.js`, 2026-11-10.

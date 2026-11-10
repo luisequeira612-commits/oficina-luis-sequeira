@@ -218,6 +218,7 @@ function buildScene(workers,roomName=""){
  return {data,basePositions,workerRanges,count:positions.length/3,positionLength:positions.length,normalLength:normals.length};
 }
 function buildOfficeScene(rooms){
+ const metal=[0.22,0.28,0.34];
  const cols=rooms.length>1?2:1,rows=Math.ceil(rooms.length/cols),scenes=rooms.map(room=>buildScene(room.workers||[],room.name||"")),positions=[],normals=[],colors=[],workerRanges=[];
  let workerOffset=0;
  scenes.forEach((scene,index)=>{

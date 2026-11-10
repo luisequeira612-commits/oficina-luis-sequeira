@@ -61,3 +61,8 @@ Las salas incorporan pilares estructurales en las esquinas, capiteles y basament
 ## Mobiliario y detalles de oficina 3D
 
 Las estaciones de trabajo incorporan cajoneras de dos niveles, bandejas de cableado bajo el escritorio, apoyabrazos y soportes de silla, además de rejillas frontales e indicadores en las torres de PC. Una pizarra mural con notas de colores aporta un punto de planificación compartida. Todo se genera con la geometría procedural existente; no añade modelos, texturas, dependencias ni servicios externos. La escena conserva sus datos, cámara y alternativa CSS.
+
+
+## Recuperación de la vista general 3D
+
+El constructor de la vista general declara sus propios materiales geométricos, incluido el material metálico de recepción. Esto evita que un identificador local de la habitación se use fuera de ámbito y que el renderer active silenciosamente la vista alternativa.
