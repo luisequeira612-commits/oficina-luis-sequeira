@@ -66,8 +66,8 @@ test("FPS meter remains measured and cache versions are current",()=>{
 });
 
 test("3D renderer pauses while the document is hidden and resumes when visible",()=>{
- assert.match(renderer,/function render\(timestamp=0\)\{if\(disposed\)return;raf=0;if\(document\.hidden\)return;/);
- assert.match(renderer,/const onVisibilityChange=\(\)=>\{if\(document\.hidden\)\{if\(raf\)cancelAnimationFrame\(raf\);raf=0;fpsFrames=0;fpsWindowStart=0\}else if\(!disposed&&!raf\)\{raf=requestAnimationFrame\(render\)\}\}/);
+ assert.match(renderer,/function render\(timestamp=0\)\{if\(disposed\|\|contextLost\)return;raf=0;if\(document\.hidden\)return;/);
+ assert.match(renderer,/const onVisibilityChange=\(\)=>\{if\(document\.hidden\)\{if\(raf\)cancelAnimationFrame\(raf\);raf=0;fpsFrames=0;fpsWindowStart=0\}else if\(!disposed&&!contextLost&&!raf\)\{raf=requestAnimationFrame\(render\)\}\}/);
  assert.match(renderer,/document\.addEventListener\("visibilitychange",onVisibilityChange\)/);
  assert.match(renderer,/document\.removeEventListener\("visibilitychange",onVisibilityChange\)/);
 });
