@@ -18,7 +18,7 @@ test("GitHub live keeps conditional ETag polling and recent commits",()=>{
  assert.match(live,/If-None-Match/);assert.match(live,/commits\?per_page=5/);assert.match(live,/commitsEtag/);assert.match(live,/taskHistory/);assert.match(live,/assignedAgent/);assert.match(live,/runAssignments/);
 });
 test("GitHub activity assigns one worker per active run and keeps history",()=>{
- assert.match(live,/const assignedId=assignedAgent\(room,e\)/);assert.match(live,/historyForAgent\(room,e,assignedId\)/);
+ assert.match(live,/const assignedId=assignedAgent\(room,e\)/);assert.match(live,/historyForAgent\(room,e,assignedId\)/);assert.match(live,/x\.agentId===agentId/);assert.match(live,/Number\(x\.runId\|\|0\)%ids\.length===index/);assert.doesNotMatch(live,/latestCommits\(e\)\.map\(commit=>\(\{name:commit\.message/);
  assert.match(live,/recordCompletedRuns\(room,e,previousRuns\)/);assert.match(live,/Sin conexión a GitHub/);assert.match(live,/Sin conexión con GitHub/);assert.match(live,/error de red/);assert.match(live,/agentId=assignments\[key\]||null/);
 });
 test("commit polling also runs after a 304 workflow validation",()=>{
