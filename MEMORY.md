@@ -326,3 +326,14 @@
 - No modifica cámara, personajes, estados reales, integración de GitHub Actions, datos ni almacenamiento persistente. Se conserva la alternativa CSS.
 - Se añade `tests/verify-3d-contact-shadows.test.mjs` y se actualiza la versión de caché del renderer a v39.
 - Fuente: cambio procedural en `assets/office-3d.js` y prueba de regresión, 2026-11-10.
+
+
+## PR #40 — oficina abierta Tycoon con nueve empleados identificados — 10 de noviembre de 2026
+
+- Reorganiza la vista general 3D en una única oficina abierta con nueve puestos distribuidos en tres filas de tres, en lugar de mostrar cada proyecto como una mini-habitación aislada. Se conservan los accesos a las habitaciones de proyecto.
+- Añade nueve empleados ficticios con nombre propio y metadatos de género, tono de piel, cabello y ropa; reparto 5 mujeres / 4 hombres. Nombres: Valeria, Mateo, Camila, Diego, Aisha, Noah, Mei, Amir y Elena.
+- La migración es aditiva y mantiene `oficina-luis-sequeira-v1`, sus claves y versión. No elimina proyectos ni empleados existentes. La plantilla de nueve se asigna entre las cuatro salas iniciales.
+- Incorpora una barra inferior desplazable con nombres y roles; tocar una persona abre su habitación/proyecto. Mantiene los estados reales de GitHub Actions y las animaciones decorativas diferenciadas.
+- Sin dependencias, modelos/texturas externas, APIs, backend ni servicios de pago. Renderer procedural WebGL 2, fallback CSS y controles móviles preservados.
+- Añade comprobaciones de regresión para migración, plantilla, renderizado abierto y barra de empleados.
+- Fuente: petición explícita del usuario y referencia visual suministrada, 2026-11-10.

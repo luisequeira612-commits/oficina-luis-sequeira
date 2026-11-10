@@ -65,8 +65,8 @@ footer{max-width:1040px;margin:0 auto;padding:0 16px 24px;color:var(--muted);fon
 @media(min-width:680px){.rooms{grid-template-columns:repeat(2,minmax(0,1fr))}.summary{padding:14px 16px}}
 @media(prefers-reduced-motion:reduce){.ag *{animation:none!important}}
 </style>
-<link rel="stylesheet" href="assets/office-view.css?v=34">
-<link rel="stylesheet" href="assets/human-workers.css?v=34">
+<link rel="stylesheet" href="assets/office-view.css?v=40">
+<link rel="stylesheet" href="assets/human-workers.css?v=40">
 <link rel="stylesheet" href="assets/github-live.css">
 </head>
 <body>
@@ -343,26 +343,47 @@ const errorEl=document.getElementById("project-error");
 function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify({version:1,rooms}))}catch(_){/* Storage may be unavailable; the page remains usable. */}}
 function applyMigrations(){
  try{
-  if(localStorage.getItem(MIGRATION_KEY)==="babymonster-chart-v1")return;
-  const exists=rooms.some(room=>room.name==="BABYMONSTER Chart"||room.repository==="luisequeira612-commits/monstie-charts.");
-  if(!exists){
-   rooms.push({id:makeId(),name:"BABYMONSTER Chart",repository:"luisequeira612-commits/monstie-charts.",agents:["Escritor","Community"].map(role=>({id:makeId(),role,source:null}))});
-   save();
+  if(localStorage.getItem(MIGRATION_KEY)!=="babymonster-chart-v1"){
+   const exists=rooms.some(room=>room.name==="BABYMONSTER Chart"||room.repository==="luisequeira612-commits/monstie-charts.");
+   if(!exists)rooms.push({id:makeId(),name:"BABYMONSTER Chart",repository:"luisequeira612-commits/monstie-charts.",agents:["Escritor","Community"].map(role=>({id:makeId(),role,source:null}))});
+   localStorage.setItem(MIGRATION_KEY,"babymonster-chart-v1");
   }
-  localStorage.setItem(MIGRATION_KEY,"babymonster-chart-v1");
+  if(localStorage.getItem(MIGRATION_KEY+"-employees")!=="nine-named-employees-v1"){
+   const roster=[
+    ["Valeria","woman","light","long","coral"],
+    ["Mateo","man","medium","short","blue"],
+    ["Camila","woman","deep","curly","teal"],
+    ["Diego","man","light","short","mustard"],
+    ["Aisha","woman","deep","tied","plum"],
+    ["Noah","man","light","curly","blue"],
+    ["Mei","woman","light","tied","coral"],
+    ["Amir","man","medium","short","teal"],
+    ["Elena","woman","medium","long","mustard"]
+   ];
+   const assignments={"App Guardi":[0,1,2],"Canal de YouTube":[3,4],"Tema Nova Launcher":[5],"BABYMONSTER Chart":[6,7,8]};
+   Object.entries(assignments).forEach(([roomName,indices])=>{
+    const room=rooms.find(item=>item.name===roomName);if(!room)return;
+    indices.forEach((rosterIndex,slot)=>{
+     if(!room.agents[slot]&&room.agents.length<6)room.agents.push({id:makeId(),role:rosterIndex===8?"Desarrollo":"Diseño",source:null});
+     const agent=room.agents[slot];if(agent){const [name,gender,skinTone,hair,shirt]=roster[rosterIndex];agent.name=agent.name||name;agent.gender=agent.gender||gender;agent.skinTone=agent.skinTone||skinTone;agent.hair=agent.hair||hair;agent.shirt=agent.shirt||shirt}
+    });
+   });
+   save();localStorage.setItem(MIGRATION_KEY+"-employees","nine-named-employees-v1");
+  }
  }catch(_){/* A failed migration can be retried on the next page load. */}
 }
 function stateFor(id){if(!states.has(id))states.set(id,"r");return states.get(id)}
 function updateSummary(){if(window.OfficeGitHubLive)window.OfficeGitHubLive.paintSummary()}
 function makeCharacter(agent){
  const wrap=document.createElement("div");wrap.className="ag";wrap.dataset.agentId=agent.id;
+ wrap.dataset.employeeName=agent.name||agent.role;wrap.dataset.employeeGender=agent.gender||"person";wrap.dataset.skinTone=agent.skinTone||"medium";wrap.dataset.hair=agent.hair||"short";wrap.dataset.shirt=agent.shirt||"blue";
  const state=stateFor(agent.id);
  wrap.classList.add(STATES[state][0]);
  const holder=document.createElement("div");
  holder.innerHTML=CHARACTER_SVG[agent.role];
  const svg=holder.firstElementChild;
  wrap.appendChild(svg);
- const role=document.createElement("div");role.className="agent-role";role.textContent=agent.role;wrap.appendChild(role);
+ wrap.dataset.agentRole=agent.role;const role=document.createElement("div");role.className="agent-role";role.textContent=(agent.name||agent.role)+" · "+agent.role;wrap.appendChild(role);
  const status=document.createElement("div");status.className="agent-state";status.textContent=STATES[state][1];status.dataset.status="true";wrap.appendChild(status);
  const remove=document.createElement("button");remove.type="button";remove.className="agent-remove";remove.textContent="×";remove.setAttribute("aria-label","Quitar personaje "+agent.role);remove.title="Quitar personaje";
  remove.addEventListener("click",()=>removeAgent(agent.id,agent.role));
@@ -441,8 +462,8 @@ render();
 window.OfficeGitHubLive.start(rooms);
 })();
 </script>
-<script src="assets/human-workers.js?v=34" defer></script>
-<script src="assets/office-3d.js?v=39" defer></script>
-<script src="assets/office-view.js?v=34" defer></script>
+<script src="assets/human-workers.js?v=40" defer></script>
+<script src="assets/office-3d.js?v=40" defer></script>
+<script src="assets/office-view.js?v=40" defer></script>
 </body>
 </html>
