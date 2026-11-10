@@ -224,7 +224,7 @@ function buildScene(workers,roomName=""){
     // Small printed state markers remain separate from real GitHub activity labels.
   if(worker.state==="st-w"){box(x-.22,1.16,z+.47,.2,.18,.2,skin);box(x+.22,1.16,z+.47,.2,.18,.2,skin)}
   else if(worker.state==="st-a"){sphere(x+.44,2.55,z+.95,.13,.13,.13,[.98,.78,.25],7,5)}
-  else if(worker.state==="st-a"){sphere(x,2.62,z+.96,.11,.11,.11,[.24,.78,.88],7,5)}
+  else if(worker.state==="st-t"){sphere(x,2.62,z+.96,.11,.11,.11,[.24,.78,.88],7,5)}
   else if(worker.state==="st-s"){sphere(x-.34,2.62,z+.96,.08,.08,.08,[.98,.78,.22],7,5);sphere(x+.34,2.62,z+.96,.08,.08,.08,[.98,.78,.22],7,5)}
   else if(worker.state==="st-f"){box(x-.38,2.55,z+.96,.1,.3,.1,[.86,.16,.22]);sphere(x-.38,2.32,z+.96,.07,.07,.07,[.86,.16,.22],7,5)}
   const bodyEnd=positions.length;
