@@ -347,3 +347,11 @@
 - La lista inferior permanece como alternativa accesible. No se cambian datos guardados, estados GitHub Actions, renderer, APIs ni dependencias.
 - Añade prueba de regresión para proyección, selección y resaltado.
 - Fuente: petición explícita del usuario, 2026-11-10.
+
+
+## Ajuste de selección en WebGL — 10 de noviembre de 2026
+
+- Al revisar el flujo de selección de PR #41 se detectó que el resaltado dorado inicial solo se aplicaba a la alternativa CSS; cuando WebGL 2 estaba activo, el fallback quedaba oculto.
+- La corrección pasa la identidad seleccionada al renderer y añade un disco/anillo dorado procedural y discreto en el suelo del puesto seleccionado, visible en la escena WebGL 2 real.
+- No cambia persistencia, navegación, estados GitHub Actions ni dependencias.
+- Fuente: inspección posterior a PR #41, 2026-11-10.
