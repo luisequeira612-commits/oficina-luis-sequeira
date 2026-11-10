@@ -246,4 +246,12 @@
 - Se guardan ETag, `X-RateLimit-Remaining`, `X-RateLimit-Reset`, y estado de pausa/retroceso; menos de diez solicitudes pausa hasta reset, 403/429 usan retroceso exponencial, 404 se consulta con menor frecuencia. Respuesta 304 conserva los datos y actualiza la hora de validación; la cuota se decide por los encabezados reales, no por una suposición de consumo cero.
 - Los estados visibles Trabajando/Éxito/Falló/Descansando proceden de los workflow runs. Las animaciones ambientales son decoración y no representan ejecución real. Panel de actividad reciente muestra workflow y hora relativa. Se retira la consulta independiente de PR del panel para cumplir una sola petición de datos por repositorio.
 - Precisión documental importante: la guía oficial de GitHub especifica que la exención de cuota para 304 condicional requiere solicitud correctamente autenticada con Authorization. Como la implementación no usa token, no se afirma que un 304 anónimo sea gratuito. Fuente: https://docs.github.com/en/rest/using-the-rest-api/best-practices-for-using-the-rest-api y https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api (consultadas 2026-11-10).
-- Rama: `feat/github-actions-live-adaptive`; PR aún por abrir y validar.
+- PR [#29](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/29) fusionado mediante squash el 10 de noviembre de 2026. Merge commit: `758c94429f8312da8db930da070b8c72eee48f5c`. CI del PR [42793190606](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42793190606): validate success. Workflow post-merge [42793239078](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42793239078): validate success; deploy Pages estaba en curso al registrar esta nota.
+
+
+## PR #30 — resumen honesto para proyectos sin repositorio — 10 de noviembre de 2026
+
+- PR [#30](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/30) en revisión.
+- Si hay proyectos sin repositorio vinculado, la Oficina no afirma que todos descansan cuando los repositorios conectados están inactivos; indica que esos proyectos no tienen estado real verificable. Si todos están vinculados y ninguno activo, mantiene «Todos descansan por ahora».
+- Cambio limitado a `assets/github-live.js` y su prueba de regresión; README y MEMORY documentan el ajuste.
+- Fuente: corrección derivada de la revisión de PR #29, 2026-11-10.

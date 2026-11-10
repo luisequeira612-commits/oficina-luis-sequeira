@@ -46,9 +46,9 @@ function paintRoom(room){
  const count=card.querySelector(".room-count");if(count)count.textContent=room.agents.length+" "+(room.agents.length===1?"personaje":"personajes");
 }
 function paintSummary(){
- const linked=rooms.filter(x=>validRepo(x.repository)),states=linked.map(x=>state(entry(x))),working=states.filter(x=>x==="working").length,success=states.filter(x=>x==="success").length,failure=states.filter(x=>x==="failure").length;
+ const linked=rooms.filter(x=>validRepo(x.repository)),unlinked=rooms.some(x=>!validRepo(x.repository)),states=linked.map(x=>state(entry(x))),working=states.filter(x=>x==="working").length,success=states.filter(x=>x==="success").length,failure=states.filter(x=>x==="failure").length;
  const el=document.getElementById("summary-text");if(!el)return;
- if(!linked.length)el.textContent="Conecta repositorios de GitHub para ver actividad real.";else if(states.every(x=>x==="rest"))el.textContent="Todos descansan por ahora.";
+ if(!linked.length)el.textContent="Conecta repositorios de GitHub para ver actividad real.";else if(states.every(x=>x==="rest")&&unlinked)el.textContent="Hay proyectos sin repositorio vinculado; su estado real no se puede confirmar.";else if(states.every(x=>x==="rest"))el.textContent="Todos descansan por ahora.";
  else{const parts=[];if(working)parts.push(working+" "+(working===1?"proyecto trabajando":"proyectos trabajando"));if(success)parts.push(success+" "+(success===1?"éxito reciente":"éxitos recientes"));if(failure)parts.push(failure+" "+(failure===1?"proyecto con fallo":"proyectos con fallos"));el.textContent=parts.join(" · ")+"."}
 }
 function paintActivity(){
