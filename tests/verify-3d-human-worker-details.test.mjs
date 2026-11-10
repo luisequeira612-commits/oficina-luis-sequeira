@@ -44,3 +44,13 @@ test("pointer controls do not depend on free-orbit drag state", () => {
   assert.match(renderer, /canvas\.addEventListener\("pointerdown",e=>\{canvas\.setPointerCapture/);
   assert.doesNotMatch(renderer, /last=\{x:e\.clientX,y:e\.clientY\}/);
 });
+
+
+test("minifigures have a visible top stud, molded C-grip hands and vivid glossy plastic",()=>{
+  assert.match(renderer,/let studY=2\.49/);
+  assert.match(renderer,/cyl\(x,studY,z\+\.99,\.135,\.12,skin,16\)/);
+  assert.match(renderer,/for\(let k=0;k<=8;k\+\+\).*Math\.PI\*1\.5\/8/);
+  assert.match(renderer,/box\(x-\.52,1\.19,z\+\.72,\.22,\.22,\.34,shirt\)/);
+  assert.match(renderer,/shirts=\[\[0\.04,0\.30,0\.86\]/);
+  assert.match(renderer,/\),40\.0\)\*0\.24/);
+});

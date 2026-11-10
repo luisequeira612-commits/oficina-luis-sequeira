@@ -478,3 +478,12 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - No cambia oficina-luis-sequeira-v1, no hay escritura remota, autenticación, backend, dependencias ni llamadas adicionales a GitHub. La exportación es manual y el usuario debe actualizar los dos JSON desde GitHub.
 - Prueba de regresión añadida en tests/verify-editable-office-data.test.mjs para proteger el formato y la preservación de tareas.json.
 - Fuente: cambios en index.html y pruebas, 2026-11-10.
+
+
+## Refuerzo visual de minifiguras — 10 de noviembre de 2026
+
+- Se reforzó el aspecto de juguete de construcción: paleta de torso más saturada (azul, rojo, verde, amarillo y violeta), brillo especular más marcado, torso trapezoidal con impresión frontal de cuello/costuras, brazos doblados en L y manos con geometría de agarre en C.
+- Se aumentó la definición de las cabezas cilíndricas y se hizo visible un stud superior separado del cabello, con altura adaptada a los estilos corto, rizado, largo y recogido. Se mantienen diversidad de tonos de piel, cabello y accesorios originales.
+- Se conservan el renderer WebGL2 propio, las geometrías y rangos de animación existentes, el esquema local, la cámara y la interfaz. No se incorporan modelos, texturas, dependencias ni assets externos; no son modelos oficiales LEGO.
+- Se añadió regresión para el stud, las manos C, los brazos y el acabado plástico. Cache-bust del motor a v53.
+- Fuente: `assets/office-3d.js`, `index.html` y `tests/verify-3d-human-worker-details.test.mjs`, 2026-11-10.
