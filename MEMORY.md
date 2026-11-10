@@ -290,3 +290,11 @@
 - No se añaden dependencias, modelos, texturas, APIs, backend ni servicios de pago. Se conserva `oficina-luis-sequeira-v1` y su esquema.
 - Se añade `tests/verify-3d-worker-activity.test.mjs` para cubrir los rangos de postura y la diferenciación por estado.
 - Fuente: cambios de `assets/office-3d.js` y prueba de regresión, 2026-11-10.
+
+
+## PR — ciclo de paseo ambiental acotado — 10 de noviembre de 2026
+- Los trabajadores en estado de espera/en cola reciben un pequeño ciclo de paseo ambiental dentro de su zona de trabajo, con desplazamiento lateral y frontal muy limitado, balanceo de brazos y pasos sutiles.
+- El movimiento es puramente visual y no altera el estado real de GitHub Actions. Los estados Trabajando, Éxito y Fallo conservan sus animaciones anteriores.
+- No se añaden dependencias, modelos externos, APIs ni cambios de persistencia. El movimiento sigue desactivado cuando el usuario activa reduced-motion.
+- Se añade `tests/verify-3d-idle-walk.test.mjs`.
+- Fuente: `assets/office-3d.js` y prueba de regresión, 2026-11-10.
