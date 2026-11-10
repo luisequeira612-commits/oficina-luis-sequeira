@@ -69,6 +69,7 @@ function paintRoom(room){
   worker.classList.remove("st-w","st-t","st-a","st-r","is-success","is-failure","is-walking");
   const prev=worker.dataset.githubState||"rest",isAssigned=worker.dataset.agentId===assignedId;
   worker.dataset.taskHistory=JSON.stringify(isAssigned?historyForAgent(room,e,assignedId):[]);
+  worker.dataset.currentTask=isAssigned&&current?(current.name||current.display_title||("Ejecución GitHub #"+current.id)):"";
   const workerState=isAssigned?s:"rest";
   if(workerState==="working"){worker.classList.add("st-w");if(prev!=="working")worker.classList.add("is-walking")}
   else if(workerState==="queued")worker.classList.add("st-a");
