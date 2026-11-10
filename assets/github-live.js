@@ -105,7 +105,7 @@ function paintActivity(){
 }
 function paintNotice(){
  if(!notice)return;
- if(navigator.onLine===false){notice.hidden=false;notice.textContent="Sin conexión a GitHub. Se conserva la última información disponible.";return}
+ if(navigator.onLine===false||rooms.some(room=>/Sin conexión|error de red/i.test(entry(room)?.error||""))){notice.hidden=false;notice.textContent="Sin conexión con GitHub. Se conserva la última información disponible.";return}
  const until=Math.max(ratePause,backoff);
  if(until>now()){notice.hidden=false;notice.textContent=ratePause>now()?"Límite de GitHub alcanzado, reintenta a las "+at(until):"GitHub rechazó la consulta; reintento automático a las "+at(until)+"."}
  else{notice.hidden=true;notice.textContent=""}
@@ -165,12 +165,12 @@ async function request(room){
     if(cr.status===304){e.commitsCheckedAt=now()}
     else if(cr.ok){
      const cd=await cr.json();
-     if(Array.isArray(cd)){e.commits=cd.slice(0,5).map(item=>({sha:item.sha,message:String(item.commit?.message||"").split("\\n")[0],author:item.commit?.author?.name||item.author?.login||"Autor",date:item.commit?.author?.date||item.commit?.committer?.date||"",url:item.html_url||""}));e.commitsEtag=cr.headers.get("ETag")||e.commitsEtag;e.commitsCheckedAt=now()}
+     if(Array.isArray(cd)){e.commits=cd.slice(0,5).map(item=>({sha:item.sha,message:String(item.commit?.message||"").split(/\\r?\\n/)[0],author:item.commit?.author?.name||item.author?.login||"Autor",date:item.commit?.author?.date||item.commit?.committer?.date||"",url:item.html_url||""}));e.commitsEtag=cr.headers.get("ETag")||e.commitsEtag;e.commitsCheckedAt=now()}
     }
    }catch(_){/* Workflow status remains usable if commit endpoint is unavailable. */}
    cache[room.repository]=e;save();
   }
- }catch(error){e.error=navigator.onLine===false?"Sin conexión a GitHub.":"No se pudo obtener información de GitHub.";cache[room.repository]=e;save()}
+ }catch(error){e.error=navigator.onLine===false?"Sin conexión a GitHub.":"No se pudo conectar con GitHub o hubo un error de red.";cache[room.repository]=e;save()}
  finally{
   busy=false;const current=rooms.find(x=>x.id===room.id&&x.repository===room.repository);
   if(current)plan(room,active(cache[room.repository])?ACTIVE_GAP:idleGap());
