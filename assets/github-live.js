@@ -1,6 +1,7 @@
 (function(){
 "use strict";
 const KEY="oficina-luis-sequeira-github-cache-v1",ROOT="https://api.github.com/repos/";
+const COMMITS_KEY="commits";
 const IDLE_CYCLE=240000,GLOBAL_GAP=60000,ACTIVE_GAP=60000,MANUAL_GAP=15000,STALE=120000;
 let rooms=[],cache={},due=new Map(),manualAt=new Map(),timer=0,busy=false,started=false,lastRequest=0,backoff=0,backoffCount=0,ratePause=0,rateRemaining=null,rateReset=0;
 const list=document.getElementById("github-activity-list"),notice=document.getElementById("github-rate-notice");
@@ -15,6 +16,7 @@ function running(e){return (e?.runs||[]).find(x=>x.status==="in_progress")||null
 function queued(e){return (e?.runs||[]).find(x=>x.status==="queued")||null}
 function active(e){return running(e)||queued(e)}
 function latest(e){return (e?.runs||[])[0]||null}
+function latestCommits(e){return Array.isArray(e?.commits)?e.commits:[]}
 function state(e){const a=running(e),q=queued(e),r=latest(e);if(a)return "working";if(q)return "queued";if(!r||r.status!=="completed")return "rest";if(["failure","timed_out","action_required"].includes(r.conclusion))return "failure";if(r.conclusion==="success"&&(e.celebrateUntil||0)>now())return "success";return "rest"}
 function freshness(e){if(e?.error)return "No se pudo obtener";if(!e?.checkedAt)return "Consultando…";return now()-e.checkedAt<=STALE?"En vivo":"Desactualizado (hace "+mins(e.checkedAt)+" min)"}
 function paintRoom(room){
@@ -38,6 +40,7 @@ function paintRoom(room){
  card.querySelectorAll(".ag[data-agent-id]").forEach(worker=>{
   worker.classList.remove("st-w","st-t","st-a","st-r","is-success","is-failure","is-walking");
   const prev=worker.dataset.githubState||"rest";
+  const taskHistory=[...(e?.runs||[]),...(e?.commits||[]).map(commit=>({name:commit.message,updated_at:commit.date,status:"commit"}))].sort((x,y)=>new Date(y.updated_at||y.date||0)-new Date(x.updated_at||x.date||0)).slice(0,3).map(item=>item.name||"Actividad de GitHub");worker.dataset.taskHistory=JSON.stringify(taskHistory);
   if(s==="working"){worker.classList.add("st-w");if(prev!=="working")worker.classList.add("is-walking")}
   else if(s==="queued")worker.classList.add("st-a");
   else if(s==="success")worker.classList.add("st-r","is-success");
@@ -100,7 +103,7 @@ async function request(room){
  if(busy||document.visibilityState==="hidden")return;
  if(now()<ratePause||now()<backoff){paint();schedule(Math.max(1000,Math.min(ratePause||Infinity,backoff||Infinity)-now()));return}
  const wait=GLOBAL_GAP-(now()-lastRequest);if(wait>0){schedule(wait);return}
- const e=cache[room.repository]||{runs:[],etag:"",checkedAt:0},headers={Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"};
+ const e=cache[room.repository]||{runs:[],commits:[],etag:"",commitsEtag:"",checkedAt:0},headers={Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"};
  if(e.etag)headers["If-None-Match"]=e.etag;
  busy=true;lastRequest=now();paint();
  try{
@@ -119,6 +122,9 @@ async function request(room){
    const previousId=e.runs?.[0]?.id;e.runs=data.workflow_runs.slice(0,5);const newest=e.runs[0];
    if(newest&&newest.id!==previousId&&newest.status==="completed"&&newest.conclusion==="success")e.celebrateUntil=now()+7000;
    e.etag=response.headers.get("ETag")||e.etag||"";e.checkedAt=now();e.fetchedAt=now();delete e.error;
+   cache[room.repository]=e;save();backoffCount=0;backoff=0;
+   const commitHeaders={Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"};if(e.commitsEtag)commitHeaders["If-None-Match"]=e.commitsEtag;
+   try{const cr=await fetch(ROOT+room.repository+"/commits?per_page=5",{headers:commitHeaders,cache:"no-store"});rateHeaders(cr);if(cr.status===304){e.commitsCheckedAt=now()}else if(cr.ok){const cd=await cr.json();if(Array.isArray(cd)){e.commits=cd.slice(0,5).map(item=>({sha:item.sha,message:String(item.commit?.message||"").split("\\n")[0],author:item.commit?.author?.name||item.author?.login||"Autor",date:item.commit?.author?.date||item.commit?.committer?.date||"",url:item.html_url||""}));e.commitsEtag=cr.headers.get("ETag")||e.commitsEtag;e.commitsCheckedAt=now()}}}catch(_){/* Workflow status remains usable if commit endpoint is unavailable. */}
    cache[room.repository]=e;save();backoffCount=0;backoff=0;
   }
  }catch(error){e.error=error?.message||"No se pudo obtener información de GitHub.";cache[room.repository]=e;save()}
@@ -159,5 +165,5 @@ function start(initial){
  const all=ids(),gap=idleGap();all.forEach((id,index)=>{if(!cache[id])cache[id]={runs:[],etag:"",checkedAt:0};due.set(id,now()+index*gap)});
  save();paint();document.addEventListener("visibilitychange",visible);window.addEventListener("online",()=>{if(document.visibilityState!=="hidden")schedule(0)});schedule(1200);
 }
-window.OfficeGitHubLive={start,sync,refresh,paintSummary};
+window.OfficeGitHubLive={start,sync,refresh,paintSummary,getHistory:(repository)=>{const e=cache[repository];return e?((e.runs||[]).concat(e.commits||[])).sort((a,b)=>new Date(b.updated_at||b.date||0)-new Date(a.updated_at||a.date||0)).slice(0,3).map(x=>x.name||x.message||"Actividad de GitHub"):[]}};
 })();
