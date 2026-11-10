@@ -1,17 +1,17 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-
 const renderer = readFileSync(new URL("../assets/office-3d.js", import.meta.url), "utf8");
-
-test("portrait canvases receive a wider initial camera distance", () => {
-  assert.match(renderer, /baseRadius\*Math\.max\(1,1\.22\/aspect\)/);
-  assert.match(renderer, /initialRadius=baseRadius\*Math\.max/);
-  assert.match(renderer, /cameraFitDone=true/);
-  assert.match(renderer, /Math.abs\(aspect-cameraAspect\)>\.025/);
+test("portrait camera distance fits the full room width with side margin",()=>{
+ assert.match(renderer,/12\/\(2\*Math\.tan\(\.86\/2\)\*aspect\*\.88\)/);
+ assert.match(renderer,/if\(wasAtFit\|\|overviewMode\)radius=initialRadius/);
+ assert.match(renderer,/Math\.abs\(aspect-cameraAspect\)>\.025/);
 });
-
-test("recenter restores the aspect-fitted camera and mobile zoom range", () => {
-  assert.match(renderer, /radius=initialRadius;target=\[0,1\.15,0\]/);
-  assert.match(renderer, /Math\.max\(23,initialRadius\*1\.65\)/);
+test("home restores the room framing",()=>{
+ assert.match(renderer,/radius=initialRadius;target=\[0,1\.65,0\]/);
+ assert.match(renderer,/minRadius=5\.5/);
+});
+test("employee focus brings the whole figure into view",()=>{
+ assert.match(renderer,/target=\[worker\.x,1\.82,worker\.z\+1\.05\]/);
+ assert.match(renderer,/radius=clamp\(5\.8,minRadius,maxRadius\)/);
 });

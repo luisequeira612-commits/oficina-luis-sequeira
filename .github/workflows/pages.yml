@@ -29,6 +29,8 @@ jobs:
           node --check /tmp/oficina-app.js
           node --check assets/github-live.js
           node --check assets/office-3d.js
+          node --check assets/office-view.js
+          node --check assets/human-workers.js
       - name: Verify approved character SVGs and UI invariants
         run: node --test tests/*.test.mjs
       - name: Check required page content

@@ -72,3 +72,28 @@ test("employee labels fit the camera viewport and the three status colors have d
 
 
 test("mobile office HUD exposes the project sheet, employee selection and legend",()=>{assert.match(view,/office-project-sheet/);assert.match(view,/office-employee-card/);assert.match(view,/office-state-legend/);assert.match(css,/office-tycoon-top/);assert.match(css,/office-roster-avatar/);assert.match(html,/office-view\.css\?v=46/);assert.match(renderer,/const taperBox=/)});
+
+test("obsolete large project card grid is removed from runtime layers",()=>{
+ assert.doesNotMatch(html,/office-map|office-tile/);
+ assert.doesNotMatch(css,/office-map|office-tile/);
+ assert.doesNotMatch(view,/office-map|office-tile|map\.appendChild/);
+ assert.match(renderer,/office-project-chip-strip/);
+ assert.match(view,/office-project-sheet/);
+});
+test("mobile nameplates use compact type and follow the moving worker",()=>{
+ assert.match(css,/\.office-worker-tag\{min-height:18px;max-width:86px;padding:2px 5px/);
+ assert.match(css,/font-size:11px;line-height:1;transform:translate\(-50%,-100%\)/);
+ assert.match(renderer,/worker\.renderX=worker\.x\+walkX;worker\.renderZ=worker\.z\+walkZ/);
+ assert.match(renderer,/const x=worker\.renderX\?\?worker\.x,y=2\.82/);
+ assert.match(renderer,/is-resting/);
+});
+test("employee card closes outside or with X and collapses the chip rail",()=>{
+ assert.match(view,/office-employee-selected/);
+ assert.match(css,/office-employee-selected \.office-3d-room-nav/);
+ assert.match(view,/office-employee-close/);
+ assert.match(view,/!e\.target\.closest\("\.office-employee-card/);
+});
+test("control buttons retain zoom, rotation, home, drag and pinch",()=>{
+ for(const pattern of [/makeButton\("−"/,/makeButton\("\+"/,/makeButton\("↶"/,/makeButton\("↷"/,/makeButton\("⌂"/,/canvas\.addEventListener\("pointerdown"/,/pointers\.size>=2/])assert.match(renderer,pattern);
+ assert.match(css,/\.office-3d-controls button\{width:44px;min-width:44px;height:44px;min-height:44px/);
+});

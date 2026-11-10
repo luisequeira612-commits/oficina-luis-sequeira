@@ -1,7 +1,6 @@
 (function(){
 "use strict";
 const rooms=document.getElementById("rooms");
-const map=document.getElementById("office-map");
 const overview=document.getElementById("office-3d-overview");
 const overviewStatus=document.getElementById("office-3d-status");
 const dialog=document.getElementById("room-dialog");
@@ -13,8 +12,8 @@ const close=document.getElementById("room-dialog-close");
 const go=document.getElementById("room-dialog-go");
 const projectSection=document.querySelector('main>section[aria-labelledby="projects-heading"]');
 let selectedCard=null;
-if(!rooms||!map||!dialog||!scene)return;
-function closeOverview(){if(overview&&typeof overview._office3dCleanup==="function")overview._office3dCleanup();if(overview){overview.classList.remove("is-active");overview.hidden=true}document.body.classList.remove("office-game-active");map.hidden=false}
+if(!rooms||!dialog||!scene)return;
+function closeOverview(){if(overview&&typeof overview._office3dCleanup==="function")overview._office3dCleanup();if(overview){overview.classList.remove("is-active","office-employee-selected");overview.hidden=true}document.body.classList.remove("office-game-active")}
 function workerState(agent){return agent.classList.contains("is-success")?"st-s":agent.classList.contains("is-failure")?"st-f":Array.from(agent.classList).find(name=>/^st-[wtar]$/.test(name))||"st-r"}
 function workerDataFor(agent){const avatar=agent.querySelector(".human-worker");const state=workerState(agent);let history=[];try{history=JSON.parse(agent.dataset.taskHistory||"[]")}catch(_){history=[]}return {id:agent.dataset.agentId||"",name:agent.dataset.employeeName||agent.querySelector(".agent-role")?.textContent?.trim()||"Agente",role:agent.dataset.agentRole||"Puesto",state,gender:avatar?.dataset.gender||agent.dataset.employeeGender||"person",tone:avatar?.dataset.skinTone||agent.dataset.skinTone||"medium",hair:avatar?.dataset.hair||agent.dataset.hair||"short",shirt:avatar?.dataset.shirt||agent.dataset.shirt||"blue",task:agent.dataset.currentTask||"Sin tarea en curso",history}}
 function openRoom(card,selectedEmployeeId=""){
@@ -58,9 +57,9 @@ function openRoom(card,selectedEmployeeId=""){
  if(typeof dialog.showModal==="function")dialog.showModal();
  else {dialog.setAttribute("open","");close.focus()}
 }
-function ensureEmployeePanel(){let p=overview.querySelector(".office-employee-card");if(p)return p;p=document.createElement("section");p.className="office-employee-card";p.hidden=true;p.setAttribute("aria-live","polite");overview.appendChild(p);overview.addEventListener("click",e=>{if(!p.hidden&&!e.target.closest(".office-employee-card,.office-roster-person,.office-worker-tag"))p.hidden=true});return p}
+function ensureEmployeePanel(){let p=overview.querySelector(".office-employee-card");if(p)return p;p=document.createElement("section");p.className="office-employee-card";p.hidden=true;p.setAttribute("aria-live","polite");overview.appendChild(p);overview.addEventListener("click",e=>{if(!p.hidden&&!e.target.closest(".office-employee-card,.office-roster-person,.office-worker-tag")){p.hidden=true;overview.classList.remove("office-employee-selected")}});return p}
 function workerStatusLabel(state){return state==="st-w"?"TRABAJANDO":state==="st-t"?"PENSANDO":state==="st-a"?"TE TOCA":state==="st-s"?"ÉXITO":state==="st-f"?"FALLO":"DESCANSANDO"}
-function selectEmployee(w){const source=Array.from(rooms.querySelectorAll(".ag")).find(agent=>agent.dataset.agentId===w.id);if(source)w=workerDataFor(source);if(overview&&typeof overview._office3dFocusWorker==="function")overview._office3dFocusWorker(w.id);const p=ensureEmployeePanel();p.replaceChildren();const x=document.createElement("button");x.type="button";x.className="office-employee-close";x.textContent="×";x.setAttribute("aria-label","Cerrar ficha");x.addEventListener("click",()=>p.hidden=true);const n=document.createElement("h3");n.textContent=w.name;const r=document.createElement("p");r.textContent=w.role+" · "+workerStatusLabel(w.state);const task=document.createElement("p");task.textContent="Tarea actual: "+(w.task||"Sin tarea registrada");const hist=document.createElement("div");hist.className="office-employee-history";const histTitle=document.createElement("strong");histTitle.textContent="Últimas tareas";hist.appendChild(histTitle);const items=Array.isArray(w.history)?w.history.slice(0,3):[];if(items.length){items.forEach(item=>{const row=document.createElement("p");row.textContent="· "+item;hist.appendChild(row)})}else{const row=document.createElement("p");row.textContent="Todavía no hay historial guardado.";hist.appendChild(row)}p.append(x,n,r,task,hist);p.hidden=false}
+function selectEmployee(w){const source=Array.from(rooms.querySelectorAll(".ag")).find(agent=>agent.dataset.agentId===w.id);if(source)w=workerDataFor(source);if(overview&&typeof overview._office3dFocusWorker==="function")overview._office3dFocusWorker(w.id);const p=ensureEmployeePanel();p.replaceChildren();const x=document.createElement("button");x.type="button";x.className="office-employee-close";x.textContent="×";x.setAttribute("aria-label","Cerrar ficha");x.addEventListener("click",()=>{p.hidden=true;overview.classList.remove("office-employee-selected")});const n=document.createElement("h3");n.textContent=w.name;const r=document.createElement("p");r.textContent=w.role+" · "+workerStatusLabel(w.state);const task=document.createElement("p");task.textContent="Tarea actual: "+(w.task||"Sin tarea registrada");const hist=document.createElement("div");hist.className="office-employee-history";const histTitle=document.createElement("strong");histTitle.textContent="Últimas tareas";hist.appendChild(histTitle);const items=Array.isArray(w.history)?w.history.slice(0,3):[];if(items.length){items.forEach(item=>{const row=document.createElement("p");row.textContent="· "+item;hist.appendChild(row)})}else{const row=document.createElement("p");row.textContent="Todavía no hay historial guardado.";hist.appendChild(row)}p.append(x,n,r,task,hist);p.hidden=false;overview.classList.add("office-employee-selected")}
 function mountTycoonControls(data){let top=overview.querySelector(".office-tycoon-top");if(!top){top=document.createElement("div");top.className="office-tycoon-top";const hd=document.createElement("div");hd.className="office-tycoon-heading";const h=document.createElement("strong");h.textContent="Oficina de Luis Sequeira";const sub=document.createElement("span");sub.textContent=data.reduce((n,r)=>n+r.workers.length,0)+" empleados · 0 humanos";hd.append(h,sub);const actions=document.createElement("div");actions.className="office-tycoon-actions";const projects=document.createElement("button");projects.type="button";projects.className="office-overlay-button";projects.textContent="Proyectos";projects.addEventListener("click",()=>sheet.hidden=false);const help=document.createElement("button");help.type="button";help.className="office-overlay-button office-help-button";help.textContent="?";help.setAttribute("aria-label","Ayuda");help.addEventListener("click",()=>{let tip=overview.querySelector(".office-help-tip");if(!tip){tip=document.createElement("p");tip.className="office-help-tip";tip.textContent="Arrastra para moverte · Pellizca para acercar · Usa ↶ ↷ para girar. Toca una persona para ver su ficha.";overview.appendChild(tip)}tip.hidden=false;clearTimeout(tip._timer);tip._timer=setTimeout(()=>tip.hidden=true,4200)});actions.append(projects,help);top.append(hd,actions);overview.appendChild(top)}
  let sheet=overview.querySelector(".office-project-sheet");if(!sheet){sheet=document.createElement("section");sheet.className="office-project-sheet";sheet.hidden=true;const head=document.createElement("div");head.className="office-sheet-head";const label=document.createElement("strong");label.textContent="Proyectos";const close=document.createElement("button");close.type="button";close.className="office-overlay-button";close.textContent="Cerrar";close.addEventListener("click",()=>sheet.hidden=true);head.append(label,close);const body=document.createElement("div");body.className="office-sheet-body";sheet.append(head,body);overview.appendChild(sheet);if(projectSection)body.appendChild(projectSection)}
  let legend=overview.querySelector(".office-state-legend");if(!legend){legend=document.createElement("details");legend.className="office-state-legend";const sum=document.createElement("summary");sum.textContent="Estados";const labels=document.createElement("span");labels.innerHTML='<i class="is-working"></i> Trabajando　<i class="is-resting"></i> Descansando　<i class="is-your-turn"></i> Te toca';legend.append(sum,labels);overview.appendChild(legend)}
@@ -68,27 +67,6 @@ function mountTycoonControls(data){let top=overview.querySelector(".office-tycoo
 function renderMap(){
  if(dialog.open)return;
  const cards=Array.from(rooms.querySelectorAll(".room[data-room-id]"));
- const activeId=map.querySelector('.office-tile[aria-pressed="true"]')?.dataset.targetRoom||"";
- map.replaceChildren();
- cards.forEach(card=>{
-  const titleText=card.querySelector(".room-title")?.textContent?.trim()||"Proyecto";
-  const count=card.querySelector(".room-count")?.textContent?.trim()||"";
-  const agents=card.querySelectorAll(".ag").length;
-  const tile=document.createElement("button");
-  tile.type="button";tile.className="office-tile";tile.dataset.targetRoom=card.dataset.roomId;
-  tile.setAttribute("aria-label","Explorar habitación "+titleText);
-  tile.setAttribute("aria-pressed",card.dataset.roomId===activeId?"true":"false");
-  const name=document.createElement("span");name.className="office-tile-name";name.textContent=titleText;
-  const meta=document.createElement("span");meta.className="office-tile-meta";meta.textContent=agents+" "+(agents===1?"puesto":"puestos")+" · "+count;
-  const mark=document.createElement("span");mark.className="office-tile-mark";mark.textContent="Entrar";
-  tile.append(name,meta,mark);
-  tile.addEventListener("click",()=>{
-   map.querySelectorAll(".office-tile").forEach(item=>item.setAttribute("aria-pressed",item===tile?"true":"false"));
-   rooms.querySelectorAll(".room").forEach(item=>item.classList.toggle("room-is-target",item===card));
-   openRoom(card);
-  });
-  map.appendChild(tile);
- });
  const roomData=cards.map(card=>({id:card.dataset.roomId,name:card.querySelector(".room-title")?.textContent?.trim()||"Proyecto",workers:Array.from(card.querySelectorAll(".ag"),agent=>({...workerDataFor(agent),roomId:card.dataset.roomId}))}));
  const renderedOverview=Boolean(overview&&window.Office3D&&roomData.length&&window.Office3D.openOverview({container:overview,rooms:roomData,onSelectRoom:id=>{const card=cards.find(item=>item.dataset.roomId===id);if(card)openRoom(card)},onSelectWorker:worker=>selectEmployee(worker)}));
  if(renderedOverview){
@@ -102,7 +80,6 @@ function renderMap(){
  }
  if(overview){overview.hidden=!renderedOverview;if(renderedOverview)overview.classList.add("is-active")}
  document.body.classList.toggle("office-game-active",renderedOverview);
- map.hidden=renderedOverview;
  if(overviewStatus){overviewStatus.hidden=renderedOverview;overviewStatus.textContent=renderedOverview?"":(window.Office3D?(window.Office3D.lastError||"No se pudo iniciar el motor 3D."):"No se cargó el archivo del motor 3D.");}
 }
 close.addEventListener("click",()=>dialog.close());
