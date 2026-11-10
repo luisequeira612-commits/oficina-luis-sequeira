@@ -487,3 +487,12 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Se conservan el renderer WebGL2 propio, las geometrías y rangos de animación existentes, el esquema local, la cámara y la interfaz. No se incorporan modelos, texturas, dependencias ni assets externos; no son modelos oficiales LEGO.
 - Se añadió regresión para el stud, las manos C, los brazos y el acabado plástico. Cache-bust del motor a v53.
 - Fuente: `assets/office-3d.js`, `index.html` y `tests/verify-3d-human-worker-details.test.mjs`, 2026-11-10.
+
+
+## Caras impresas y piezas articuladas de minifiguras — 10 de noviembre de 2026
+
+- Se reemplazaron las bocas cuadradas por expresiones faciales distintas construidas con geometría de impresión: sonrisa curva segmentada, boca neutra, gesto sorprendido, cejas y guiño; se mantienen ojos pequeños y gafas en personajes seleccionados.
+- Los brazos ahora usan segmentos cilíndricos entre hombro, codo y muñeca; las manos forman una pinza C continua con segmentos redondeados, no un círculo de bolitas separadas. Se añadieron accesorios independientes de cabello (adornos laterales, auricular y lazo) a varios personajes.
+- Se conserva el renderer WebGL2 propio para no introducir un CDN ni una biblioteca de gran tamaño. Por ello, estas caras son geometría impresa simulada y no una CanvasTexture, y el motor no es Three.js; migrar a Three.js y a textura facial real sigue siendo una diferencia respecto a la especificación literal.
+- Cache-bust del motor a v54 y pruebas de regresión para expresiones, articulaciones y accesorios. Sin cambios al esquema local, proyectos, cámara o integración GitHub.
+- Fuente: `assets/office-3d.js`, `index.html`, `tests/verify-3d-human-worker-details.test.mjs`, 2026-11-10.

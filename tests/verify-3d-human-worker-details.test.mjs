@@ -54,3 +54,16 @@ test("minifigures have a visible top stud, molded C-grip hands and vivid glossy 
   assert.match(renderer,/shirts=\[\[0\.04,0\.30,0\.86\]/);
   assert.match(renderer,/\),40\.0\)\*0\.24/);
 });
+
+
+test("minifigure faces have distinct printed expressions and arms use articulated molded C-grips",()=>{
+  assert.match(renderer,/const segment=\(a,b,r,color,seg=8\)/);
+  assert.match(renderer,/const ink=\[\.075,\.055,\.045\]/);
+  assert.match(renderer,/const smile=\[\]/);
+  assert.match(renderer,/index%5===4/);
+  assert.match(renderer,/const shoulder=\[x\+side\*\.48,1\.49,z\+\.99\]/);
+  assert.match(renderer,/for\(let k=0;k<=6;k\+\+\).*250\/6/);
+  assert.match(renderer,/index===2/);
+  assert.match(renderer,/index===4/);
+  assert.match(renderer,/index===6/);
+});

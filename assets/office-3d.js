@@ -23,6 +23,12 @@ function buildScene(workers,roomName=""){
   const taperBox=(x,y,z,wt,wb,h,d,c)=>{const a=wt/2,b=wb/2,y0=y-h/2,y1=y+h/2,z0=z-d/2,z1=z+d/2;quad([x-b,y0,z1],[x+b,y0,z1],[x+a,y1,z1],[x-a,y1,z1],c);quad([x+b,y0,z0],[x-b,y0,z0],[x-a,y1,z0],[x+a,y1,z0],c);quad([x-b,y0,z0],[x-b,y0,z1],[x-a,y1,z1],[x-a,y1,z0],c);quad([x+b,y0,z1],[x+b,y0,z0],[x+a,y1,z0],[x+a,y1,z1],c);quad([x-a,y1,z1],[x+a,y1,z1],[x+a,y1,z0],[x-a,y1,z0],c);quad([x-b,y0,z0],[x+b,y0,z0],[x+b,y0,z1],[x-b,y0,z1],c)};
  const sphere=(cx,cy,cz,rx,ry,rz,color,segments=9,rings=6)=>{for(let r=0;r<rings;r++){const p0=-Math.PI/2+Math.PI*r/rings,p1=-Math.PI/2+Math.PI*(r+1)/rings;for(let s=0;s<segments;s++){const t0=2*Math.PI*s/segments,t1=2*Math.PI*(s+1)/segments;const pt=(p,t)=>[cx+rx*Math.cos(p)*Math.cos(t),cy+ry*Math.sin(p),cz+rz*Math.cos(p)*Math.sin(t)];const a=pt(p0,t0),b=pt(p0,t1),c=pt(p1,t1),d=pt(p1,t0);quad(a,d,c,b,color)}}};
  const cyl=(x,y,z,r,h,color,seg=8)=>{for(let i=0;i<seg;i++){const a=i*2*Math.PI/seg,b=(i+1)*2*Math.PI/seg;const p1=[x+Math.cos(a)*r,y-h/2,z+Math.sin(a)*r],p2=[x+Math.cos(b)*r,y-h/2,z+Math.sin(b)*r],p3=[x+Math.cos(b)*r,y+h/2,z+Math.sin(b)*r],p4=[x+Math.cos(a)*r,y+h/2,z+Math.sin(a)*r];quad(p1,p4,p3,p2,color);addTri([x,y+h/2,z],p3,p4,color);addTri([x,y-h/2,z],p1,p2,color)}};
+ const segment=(a,b,r,color,seg=8)=>{
+  const dx=b[0]-a[0],dy=b[1]-a[1],dz=b[2]-a[2],len=Math.hypot(dx,dy,dz)||1,n=[dx/len,dy/len,dz/len];
+  const ref=Math.abs(n[1])<.88?[0,1,0]:[0,0,1],cross=(u,v)=>[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];
+  let u=cross(n,ref),ul=Math.hypot(...u)||1;u=u.map(v=>v/ul);const v=cross(n,u);
+  for(let i=0;i<seg;i++){const t0=i*2*Math.PI/seg,t1=(i+1)*2*Math.PI/seg,point=(p,t)=>[p[0]+r*(u[0]*Math.cos(t)+v[0]*Math.sin(t)),p[1]+r*(u[1]*Math.cos(t)+v[1]*Math.sin(t)),p[2]+r*(u[2]*Math.cos(t)+v[2]*Math.sin(t))],a0=point(a,t0),a1=point(a,t1),b0=point(b,t0),b1=point(b,t1);quad(a0,a1,b1,b0,color);addTri(a,b0,b1,color);addTri(b,a1,a0,color)}
+ };
  // Layered opaque floor shadows add contact and visual grounding without a texture or shadow-map pass.
  const shadow=(cx,cz,rx,rz)=>{
   const bands=[{r:1.00,c:[0.51,0.47,0.40]},{r:.70,c:[0.47,0.43,0.37]},{r:.38,c:[0.43,0.40,0.35]}],segments=16,y=.009;
@@ -215,11 +221,36 @@ function buildScene(workers,roomName=""){
   const headStart=positions.length;cyl(x,2.02,z+.99,.365,.61,skin,24);
   let studY=2.49;if(hairStyle==="short"){sphere(x,2.29,z+.94,.36,.14,.31,hairColor,14,7);box(x,2.25,z+1.235,.54,.12,.08,hairColor)}else if(hairStyle==="curly"){studY=2.58;sphere(x,2.32,z+.94,.37,.18,.32,hairColor,14,8);for(let k=0;k<7;k++){const q=k*Math.PI*2/7;sphere(x+Math.cos(q)*.27,2.36,z+.94+Math.sin(q)*.24,.105,.11,.105,hairColor,8,5)}}else if(hairStyle==="long"){sphere(x,2.31,z+.94,.37,.15,.32,hairColor,14,7);sphere(x-.30,2.03,z+.99,.12,.38,.18,hairColor,10,7);sphere(x+.30,2.03,z+.99,.12,.38,.18,hairColor,10,7)}else{studY=2.68;sphere(x,2.31,z+.94,.37,.15,.32,hairColor,14,7);sphere(x,2.47,z+.69,.15,.17,.15,hairColor,10,7)}cyl(x,studY,z+.99,.135,.12,skin,16);
   if(index===3||index===7){box(x,2.40,z+.98,.70,.09,.68,[.78,.18,.13]);box(x,2.42,z+1.01,.72,.035,.69,[.95,.72,.25])}
-  sphere(x-.12,2.04,z+1.335,.038,.045,.022,[.08,.07,.06],8,5);sphere(x+.12,2.04,z+1.335,.038,.045,.022,[.08,.07,.06],8,5);
-  if(index%3===0){for(let k=0;k<5;k++)sphere(x+(k-2)*.035,1.925+Math.abs(k-2)*.009,z+1.337,.018,.018,.014,[.42,.13,.13],6,4)}else{box(x,1.92,z+1.337,.10,.018,.018,[.42,.16,.13])}
-  if(index===1||index===5){box(x-.12,2.04,z+1.36,.15,.075,.025,[.12,.20,.26]);box(x+.12,2.04,z+1.36,.15,.075,.025,[.12,.20,.26]);box(x,2.04,z+1.36,.10,.025,.025,[.12,.20,.26])}
-  const headEnd=positions.length,armsStart=positions.length;sphere(x-.49,1.49,z+.99,.17,.18,.17,shirt,12,7);sphere(x+.49,1.49,z+.99,.17,.18,.17,shirt,12,7);cyl(x-.52,1.38,z+.91,.115,.34,shirt,12);cyl(x+.52,1.38,z+.91,.115,.34,shirt,12);box(x-.52,1.19,z+.72,.22,.22,.34,shirt);box(x+.52,1.19,z+.72,.22,.22,.34,shirt);
-  const handsStart=positions.length;for(const side of [-1,1]){const hx=x+side*.52,hz=z+.61;sphere(hx,1.12,hz+.045,.075,.085,.065,skin,10,6);for(let k=0;k<=8;k++){const angle=(Math.PI*.25+k*Math.PI*1.5/8)*(side===1?-1:1);sphere(hx+Math.cos(angle)*.09,1.12+Math.sin(angle)*.09,hz+.07,.042,.042,.045,skin,8,5)}}
+  if(index===2){sphere(x-.24,2.18,z+.98,.075,.075,.075,[.94,.72,.22],9,6);sphere(x+.24,2.18,z+.98,.075,.075,.075,[.94,.72,.22],9,6)}
+  if(index===4){segment([x-.36,2.02,z+.99],[x-.40,2.28,z+.98],.035,[.22,.25,.29],8);sphere(x-.40,2.28,z+.98,.075,.075,.075,[.22,.25,.29],9,6)}
+  if(index===6){sphere(x+.32,2.12,z+.98,.085,.12,.08,[.82,.28,.43],9,6);sphere(x+.32,2.12,z+1.06,.045,.055,.025,[.98,.76,.78],8,5)}
+  // Printed face: individual expressions are built from tiny molded ink-like geometry on the curved front.
+  const ink=[.075,.055,.045],faceZ=z+1.351,eyeY=2.055;
+  sphere(x-.12,eyeY,faceZ,.034,.042,.018,ink,10,6);sphere(x+.12,eyeY,faceZ,.034,.042,.018,ink,10,6);
+  if(index%5===1){segment([x+.075,eyeY,faceZ+.012],[x+.165,eyeY,faceZ+.012],.014,skin,7)}
+  if(index%5===2){segment([x-.18,2.13,faceZ],[x-.07,2.15,faceZ],.014,ink,7);segment([x+.07,2.15,faceZ],[x+.18,2.13,faceZ],.014,ink,7)}
+  if(index%5===4){sphere(x,1.925,faceZ,.038,.052,.016,ink,10,6)}
+  else if(index%5===3){segment([x-.075,1.925,faceZ],[x+.075,1.925,faceZ],.014,[.42,.13,.12],7)}
+  else{
+   const smile=[];
+   for(let k=0;k<=4;k++){const px=-.095+k*.0475,py=1.925+.032*Math.pow(Math.abs(px)/.095,2);smile.push([x+px,py,faceZ])}
+   for(let k=0;k<smile.length-1;k++)segment(smile[k],smile[k+1],.014,[.42,.13,.12],7);
+  }
+  if(index===1||index===5){box(x-.12,eyeY,faceZ+.025,.15,.065,.025,[.12,.20,.26]);box(x+.12,eyeY,faceZ+.025,.15,.065,.025,[.12,.20,.26]);box(x,eyeY,faceZ+.025,.10,.025,.025,[.12,.20,.26])}
+  const headEnd=positions.length,armsStart=positions.length;
+  for(const side of [-1,1]){
+   const shoulder=[x+side*.48,1.49,z+.99],elbow=[x+side*.58,1.30,z+.82],wrist=[x+side*.53,1.16,z+.66];
+   sphere(shoulder[0],shoulder[1],shoulder[2],.16,.16,.16,shirt,12,7);
+   segment(shoulder,elbow,.115,shirt,10);sphere(elbow[0],elbow[1],elbow[2],.105,.105,.105,shirt,10,6);
+   segment(elbow,wrist,.105,shirt,10);
+  }
+  const handsStart=positions.length;
+  for(const side of [-1,1]){
+   const hx=x+side*.53,hy=1.12,hz=z+.62,arc=[];
+   for(let k=0;k<=6;k++){const angle=(55+k*(250/6))*Math.PI/180;arc.push([hx+side*Math.cos(angle)*.095,hy+Math.sin(angle)*.095,hz+.045])}
+   for(let k=0;k<arc.length-1;k++)segment(arc[k],arc[k+1],.038,skin,8);
+   sphere(hx-side*.055,hy,hz+.045,.065,.075,.055,skin,10,6);
+  }
   const handsEnd=positions.length,armsEnd=positions.length;
     // Small printed state markers remain separate from real GitHub activity labels.
   if(worker.state==="st-w"){box(x-.22,1.16,z+.47,.2,.18,.2,skin);box(x+.22,1.16,z+.47,.2,.18,.2,skin)}
