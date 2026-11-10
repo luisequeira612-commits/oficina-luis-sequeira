@@ -165,7 +165,7 @@ async function request(room){
     if(cr.status===304){e.commitsCheckedAt=now()}
     else if(cr.ok){
      const cd=await cr.json();
-     if(Array.isArray(cd)){e.commits=cd.slice(0,5).map(item=>({sha:item.sha,message:String(item.commit?.message||"").split(/\\r?\\n/)[0],author:item.commit?.author?.name||item.author?.login||"Autor",date:item.commit?.author?.date||item.commit?.committer?.date||"",url:item.html_url||""}));e.commitsEtag=cr.headers.get("ETag")||e.commitsEtag;e.commitsCheckedAt=now()}
+     if(Array.isArray(cd)){e.commits=cd.slice(0,5).map(item=>({sha:item.sha,message:String(item.commit?.message||"").split(/\r?\n/)[0],author:item.commit?.author?.name||item.author?.login||"Autor",date:item.commit?.author?.date||item.commit?.committer?.date||"",url:item.html_url||""}));e.commitsEtag=cr.headers.get("ETag")||e.commitsEtag;e.commitsCheckedAt=now()}
     }
    }catch(_){/* Workflow status remains usable if commit endpoint is unavailable. */}
    cache[room.repository]=e;save();
