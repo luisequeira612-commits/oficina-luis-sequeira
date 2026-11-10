@@ -17,6 +17,33 @@ function queued(e){return (e?.runs||[]).find(x=>x.status==="queued")||null}
 function active(e){return running(e)||queued(e)}
 function latest(e){return (e?.runs||[])[0]||null}
 function latestCommits(e){return Array.isArray(e?.commits)?e.commits:[]}
+function roomAgentIds(room){return Array.isArray(room?.agents)?room.agents.map(x=>x.id).filter(Boolean):[]}
+function assignedAgent(room,e){
+ const ids=roomAgentIds(room);if(!ids.length)return null;
+ const activeRun=active(e);
+ const assignments=e?.runAssignments&&typeof e.runAssignments==="object"?e.runAssignments:{};
+ if(activeRun&&assignments[String(activeRun.id)]&&ids.includes(assignments[String(activeRun.id)]))return assignments[String(activeRun.id)];
+ if(activeRun){
+  const n=Number(activeRun.id)||0;
+  const id=ids[n%ids.length];assignments[String(activeRun.id)]=id;
+  e.runAssignments=assignments;return id;
+ }
+ const latestRun=latest(e),latestId=latestRun?.id?String(latestRun.id):"";
+ if(latestId&&assignments[latestId]&&ids.includes(assignments[latestId]))return assignments[latestId];
+ return ids[0];
+}
+function historyForAgent(room,e,agentId){
+ if(!agentId)return [];
+ const taskHistory=Array.isArray(e?.taskHistory)?e.taskHistory:[];
+ const commits=latestCommits(e).map(commit=>({name:commit.message,updated_at:commit.date,status:"commit",agentId}));
+ return taskHistory.filter(x=>!x.agentId||x.agentId===agentId).concat(commits).sort((a,b)=>new Date(b.updated_at||b.date||0)-new Date(a.updated_at||a.date||0)).slice(0,3).map(x=>x.name||x.message||"Actividad de GitHub");
+}
+function recordCompletedRuns(e,previousRuns){
+ const seen=new Set(Array.isArray(e?.taskHistory)?e.taskHistory.map(x=>String(x.runId||"")):[]);
+ const prior=new Set((previousRuns||[]).map(x=>String(x.id)));
+ const additions=(e?.runs||[]).filter(run=>run.status==="completed"&&!prior.has(String(run.id))&&!seen.has(String(run.id))).map(run=>({runId:run.id,name:run.name||run.display_title||"GitHub Actions",conclusion:run.conclusion||"completed",completedAt:run.updated_at||run.completed_at||run.created_at||"",updated_at:run.updated_at||run.completed_at||run.created_at||"",agentId:(e.runAssignments||{})[String(run.id)]||null}));
+ e.taskHistory=[...(e.taskHistory||[]),...additions].sort((a,b)=>new Date(b.updated_at||b.completedAt||0)-new Date(a.updated_at||a.completedAt||0)).slice(0,12);
+}
 function state(e){const a=running(e),q=queued(e),r=latest(e);if(a)return "working";if(q)return "queued";if(!r||r.status!=="completed")return "rest";if(["failure","timed_out","action_required"].includes(r.conclusion))return "failure";if(r.conclusion==="success"&&(e.celebrateUntil||0)>now())return "success";return "rest"}
 function freshness(e){if(e?.error)return "No se pudo obtener";if(!e?.checkedAt)return "Consultando…";return now()-e.checkedAt<=STALE?"En vivo":"Desactualizado (hace "+mins(e.checkedAt)+" min)"}
 function paintRoom(room){
@@ -37,18 +64,20 @@ function paintRoom(room){
  }
  if(bubble){bubble.hidden=!current;bubble.textContent=current?(current.name||current.display_title||"GitHub Actions"):""}
  if(button){const wait=Math.max(0,(manualAt.get(room.repository)||0)-now());button.disabled=wait>0||busy||now()<ratePause||now()<backoff;button.textContent=wait?"Espera "+Math.ceil(wait/1000)+" s":"Actualizar"}
+ const assignedId=assignedAgent(room,e);
  card.querySelectorAll(".ag[data-agent-id]").forEach(worker=>{
   worker.classList.remove("st-w","st-t","st-a","st-r","is-success","is-failure","is-walking");
-  const prev=worker.dataset.githubState||"rest";
-  const taskHistory=[...(e?.runs||[]),...(e?.commits||[]).map(commit=>({name:commit.message,updated_at:commit.date,status:"commit"}))].sort((x,y)=>new Date(y.updated_at||y.date||0)-new Date(x.updated_at||x.date||0)).slice(0,3).map(item=>item.name||"Actividad de GitHub");worker.dataset.taskHistory=JSON.stringify(taskHistory);
-  if(s==="working"){worker.classList.add("st-w");if(prev!=="working")worker.classList.add("is-walking")}
-  else if(s==="queued")worker.classList.add("st-a");
-  else if(s==="success")worker.classList.add("st-r","is-success");
-  else if(s==="failure")worker.classList.add("st-r","is-failure");
+  const prev=worker.dataset.githubState||"rest",isAssigned=worker.dataset.agentId===assignedId;
+  worker.dataset.taskHistory=JSON.stringify(isAssigned?historyForAgent(room,e,assignedId):[]);
+  const workerState=isAssigned?s:"rest";
+  if(workerState==="working"){worker.classList.add("st-w");if(prev!=="working")worker.classList.add("is-walking")}
+  else if(workerState==="queued")worker.classList.add("st-a");
+  else if(workerState==="success")worker.classList.add("st-r","is-success");
+  else if(workerState==="failure")worker.classList.add("st-r","is-failure");
   else worker.classList.add("st-r");
-  worker.dataset.githubState=s;
+  worker.dataset.githubState=workerState;
   const label=worker.querySelector('[data-status="true"]');
-  if(label)label.textContent=s==="working"?"Trabajando":s==="queued"?"En cola":s==="success"?"Éxito":s==="failure"?"Falló":"Descansando";
+  if(label)label.textContent=workerState==="working"?"Trabajando":workerState==="queued"?"En cola":workerState==="success"?"Éxito":workerState==="failure"?"Falló":"Descansando";
  });
  const count=card.querySelector(".room-count");if(count)count.textContent=room.agents.length+" "+(room.agents.length===1?"personaje":"personajes");
 }
@@ -75,7 +104,9 @@ function paintActivity(){
  });
 }
 function paintNotice(){
- if(!notice)return;const until=Math.max(ratePause,backoff);
+ if(!notice)return;
+ if(navigator.onLine===false){notice.hidden=false;notice.textContent="Sin conexión a GitHub. Se conserva la última información disponible.";return}
+ const until=Math.max(ratePause,backoff);
  if(until>now()){notice.hidden=false;notice.textContent=ratePause>now()?"Límite de GitHub alcanzado, reintenta a las "+at(until):"GitHub rechazó la consulta; reintento automático a las "+at(until)+"."}
  else{notice.hidden=true;notice.textContent=""}
 }
@@ -108,7 +139,8 @@ async function request(room){
  busy=true;lastRequest=now();paint();
  try{
   const response=await fetch(ROOT+room.repository+"/actions/runs?per_page=5",{headers,cache:"no-store"});rateHeaders(response);
-  if(response.status===304){e.checkedAt=now();delete e.error;cache[room.repository]=e;backoffCount=0;save()}
+  let workflowFresh=false;
+  if(response.status===304){e.checkedAt=now();delete e.error;workflowFresh=true;cache[room.repository]=e;backoffCount=0;save()}
   else if(response.status===403||response.status===429){
    backoffCount=Math.min(6,backoffCount+1);
    const retry=Number(response.headers.get("Retry-After")||0)*1000,reset=Number(response.headers.get("X-RateLimit-Reset")||0)*1000;
@@ -119,15 +151,26 @@ async function request(room){
   else if(!response.ok)throw new Error("GitHub respondió con el error "+response.status+".");
   else{
    const data=await response.json();if(!Array.isArray(data.workflow_runs))throw new Error("Respuesta de GitHub no válida.");
-   const previousId=e.runs?.[0]?.id;e.runs=data.workflow_runs.slice(0,5);const newest=e.runs[0];
-   if(newest&&newest.id!==previousId&&newest.status==="completed"&&newest.conclusion==="success")e.celebrateUntil=now()+7000;
+   const previousRuns=Array.isArray(e.runs)?e.runs.slice():[];
+   const previousId=previousRuns[0]?.id;e.runs=data.workflow_runs.slice(0,5);
+   if(e.runs[0]?.id!==previousId&&e.runs[0]?.status==="completed"&&e.runs[0]?.conclusion==="success")e.celebrateUntil=now()+7000;
    e.etag=response.headers.get("ETag")||e.etag||"";e.checkedAt=now();e.fetchedAt=now();delete e.error;
-   cache[room.repository]=e;save();backoffCount=0;backoff=0;
-   const commitHeaders={Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"};if(e.commitsEtag)commitHeaders["If-None-Match"]=e.commitsEtag;
-   try{const cr=await fetch(ROOT+room.repository+"/commits?per_page=5",{headers:commitHeaders,cache:"no-store"});rateHeaders(cr);if(cr.status===304){e.commitsCheckedAt=now()}else if(cr.ok){const cd=await cr.json();if(Array.isArray(cd)){e.commits=cd.slice(0,5).map(item=>({sha:item.sha,message:String(item.commit?.message||"").split("\\n")[0],author:item.commit?.author?.name||item.author?.login||"Autor",date:item.commit?.author?.date||item.commit?.committer?.date||"",url:item.html_url||""}));e.commitsEtag=cr.headers.get("ETag")||e.commitsEtag;e.commitsCheckedAt=now()}}}catch(_){/* Workflow status remains usable if commit endpoint is unavailable. */}
-   cache[room.repository]=e;save();backoffCount=0;backoff=0;
+   recordCompletedRuns(e,previousRuns);
+   cache[room.repository]=e;save();backoffCount=0;backoff=0;workflowFresh=true;
   }
- }catch(error){e.error=error?.message||"No se pudo obtener información de GitHub.";cache[room.repository]=e;save()}
+  if(workflowFresh){
+   const commitHeaders={Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"};if(e.commitsEtag)commitHeaders["If-None-Match"]=e.commitsEtag;
+   try{
+    const cr=await fetch(ROOT+room.repository+"/commits?per_page=5",{headers:commitHeaders,cache:"no-store"});rateHeaders(cr);
+    if(cr.status===304){e.commitsCheckedAt=now()}
+    else if(cr.ok){
+     const cd=await cr.json();
+     if(Array.isArray(cd)){e.commits=cd.slice(0,5).map(item=>({sha:item.sha,message:String(item.commit?.message||"").split("\\n")[0],author:item.commit?.author?.name||item.author?.login||"Autor",date:item.commit?.author?.date||item.commit?.committer?.date||"",url:item.html_url||""}));e.commitsEtag=cr.headers.get("ETag")||e.commitsEtag;e.commitsCheckedAt=now()}
+    }
+   }catch(_){/* Workflow status remains usable if commit endpoint is unavailable. */}
+   cache[room.repository]=e;save();
+  }
+ }catch(error){e.error=navigator.onLine===false?"Sin conexión a GitHub.":"No se pudo obtener información de GitHub.";cache[room.repository]=e;save()}
  finally{
   busy=false;const current=rooms.find(x=>x.id===room.id&&x.repository===room.repository);
   if(current)plan(room,active(cache[room.repository])?ACTIVE_GAP:idleGap());
@@ -146,7 +189,7 @@ async function tick(){
 function sync(next){
  rooms=Array.isArray(next)?next:[];
  const keep=new Set(ids());
- rooms.forEach(room=>{if(!validRepo(room.repository))return;if(!cache[room.repository])cache[room.repository]={runs:[],etag:"",checkedAt:0};if(!due.has(room.repository))plan(room,idleGap())});
+ rooms.forEach(room=>{if(!validRepo(room.repository))return;if(!cache[room.repository])cache[room.repository]={runs:[],commits:[],taskHistory:[],runAssignments:{},etag:"",commitsEtag:"",checkedAt:0};if(!due.has(room.repository))plan(room,idleGap())});
  Array.from(due.keys()).forEach(id=>{if(!keep.has(id))due.delete(id)});
  paint();
 }
@@ -162,8 +205,8 @@ function visible(){
 }
 function start(initial){
  if(started)return;started=true;cache=read();const meta=cache.__meta||{};ratePause=Number(meta.ratePause)||0;backoff=Number(meta.backoff)||0;backoffCount=Number(meta.backoffCount)||0;rateRemaining=Number.isFinite(meta.rateRemaining)?meta.rateRemaining:null;rateReset=Number(meta.rateReset)||0;sync(initial);
- const all=ids(),gap=idleGap();all.forEach((id,index)=>{if(!cache[id])cache[id]={runs:[],etag:"",checkedAt:0};due.set(id,now()+index*gap)});
- save();paint();document.addEventListener("visibilitychange",visible);window.addEventListener("online",()=>{if(document.visibilityState!=="hidden")schedule(0)});schedule(1200);
+ const all=ids(),gap=idleGap();all.forEach((id,index)=>{if(!cache[id])cache[id]={runs:[],commits:[],taskHistory:[],runAssignments:{},etag:"",commitsEtag:"",checkedAt:0};due.set(id,now()+index*gap)});
+ save();paint();document.addEventListener("visibilitychange",visible);window.addEventListener("online",()=>{paintNotice();if(document.visibilityState!=="hidden")schedule(0)});window.addEventListener("offline",paintNotice);schedule(1200);
 }
 window.OfficeGitHubLive={start,sync,refresh,paintSummary,getHistory:(repository)=>{const e=cache[repository];return e?((e.runs||[]).concat(e.commits||[])).sort((a,b)=>new Date(b.updated_at||b.date||0)-new Date(a.updated_at||a.date||0)).slice(0,3).map(x=>x.name||x.message||"Actividad de GitHub"):[]}};
 })();
