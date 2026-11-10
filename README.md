@@ -66,3 +66,8 @@ Las estaciones de trabajo incorporan cajoneras de dos niveles, bandejas de cable
 ## Recuperación de la vista general 3D
 
 El constructor de la vista general declara sus propios materiales geométricos, incluido el material metálico de recepción. Esto evita que un identificador local de la habitación se use fuera de ámbito y que el renderer active silenciosamente la vista alternativa.
+
+
+### Diagnóstico de la vista 3D
+
+Si WebGL 2 no está disponible o el motor falla al construir la escena, la página conserva el mapa alternativo y muestra el motivo del fallo fuera del contenedor 3D oculto. Los scripts del renderer y de la vista llevan una versión de caché para evitar reutilizar archivos antiguos del navegador. La validación automatizada comprueba que el diagnóstico permanezca visible; no sustituye una prueba física en Android.

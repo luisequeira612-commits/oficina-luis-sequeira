@@ -2,7 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
-const renderer = readFileSync(new URL("../assets/office-3d.js", import.meta.url), "utf8");
+const read = path => readFileSync(new URL("../" + path, import.meta.url), "utf8");
+const renderer = read("assets/office-3d.js");
 
 test("3D workstations include finished furniture and office planning details", () => {
   assert.match(renderer, /Two-drawer pedestal/, "adds a drawer pedestal to each desk");
@@ -16,4 +17,16 @@ test("3D workstations include finished furniture and office planning details", (
 test("3D building overview defines its own reception metal material", () => {
   const overview = renderer.slice(renderer.indexOf("function buildOfficeScene"), renderer.indexOf("function open("));
   assert.ok(overview.includes("const metal=["), "prevents an out-of-scope material reference from aborting the overview");
+});
+
+test("3D startup failures remain visible outside the hidden overview canvas",()=>{
+ const renderer=read("assets/office-3d.js");
+ const view=read("assets/office-view.js");
+ const html=read("index.html");
+ assert.match(renderer,/window\.Office3D\.lastError=null/);
+ assert.match(renderer,/El navegador no proporcionó un contexto WebGL 2/);
+ assert.match(view,/overviewStatus\.textContent=renderedOverview\?"":\(window\.Office3D\?/);
+ assert.match(html,/id="office-3d-status"[^>]*role="status"/);
+ assert.match(html,/office-3d\.js\?v=27/);
+ assert.match(html,/office-view\.js\?v=27/);
 });

@@ -3,6 +3,7 @@
 const rooms=document.getElementById("rooms");
 const map=document.getElementById("office-map");
 const overview=document.getElementById("office-3d-overview");
+const overviewStatus=document.getElementById("office-3d-status");
 const dialog=document.getElementById("room-dialog");
 const scene=document.getElementById("room-scene");
 const title=document.getElementById("room-dialog-title");
@@ -83,6 +84,7 @@ function renderMap(){
  const renderedOverview=Boolean(overview&&window.Office3D&&roomData.length&&window.Office3D.openOverview({container:overview,rooms:roomData,onSelectRoom:id=>{const card=cards.find(item=>item.dataset.roomId===id);if(card)openRoom(card)}}));
  if(overview){overview.hidden=!renderedOverview;if(renderedOverview)overview.classList.add("is-active")}
  map.hidden=renderedOverview;
+ if(overviewStatus){overviewStatus.hidden=renderedOverview;overviewStatus.textContent=renderedOverview?"":(window.Office3D?(window.Office3D.lastError||"No se pudo iniciar el motor 3D."):"No se cargó el archivo del motor 3D.");}
 }
 close.addEventListener("click",()=>dialog.close());
 dialog.addEventListener("click",event=>{if(event.target===dialog)dialog.close()});
