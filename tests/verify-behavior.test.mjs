@@ -127,7 +127,8 @@ test("explorable room stations show the same human workers as the project cards"
 });
 
 test("room workers inherit the current card state and its matching human animation", () => {
-  assert.ok(officeScript.includes('find(className=>/^st-[wtar]$/.test(className))'), "room station copies the current worker state");
+  assert.ok(officeScript.includes('agent.classList.contains("is-success")'), "room station copies real success state");
+  assert.ok(officeScript.includes('agent.classList.contains("is-failure")'), "room station copies real failure state");
   assert.ok(officeScript.includes('station.classList.add(stateClass)'), "room station exposes the copied state class");
   const roomCss = readFileSync(new URL("../assets/office-view.css", import.meta.url), "utf8");
   for (const state of ["st-w", "st-t", "st-a", "st-r"]) {
@@ -140,7 +141,7 @@ test("one GitHub Actions endpoint is used; no token or secondary PR API request 
   assert.doesNotMatch(githubLiveScript, /\/pulls\?/);
   assert.doesNotMatch(html, /Authorization\s*:/i);
   assert.match(html, /Datos reales de ejecuciones públicas/);
-  assert.match(html, /movimientos.*decoración/i);
+  assert.match(html, /animaciones.*decoración/i);
 });
 
 
@@ -183,6 +184,8 @@ test("3D workers reuse the same hairstyle, shirt and live state as their project
   assert.ok(officeScript.includes('shirt:avatar?.dataset.shirt||"blue"'), "passes the existing shirt into 3D");
   assert.ok(officeScript.includes("stateObserver.observe(rooms"), "observes live card state changes");
   assert.ok(officeScript.includes("threeD._office3dUpdateStates(states)"), "synchronizes live state to the 3D scene");
+  assert.ok(rendererScript.includes('worker.state==="st-s"'), "3D workers celebrate real successful runs");
+  assert.ok(rendererScript.includes('worker.state==="st-f"'), "3D workers display real failure alerts");
   assert.ok(rendererScript.includes("shirtByName[worker.shirt]"), "renders the selected shirt color");
   assert.ok(rendererScript.includes("hairStyle==="), "renders distinct hairstyles");
   assert.ok(rendererScript.includes("container._office3dUpdateStates=states=>"), "exposes live 3D state updates");
