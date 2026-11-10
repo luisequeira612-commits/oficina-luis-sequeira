@@ -90,14 +90,13 @@ test("BABYMONSTER Chart appears in required published project content", () => {
   mustContain('name:"BABYMONSTER Chart",repository:"luisequeira612-commits/monstie-charts."', "BABYMONSTER Chart migration");
 });
 
-test("isometric office overview explores existing projects without changing persisted data", () => {
-  assert.match(html, /href="assets\/office-view\.css(?:\?v=\d+)?"/, "isometric office styles");
-  assert.match(html, /src="assets\/office-view\.js\?v=\d+"/, "isometric office interaction");
-  mustContain('id="office-map"', "office map container");
+test("immersive office overview explores existing projects without changing persisted data", () => {
+  assert.match(html, /href="assets\\/office-view\\.css\\?v=\\d+"/, "immersive office styles");
+  assert.match(html, /src="assets\\/office-view\\.js\\?v=\\d+"/, "office interaction");
+  assert.doesNotMatch(html, /id="office-map"/, "obsolete large project card grid is removed");
   mustContain('id="office-3d-overview"', "connected 3D office overview container");
-  mustContain('card.dataset.roomId=room.id', "stable room identity for map");
+  mustContain('card.dataset.roomId=room.id', "stable room identity for project navigation");
   assert.ok(officeScript.includes('selectedCard.scrollIntoView({behavior:reduced?"auto":"smooth",block:"center"})'), "missing explore project navigation");
-  assert.ok(officeScript.includes("aria-pressed"), "missing accessible selected room state");
   assert.ok(officeScript.includes("dialog.showModal"), "room opens in an accessible dialog");
   assert.ok(officeScript.includes("room-desk"), "room scene includes desk furniture");
   assert.ok(officeScript.includes("selectedCard.scrollIntoView"), "room dialog links back to project details");
@@ -170,7 +169,7 @@ test("real 3D room prototype uses WebGL2 locally and preserves the CSS fallback"
   assert.ok(renderer.includes("function buildOfficeScene(rooms)"), "builds a multi-room 3D office");
   assert.ok(renderer.includes("Low partitions and project accent rails"), "connects team zones in one shared room");
   assert.ok(renderer.includes("const allWorkers=rooms.flatMap"), "combines all project teams into one shared office");
-  assert.ok(renderer.includes("baseRadius=overviewMode?18:13"), "uses a closer camera for the single shared office");
+  assert.ok(renderer.includes("baseRadius=overviewMode?12.2:13"), "uses a closer camera for the single shared office");
   assert.ok(renderer.includes("office-3d-room-nav"), "provides direct entry controls for each 3D room");
 });
 
@@ -194,9 +193,11 @@ test("3D workers reuse the same hairstyle, shirt and live state as their project
   assert.ok(rendererScript.includes("container._office3dUpdateStates=states=>"), "exposes live 3D state updates");
 });
 
-test("connected 3D overview falls back to the accessible project map without WebGL2", () => {
-  assert.ok(officeScript.includes("map.hidden=renderedOverview"), "keeps the CSS project map when the 3D overview is unavailable");
-  assert.ok(officeScript.includes("overview.hidden=!renderedOverview"), "only shows the 3D overview after successful initialization");
+test("connected 3D overview falls back to the existing accessible project section without WebGL2", () => {
+  assert.ok(officeScript.includes("if(overview){overview.hidden=!renderedOverview"), "hides the immersive overview if WebGL cannot initialize");
+  assert.ok(officeScript.includes("const projectSection=document.querySelector"), "retains the accessible project list outside immersive mode");
   assert.ok(officeScript.includes("function closeOverview()"), "releases the overview before entering a project room");
   assert.ok(officeScript.includes("renderMap()});"), "restores the connected overview when a room closes");
+});
+
 });
