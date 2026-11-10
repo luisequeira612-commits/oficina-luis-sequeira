@@ -39,3 +39,8 @@ test("camera uses bounded drag navigation and deliberate limited rotation", () =
   assert.match(renderer, /theta=clamp\(theta\+\.14,-\.35,1\.78\)/);
   assert.match(renderer, /Centrar oficina/);
 });
+
+test("pointer controls do not depend on free-orbit drag state", () => {
+  assert.match(renderer, /canvas\.addEventListener\("pointerdown",e=>\{canvas\.setPointerCapture/);
+  assert.doesNotMatch(renderer, /last=\{x:e\.clientX,y:e\.clientY\}/);
+});
