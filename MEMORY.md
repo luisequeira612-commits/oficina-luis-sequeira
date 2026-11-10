@@ -683,7 +683,7 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Es un cambio exclusivamente CSS; no añade geometría WebGL, filtros por píxel, animaciones, bucles, dependencias, almacenamiento ni peticiones de red.
 - Se versionó la importación de `office-3d-atmosphere.css?v=2` y la hoja principal `office-view.css?v=50` para evitar caché obsoleta.
 - Se añadió `tests/verify-3d-office-atmosphere.test.mjs` para comprobar capas ambientales, caché y ausencia de keyframes.
-- Estado: añadido al PR #47; la nueva CI debe validar el conjunto completo. No afirmar mejora visual ni impacto FPS hasta revisar en Tecno Pova 4.
+- Estado: añadido al PR #47. La ejecución [42902364325](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42902364325) terminó con validate success y chequeo de contenido success; deploy se omitió correctamente en pull_request. No afirmar mejora visual ni impacto FPS hasta revisar en Tecno Pova 4.
 - Fuente: código, prueba añadida y commits de la rama `feat/office-seated-clock-main`, 2026-11-10.
 
 
@@ -692,3 +692,13 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - La primera CI posterior al ajuste ambiental [42902144982](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42902144982) detectó aserciones heredadas que todavía esperaban `office-view.css?v=49` y la importación ambiental sin versión. La sintaxis JavaScript pasó; falló el conjunto de invariantes por esas expectativas antiguas.
 - Se actualizaron las pruebas `verify-3d-atmosphere`, `verify-3d-human-worker-details` y `verify-nine-worker-open-plan` para exigir las nuevas referencias versionadas (`office-view.css?v=50` y `office-3d-atmosphere.css?v=2`).
 - No se revirtió el cambio CSS ni se alteró el motor WebGL. La nueva CI debe confirmar el resultado final.
+
+
+## Detalle de periféricos en los puestos 3D — 10 de noviembre de 2026
+
+- Se refinó el teclado de cada estación: las diez teclas que antes se representaban como barras largas ahora forman dos filas compactas de cinco teclas. Se añadió una pequeña rueda central visible en el ratón.
+- Se reutiliza el mismo número de cajas de teclas por puesto (10); el único incremento geométrico es una pieza pequeña por ratón. No hay texturas, nuevos materiales, animaciones, draw calls, dependencias, APIs, backend ni cambios de almacenamiento.
+- Renderer actualizado a `assets/office-3d.js?v=69`. Pruebas actualizadas para el teclado, rueda del ratón y versión de caché; prueba del reloj también exige v69.
+- Cambio en PR #47, rama `feat/office-seated-clock-main`. La nueva CI de este head aún debe confirmar el conjunto completo.
+- La inspección en el Tecno Pova 4 sigue pendiente; no afirmar impacto FPS ni legibilidad visual definitiva sin la prueba en dispositivo.
+- Fuente: renderer, HTML, pruebas y commits de la rama, 2026-11-10.
