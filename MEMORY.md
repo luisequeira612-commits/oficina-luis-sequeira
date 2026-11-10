@@ -521,3 +521,5 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Ajuste de regresión y caché: el test de vista abierta todavía exigía el texto antiguo «Entrar · nombre» en los botones de proyecto. Se actualizó para comprobar chips compactos y su etiqueta abreviada. La hoja `office-view.css` recibió una nueva clave de caché para que los avatares circulares y el carril de chips se actualicen en móvil.
 
 - Se alinearon las dos aserciones de la prueba del HUD móvil con `office-view.css?v=46`; la prueba del carril de chips ya pasa y el runner había detectado solo la versión de caché antigua en estas expectativas.
+
+- Se actualizó también la prueba `verify-3d-room-entrances.test.mjs`: conserva la comprobación de que cada proyecto se puede abrir, ahora mediante el nuevo chip compacto en vez del antiguo botón alto «Entrar ·».
