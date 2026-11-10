@@ -59,6 +59,8 @@ test("minifigures have a visible top stud, molded C-grip hands and vivid glossy 
 test("minifigure faces have distinct printed expressions and arms use articulated molded C-grips",()=>{
   assert.match(renderer,/const segment=\(a,b,r,color,seg=8\)/);
   assert.match(renderer,/const ink=\[\.075,\.055,\.045\]/);
+  assert.match(renderer,/const ink=\[\.075,\.055,\.045\],faceZ=z\+\.625/,"face is placed on the negative-Z side, toward the monitor");
+  assert.match(renderer,/box\(x,1\.56,z\+\.642/,"torso print faces the same direction as the face");
   assert.match(renderer,/const smile=\[\]/);
   assert.match(renderer,/index%5===4/);
   assert.match(renderer,/const shoulder=\[x\+side\*\.48,1\.49,z\+\.99\]/);
