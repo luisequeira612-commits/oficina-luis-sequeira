@@ -673,5 +673,15 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 
 - PR vigente: [#47](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/47), base main. Reúne la corrección de actividad sentada y el reloj mural decorativo.
 - Primera CI [42901154869](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42901154869): una única prueba todavía esperaba caché v67; se actualizó la aserción a v68.
-- Validación final [42901271575](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42901271575): validate success, 93/93 pruebas, cero fallos. Deploy se omitió correctamente en pull_request.
+- Validación final [42901434888](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42901434888): validate success, 93/93 pruebas, cero fallos. Deploy se omitió correctamente en pull_request.
 - Sin merge ni publicación: autonomía review. Pendiente revisión visual/FPS en Tecno Pova 4.
+
+
+## Ajuste ambiental ligero de la oficina 3D — 10 de noviembre de 2026
+
+- Sobre la rama del PR #47 se añadió profundidad ambiental al fondo de la vista: dos halos radiales suaves (frío y cálido) y una viñeta interior inferior.
+- Es un cambio exclusivamente CSS; no añade geometría WebGL, filtros por píxel, animaciones, bucles, dependencias, almacenamiento ni peticiones de red.
+- Se versionó la importación de `office-3d-atmosphere.css?v=2` y la hoja principal `office-view.css?v=50` para evitar caché obsoleta.
+- Se añadió `tests/verify-3d-office-atmosphere.test.mjs` para comprobar capas ambientales, caché y ausencia de keyframes.
+- Estado: añadido al PR #47; la nueva CI debe validar el conjunto completo. No afirmar mejora visual ni impacto FPS hasta revisar en Tecno Pova 4.
+- Fuente: código, prueba añadida y commits de la rama `feat/office-seated-clock-main`, 2026-11-10.
