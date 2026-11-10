@@ -377,3 +377,14 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Prueba de regresión añadida en <code>tests/verify-3d-worker-activity.test.mjs</code> para rutas, monitores y animación de código.
 - Pendiente de verificación: estado del workflow disparado por estos commits y comprobación visual/rendimiento en el Tecno Pova 4. La herramienta disponible para workflows asociada a commits solo devuelve ejecuciones de pull request, por lo que no se debe interpretar una lista vacía como «CI no ejecutó».
 - D sigue pendiente: fuentes <code>data/agentes.json</code>, <code>data/proyectos.json</code>, <code>data/tareas.json</code> y sincronización adicional de commits/workflows; no se modifica todavía el esquema <code>oficina-luis-sequeira-v1</code>.
+
+
+## D — datos editables y actividad GitHub ampliada — 10 de noviembre de 2026
+
+- Se añadió <code>data/agentes.json</code> con los 9 empleados nombrados, <code>data/proyectos.json</code> con los 4 proyectos y sus repositorios, y <code>data/tareas.json</code> como fuente editable de tareas futuras.
+- <code>index.html</code> carga esos JSON como semilla cuando no existe todavía <code>oficina-luis-sequeira-v1</code> en localStorage; si ya existe almacenamiento local, se conserva para no destruir personalizaciones. Esto mantiene la compatibilidad del esquema existente.
+- <code>assets/github-live.js</code> conserva ETag/If-None-Match y sondeo adaptativo existente y ahora consulta también los 5 commits recientes por repositorio, guarda su ETag independiente y expone historial reciente para los empleados. No se añadió backend ni credencial.
+- <code>assets/office-view.js</code> muestra hasta tres actividades recientes en la ficha de cada empleado cuando GitHub las proporciona.
+- Importante: una página GitHub Pages estática no puede escribir cambios de vuelta a <code>data/*.json</code> del repositorio de forma anónima. «Nuevo proyecto» sigue guardándose en localStorage; no se fingió una escritura al repositorio. Para escritura real haría falta autenticación/permiso de GitHub o un servicio intermediario, que queda fuera de las restricciones actuales.
+- Prueba añadida: <code>tests/verify-editable-office-data.test.mjs</code>.
+- Commits de esta etapa: <code>b704e478</code> (GitHub + commits), <code>333c721a</code>, <code>f8996fe4</code>, <code>859f4fe4</code> (datos), <code>fc2da1e2</code> (carga de datos), <code>ce0085fd</code> (historial), <code>94f9a6db</code> (tests).
