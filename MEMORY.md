@@ -745,3 +745,10 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Renderer actualizado a `office-3d.js?v=72`; pruebas existentes actualizadas y nueva prueba dedicada de estados.
 - PR #49 por crear/validar; no fusionado. Legibilidad y FPS en Tecno Pova 4 aún pendientes.
 - Fuente: renderer, estado dinámico del puente GitHub y pruebas del repositorio, 2026-11-10.
+
+
+### Corrección de expectativa heredada en PR #49 — 10 de noviembre de 2026
+
+- CI inicial [42904881660](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42904881660): sintaxis pasó; 97/98 pruebas pasaron. La prueba heredada de interfaz de monitor seguía esperando el color fijo oscuro en la cabecera.
+- Se actualizó la aserción para verificar `monitorStatusColor`, conservando la prueba dedicada que exige la paleta de estados trabajando/pensando/decisión/éxito/fallo/descanso.
+- PR #49 sigue abierto; falta confirmar la nueva CI.
