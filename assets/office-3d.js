@@ -39,7 +39,17 @@ function buildScene(workers,roomName=""){
  // Continuous skirting boards visually join the two solid walls to the floor.
  box(0,.17,-4.78,11.5,.28,.12,[0.42,0.50,0.57]);
  box(-5.78,.17,0,.12,.28,9.5,[0.42,0.50,0.57]);
- // Ceiling fixtures create a visible overhead light source and a stronger playable-room silhouette.\n box(-3.0,3.68,-1.05,2.15,.10,.48,[0.28,0.33,0.39]);\n box(1.45,3.68,-1.05,2.15,.10,.48,[0.28,0.33,0.39]);\n box(-3.0,3.61,-1.05,1.35,.035,.18,[0.96,0.84,0.58]);\n box(1.45,3.61,-1.05,1.35,.035,.18,[0.96,0.84,0.58]);\n box(-3.0,3.57,-1.05,1.05,.025,.12,[0.86,0.74,0.48]);\n box(1.45,3.57,-1.05,1.05,.025,.12,[0.86,0.74,0.48]);\n // Light bands on the ceiling/floor axis reinforce depth without introducing textures.\n box(-3.0,.012,-1.05,1.55,.018,.42,[0.76,0.64,0.43]);\n box(1.45,.012,-1.05,1.55,.018,.42,[0.76,0.64,0.43]);\n // Recessed wall panels and narrow battens add depth without covering project displays.
+ // Ceiling fixtures create a visible overhead light source and a stronger playable-room silhouette.
+ box(-3.0,3.68,-1.05,2.15,.10,.48,[0.28,0.33,0.39]);
+ box(1.45,3.68,-1.05,2.15,.10,.48,[0.28,0.33,0.39]);
+ box(-3.0,3.61,-1.05,1.35,.035,.18,[0.96,0.84,0.58]);
+ box(1.45,3.61,-1.05,1.35,.035,.18,[0.96,0.84,0.58]);
+ box(-3.0,3.57,-1.05,1.05,.025,.12,[0.86,0.74,0.48]);
+ box(1.45,3.57,-1.05,1.05,.025,.12,[0.86,0.74,0.48]);
+ // Light bands on the ceiling/floor axis reinforce depth without introducing textures.
+ box(-3.0,.012,-1.05,1.55,.018,.42,[0.76,0.64,0.43]);
+ box(1.45,.012,-1.05,1.55,.018,.42,[0.76,0.64,0.43]);
+ // Recessed wall panels and narrow battens add depth without covering project displays.
  for(const px of [-4.85,-4.35,3.15,3.65,4.15]){
   box(px,2.02,-4.77,.055,2.95,.055,[0.64,0.70,0.75]);
  }
