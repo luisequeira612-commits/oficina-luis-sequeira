@@ -500,3 +500,12 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Corrección de prueba: se actualizó la aserción heredada de la mano segmentada anterior para comprobar el nuevo arco C articulado de seis tramos. El primer CI detectó únicamente esa expectativa antigua; la sintaxis JavaScript pasó. Se vuelve a ejecutar la validación antes del despliegue.
 
 - Segunda corrección de prueba: se sustituyó la expectativa antigua de antebrazo cúbico por la articulación cilíndrica hombro-codo-muñeca. La validación de sintaxis y la prueba anterior de arco C ya pasaron; el runner detectó esta segunda aserción visual obsoleta.
+
+
+## Silueta moldeada de minifiguras — 10 de noviembre de 2026
+
+- Se sustituyó la cabeza cilíndrica de borde plano por una cabeza con biseles superior e inferior construidos con anillos de geometría compartida en el mismo buffer. Se añadió el poste de cuello que conecta cabeza y torso.
+- Se definieron caderas separadas, piernas cortas trapezoidales y suelas oscuras diferenciadas en ambos pies, para reforzar la silueta de minifigura sentada frente al escritorio.
+- Se conserva el renderer WebGL2 propio, sin Three.js, CDN, assets ni dependencias nuevas. Las piezas siguen siendo geometría procedural estática que reutiliza el buffer de escena; no se cambia la estructura de localStorage ni el esquema de datos.
+- Cache-bust a `office-3d.js?v=55` y regresión para cabeza biselada, cuello, piernas y suelas. Pendiente: textura facial CanvasTexture y migración a Three.js si se decide asumir su coste de descarga/ejecución; no se afirma que la especificación literal de Three.js esté completada.
+- Fuente: `assets/office-3d.js`, `index.html`, `tests/verify-3d-human-worker-details.test.mjs`, 2026-11-10.

@@ -23,6 +23,11 @@ function buildScene(workers,roomName=""){
   const taperBox=(x,y,z,wt,wb,h,d,c)=>{const a=wt/2,b=wb/2,y0=y-h/2,y1=y+h/2,z0=z-d/2,z1=z+d/2;quad([x-b,y0,z1],[x+b,y0,z1],[x+a,y1,z1],[x-a,y1,z1],c);quad([x+b,y0,z0],[x-b,y0,z0],[x-a,y1,z0],[x+a,y1,z0],c);quad([x-b,y0,z0],[x-b,y0,z1],[x-a,y1,z1],[x-a,y1,z0],c);quad([x+b,y0,z1],[x+b,y0,z0],[x+a,y1,z0],[x+a,y1,z1],c);quad([x-a,y1,z1],[x+a,y1,z1],[x+a,y1,z0],[x-a,y1,z0],c);quad([x-b,y0,z0],[x+b,y0,z0],[x+b,y0,z1],[x-b,y0,z1],c)};
  const sphere=(cx,cy,cz,rx,ry,rz,color,segments=9,rings=6)=>{for(let r=0;r<rings;r++){const p0=-Math.PI/2+Math.PI*r/rings,p1=-Math.PI/2+Math.PI*(r+1)/rings;for(let s=0;s<segments;s++){const t0=2*Math.PI*s/segments,t1=2*Math.PI*(s+1)/segments;const pt=(p,t)=>[cx+rx*Math.cos(p)*Math.cos(t),cy+ry*Math.sin(p),cz+rz*Math.cos(p)*Math.sin(t)];const a=pt(p0,t0),b=pt(p0,t1),c=pt(p1,t1),d=pt(p1,t0);quad(a,d,c,b,color)}}};
  const cyl=(x,y,z,r,h,color,seg=8)=>{for(let i=0;i<seg;i++){const a=i*2*Math.PI/seg,b=(i+1)*2*Math.PI/seg;const p1=[x+Math.cos(a)*r,y-h/2,z+Math.sin(a)*r],p2=[x+Math.cos(b)*r,y-h/2,z+Math.sin(b)*r],p3=[x+Math.cos(b)*r,y+h/2,z+Math.sin(b)*r],p4=[x+Math.cos(a)*r,y+h/2,z+Math.sin(a)*r];quad(p1,p4,p3,p2,color);addTri([x,y+h/2,z],p3,p4,color);addTri([x,y-h/2,z],p1,p2,color)}};
+ const roundedCylinder=(x,y,z,r,h,color,seg=24)=>{
+  const profile=[[-.50,.84],[-.43,.96],[-.32,1],[.32,1],[.43,.96],[.50,.84]],rings=profile.map(([yy,rr])=>Array.from({length:seg},(_,i)=>{const a=i*2*Math.PI/seg;return [x+Math.cos(a)*r*rr,y+yy*h,z+Math.sin(a)*r*rr]}));
+  for(let j=0;j<rings.length-1;j++)for(let i=0;i<seg;i++){const n=(i+1)%seg;quad(rings[j][i],rings[j][n],rings[j+1][n],rings[j+1][i],color)}
+  for(let i=0;i<seg;i++){const n=(i+1)%seg;addTri([x,y-h*.5,z],rings[0][n],rings[0][i],color);addTri([x,y+h*.5,z],rings[rings.length-1][i],rings[rings.length-1][n],color)}
+ };
  const segment=(a,b,r,color,seg=8)=>{
   const dx=b[0]-a[0],dy=b[1]-a[1],dz=b[2]-a[2],len=Math.hypot(dx,dy,dz)||1,n=[dx/len,dy/len,dz/len];
   const ref=Math.abs(n[1])<.88?[0,1,0]:[0,0,1],cross=(u,v)=>[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];
@@ -215,10 +220,15 @@ function buildScene(workers,roomName=""){
   }
   // Classic minifigure proportions with molded hair and printed facial details.
   const skin=tone[worker.tone]||tone.medium,shirt=shirtByName[worker.shirt]||shirts[index%shirts.length],hairColor=hairColors[index%hairColors.length],hairStyle=worker.hair||["short","long","curly","tied"][index%4],workerStart=positions.length,legsStart=positions.length;
-  box(x,.88,z+.82,.66,.25,.40,[.16,.20,.25]);box(x-.19,.66,z+.83,.31,.40,.34,[.17,.22,.28]);box(x+.19,.66,z+.83,.31,.40,.34,[.17,.22,.28]);box(x-.19,.43,z+.98,.32,.14,.43,[.13,.16,.19]);box(x+.19,.43,z+.98,.32,.14,.43,[.13,.16,.19]);const legsEnd=positions.length;
+  // Distinct hip block, short legs and forward-facing block feet create the classic seated minifigure silhouette.
+  box(x,.88,z+.82,.66,.25,.40,[.16,.20,.25]);
+  taperBox(x-.19,.66,z+.83,.34,.31,.40,.34,[.17,.22,.28]);taperBox(x+.19,.66,z+.83,.34,.31,.40,.34,[.17,.22,.28]);
+  box(x-.19,.43,z+1.00,.32,.14,.43,[.13,.16,.19]);box(x+.19,.43,z+1.00,.32,.14,.43,[.13,.16,.19]);
+  box(x-.19,.352,z+1.00,.325,.035,.435,[.075,.09,.12]);box(x+.19,.352,z+1.00,.325,.035,.435,[.075,.09,.12]);
+  const legsEnd=positions.length;
   taperBox(x,1.29,z+1,.96,.66,.70,.46,shirt);box(x,1.56,z+1.238,.035,.34,.025,[.96,.94,.84]);box(x,1.625,z+1.18,.34,.075,.035,[.96,.94,.84]);box(x,1.22,z+1.238,.58,.035,.025,[.96,.94,.84]);
   if(index%3===1){taperBox(x,1.30,z+1.255,.42,.34,.48,.025,[.13,.20,.28]);box(x,1.51,z+1.278,.09,.12,.018,[.88,.73,.35])}else if(index%3===2){for(let k=0;k<2;k++)sphere(x,1.48-k*.16,z+1.27,.025,.025,.018,[.94,.88,.68],6,4)}else{box(x-.25,1.44,z+1.25,.12,.14,.025,[.91,.91,.86]);box(x+.25,1.44,z+1.25,.12,.14,.025,[.91,.91,.86])}
-  const headStart=positions.length;cyl(x,2.02,z+.99,.365,.61,skin,24);
+  const headStart=positions.length;cyl(x,1.68,z+.99,.17,.20,skin,16);roundedCylinder(x,2.02,z+.99,.365,.61,skin,24);
   let studY=2.49;if(hairStyle==="short"){sphere(x,2.29,z+.94,.36,.14,.31,hairColor,14,7);box(x,2.25,z+1.235,.54,.12,.08,hairColor)}else if(hairStyle==="curly"){studY=2.58;sphere(x,2.32,z+.94,.37,.18,.32,hairColor,14,8);for(let k=0;k<7;k++){const q=k*Math.PI*2/7;sphere(x+Math.cos(q)*.27,2.36,z+.94+Math.sin(q)*.24,.105,.11,.105,hairColor,8,5)}}else if(hairStyle==="long"){sphere(x,2.31,z+.94,.37,.15,.32,hairColor,14,7);sphere(x-.30,2.03,z+.99,.12,.38,.18,hairColor,10,7);sphere(x+.30,2.03,z+.99,.12,.38,.18,hairColor,10,7)}else{studY=2.68;sphere(x,2.31,z+.94,.37,.15,.32,hairColor,14,7);sphere(x,2.47,z+.69,.15,.17,.15,hairColor,10,7)}cyl(x,studY,z+.99,.135,.12,skin,16);
   if(index===3||index===7){box(x,2.40,z+.98,.70,.09,.68,[.78,.18,.13]);box(x,2.42,z+1.01,.72,.035,.69,[.95,.72,.25])}
   if(index===2){sphere(x-.24,2.18,z+.98,.075,.075,.075,[.94,.72,.22],9,6);sphere(x+.24,2.18,z+.98,.075,.075,.075,[.94,.72,.22],9,6)}

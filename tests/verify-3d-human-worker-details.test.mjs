@@ -67,3 +67,12 @@ test("minifigure faces have distinct printed expressions and arms use articulate
   assert.match(renderer,/index===4/);
   assert.match(renderer,/index===6/);
 });
+
+
+test("minifigure heads have molded bevels, neck posts and separate short legs with sole details",()=>{
+  assert.match(renderer,/const roundedCylinder=\(x,y,z,r,h,color,seg=24\)/);
+  assert.match(renderer,/roundedCylinder\(x,2\.02,z\+\.99,\.365,\.61,skin,24\)/);
+  assert.match(renderer,/cyl\(x,1\.68,z\+\.99,\.17,\.20,skin,16\)/);
+  assert.match(renderer,/taperBox\(x-\.19,\.66,z\+\.83,\.34,\.31,\.40,\.34/);
+  assert.match(renderer,/box\(x-\.19,\.352,z\+1\.00,\.325,\.035,\.435/);
+});
