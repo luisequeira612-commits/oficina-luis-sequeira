@@ -383,7 +383,7 @@ function makeCharacter(agent){
  holder.innerHTML=CHARACTER_SVG[agent.role];
  const svg=holder.firstElementChild;
  wrap.appendChild(svg);
- const role=document.createElement("div");role.className="agent-role";role.textContent=(agent.name||agent.role)+" · "+agent.role;wrap.appendChild(role);
+ wrap.dataset.agentRole=agent.role;const role=document.createElement("div");role.className="agent-role";role.textContent=(agent.name||agent.role)+" · "+agent.role;wrap.appendChild(role);
  const status=document.createElement("div");status.className="agent-state";status.textContent=STATES[state][1];status.dataset.status="true";wrap.appendChild(status);
  const remove=document.createElement("button");remove.type="button";remove.className="agent-remove";remove.textContent="×";remove.setAttribute("aria-label","Quitar personaje "+agent.role);remove.title="Quitar personaje";
  remove.addEventListener("click",()=>removeAgent(agent.id,agent.role));
