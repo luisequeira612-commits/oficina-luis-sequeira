@@ -644,3 +644,9 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Se mantiene el buffer compartido; no se añaden texturas, dependencias, animaciones, APIs, almacenamiento ni servicios de pago.
 - Se invalida la caché de office-3d.js a v68 y se añade tests/verify-3d-office-wall-clock.test.mjs.
 - Fuente: cambio del renderer y prueba de regresión, 2026-11-10. Requiere CI y comprobación visual en el Tecno Pova 4.
+
+
+### Dependencia de PR #44 para validación de PR #45 — 10 de noviembre de 2026
+
+- PR #45 se retargeteó para basarse en la rama fix/keep-github-workers-seated de PR #44. La primera CI de PR #45 contra main falló porque main todavía contiene aserciones antiguas sobre caminata, que PR #44 corrige.
+- El cambio de reloj no toca el comportamiento de trabajadores; se valida como PR apilado sobre el baseline sentado. Después de que PR #44 se integre, PR #45 deberá retargetearse a main y volver a validar.
