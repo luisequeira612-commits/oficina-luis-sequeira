@@ -62,7 +62,7 @@ test("FPS meter remains measured and cache versions are current",()=>{
  assert.ok(renderer.includes("fpsFrames*1000/Math.max(1,timestamp-fpsWindowStart)"));
  assert.match(styles,/\.office-3d-fps\{[^}]*z-index:10/);
  assert.match(page,/office-view\.css\?v=50/);
- assert.match(page,/office-3d\\.js\\?v=77/);
+ assert.match(page,/office-3d\.js\?v=77/);
 });
 
 test("3D renderer pauses while the document is hidden and resumes when visible",()=>{
