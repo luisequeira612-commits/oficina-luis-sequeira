@@ -14,5 +14,5 @@ test("open-plan monitor accents follow the owning project",()=>{
  assert.ok(renderer.includes('stationProjectKey.includes("babymonster")||stationProjectKey.includes("monstie")||stationProjectKey.includes("chart")?[0.70,0.38,0.66]'));
  assert.ok(renderer.includes("box(x-.405,1.63,z-.245,.07,.43,.012,stationAccent)"));
  assert.ok(renderer.includes("codeRow%3===0?stationAccent:[0.63,0.91,1]"));
- assert.match(page,/office-3d\.js\?v=75/);
+ assert.match(page,/office-3d\.js\?v=76/);
 });
