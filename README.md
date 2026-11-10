@@ -71,3 +71,8 @@ El constructor de la vista general declara sus propios materiales geométricos, 
 ### Diagnóstico de la vista 3D
 
 Si WebGL 2 no está disponible o el motor falla al construir la escena, la página conserva el mapa alternativo y muestra el motivo del fallo fuera del contenedor 3D oculto. Los scripts del renderer y de la vista llevan una versión de caché para evitar reutilizar archivos antiguos del navegador. La validación automatizada comprueba que el diagnóstico permanezca visible; no sustituye una prueba física en Android.
+
+
+### Animaciones Tycoon de trabajadores
+
+Los trabajadores low-poly ahora tienen rangos de movimiento independientes para cabeza, brazos y manos. En estado de trabajo realizan pequeños movimientos de tecleo; al pensar mueven la cabeza de forma más pausada; al esperar y descansar usan movimientos más suaves y distintos. Todo sigue siendo animación local ilustrativa, se limita a unos 30 FPS y respeta la preferencia de movimiento reducido del dispositivo. No representa telemetría ni ejecución real de agentes.
