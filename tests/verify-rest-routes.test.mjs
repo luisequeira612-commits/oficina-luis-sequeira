@@ -5,7 +5,7 @@ const renderer=readFileSync(new URL("../assets/office-3d.js",import.meta.url),"u
 const css=readFileSync(new URL("../assets/office-view.css",import.meta.url),"utf8");
 test("resting workers use clear inter-column aisles and return to their own desk",()=>{
  assert.match(renderer,/const laneX=col===0\?-1\.82:col===1\?1\.82:5\.48/);
- assert.match(renderer,/restZ:-4\.48/);
+ assert.match(renderer,/restZ:-3\.2/);
  assert.match(renderer,/rest=\[worker\.laneX,worker\.restZ\],path=\[start,lane,rest\]/);
  assert.match(renderer,/const returning=phase>=oneWay\+dwell/);
  assert.match(renderer,/const speed=\.82,dwell=3\.8/);

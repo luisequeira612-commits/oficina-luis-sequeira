@@ -165,12 +165,12 @@ function buildScene(workers,roomName=""){
  if(count>=7){
   // Break points are mounted on the back wall and reached via the gaps between desk columns.
   for(const stationX of [-1.82,1.82,5.48]){
-   box(stationX,1.08,-4.59,.46,.92,.22,[.23,.32,.39]);
-   box(stationX,1.13,-4.46,.31,.48,.035,[.12,.22,.29]);
-   box(stationX,1.28,-4.435,.19,.055,.018,[.18,.83,.74]);
-   box(stationX-.11,.87,-4.435,.08,.12,.018,[.78,.85,.89]);
-   box(stationX+.11,.87,-4.435,.08,.12,.018,[.78,.85,.89]);
-   box(stationX,1.58,-4.59,.22,.055,.24,[.88,.70,.38]);
+   box(stationX,1.08,-1.45,.34,.92,.30,[.23,.32,.39]);
+   box(stationX,1.13,-1.265,.25,.48,.035,[.12,.22,.29]);
+   box(stationX,1.28,-1.245,.15,.055,.018,[.18,.83,.74]);
+   box(stationX-.085,.87,-1.245,.06,.12,.018,[.78,.85,.89]);
+   box(stationX+.085,.87,-1.245,.06,.12,.018,[.78,.85,.89]);
+   box(stationX,1.58,-1.45,.18,.055,.24,[.88,.70,.38]);
   }
  }
  workers.forEach((worker,index)=>{
@@ -281,7 +281,7 @@ function buildScene(workers,roomName=""){
   else if(worker.state==="st-f"){box(x-.38,2.55,z+.96,.1,.3,.1,[.86,.16,.22]);sphere(x-.38,2.32,z+.96,.07,.07,.07,[.86,.16,.22],7,5)}
   const bodyEnd=positions.length;
   const laneX=col===0?-1.82:col===1?1.82:5.48;
-  workerRanges.push({start:workerStart,end:positions.length,legsStart,legsEnd,bodyStart:legsEnd,bodyEnd,headStart,headEnd,armsStart,armsEnd,handsStart,handsEnd,monitorStart,monitorEnd,state:worker.state,index,employeeId:worker.id||"",name:worker.name||worker.role||"Agente",role:worker.role||"Puesto",roomId:worker.roomId||"",x,z,laneX,restZ:-4.48});
+  workerRanges.push({start:workerStart,end:positions.length,legsStart,legsEnd,bodyStart:legsEnd,bodyEnd,headStart,headEnd,armsStart,armsEnd,handsStart,handsEnd,monitorStart,monitorEnd,state:worker.state,index,employeeId:worker.id||"",name:worker.name||worker.role||"Agente",role:worker.role||"Puesto",roomId:worker.roomId||"",x,z,laneX,restZ:-3.2});
  });
  // Layered ceiling fixtures: recessed rails and three pendant lamps with bright diffusers.
  box(0,3.72,-.5,4.8,.08,.7,[0.34,0.41,0.47]);
