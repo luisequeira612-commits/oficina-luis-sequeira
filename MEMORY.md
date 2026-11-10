@@ -743,7 +743,7 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Paleta: trabajando verde azulado; pensando azul; requiere decisión ámbar; éxito verde; fallo rojo; descanso/otro gris azulado.
 - Solo se cambia el color de la primitiva de cabecera que ya existía: no se añade geometría, draw calls, materiales, texturas, animaciones, dependencias, APIs, backend ni almacenamiento.
 - Renderer actualizado a `office-3d.js?v=72`; pruebas existentes actualizadas y nueva prueba dedicada de estados.
-- PR #49 por crear/validar; no fusionado. Legibilidad y FPS en Tecno Pova 4 aún pendientes.
+- PR #49 fue fusionado mediante squash en `6b21039ba3163e1514c0d1b5074a40574a0ec607`; CI [42904967960](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42904967960) y Pages [42905037573](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42905037573) completados con éxito. La actualización dinámica real se corrigió en PR #50.
 - Fuente: renderer, estado dinámico del puente GitHub y pruebas del repositorio, 2026-11-10.
 
 
@@ -751,7 +751,7 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 
 - CI inicial [42904881660](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42904881660): sintaxis pasó; 97/98 pruebas pasaron. La prueba heredada de interfaz de monitor seguía esperando el color fijo oscuro en la cabecera.
 - Se actualizó la aserción para verificar `monitorStatusColor`, conservando la prueba dedicada que exige la paleta de estados trabajando/pensando/decisión/éxito/fallo/descanso.
-- PR #49 sigue abierto; falta confirmar la nueva CI.
+- PR #49 fue fusionado y desplegado; su color inicial era estático. PR #50 corrige el refresco del color al cambiar estado.
 
 
 ## Corrección: refresco dinámico del color de estado del monitor — 10 de noviembre de 2026
@@ -765,4 +765,4 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 ### Corrección de caché heredada en PR #50 — 10 de noviembre de 2026
 
 - La primera CI [42905449263](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42905449263) pasó sintaxis y falló una prueba de identidad de proyecto que aún esperaba la caché v72. Se actualizó a v73; no falló la lógica de actualización de estado.
-- Revisar la nueva ejecución antes de fusionar PR #50.
+- PR #50 fue fusionado mediante squash en `790e966700379e92d109ad4f7b5d1d34e17ac682` tras CI [42905544491](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42905544491) aprobada. El despliegue main [42905636359](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42905636359) está en curso.
