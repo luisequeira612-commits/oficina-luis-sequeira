@@ -73,9 +73,9 @@ test("3D renderer pauses while the document is hidden and resumes when visible",
 });
 
 test("viewport measurements run on initialization and ResizeObserver changes, not every frame",()=>{
- assert.match(renderer,/lastFrame=timestamp;const seconds=timestamp\\*\\.001\\*motionScale/);
- assert.match(renderer,/resize\\(\\);const observer=new ResizeObserver\\(resize\\);observer\\.observe\\(container\\)/);
- assert.doesNotMatch(renderer,/lastFrame=timestamp;resize\\(\\);/);
+ assert.ok(renderer.includes("lastFrame=timestamp;const seconds=timestamp*.001*motionScale"));
+ assert.ok(renderer.includes("resize();const observer=new ResizeObserver(resize);observer.observe(container)"));
+ assert.doesNotMatch(renderer,/lastFrame=timestamp;resize\(\);/);
 });
 
 test("animated worker uploads stay inside each worker vertex range",()=>{
