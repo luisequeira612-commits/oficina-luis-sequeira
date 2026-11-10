@@ -171,6 +171,18 @@ function buildScene(workers,roomName=""){
   box(-5.54,2.52-(note%2)*.42,-1.68+note*.42,.018,.025,.20,[0.94,0.95,0.92]);
  }
  box(-5.55,1.62,-1.05,.18,.06,2.22,woodTop);
+ // Analog wall clock: a small office prop with baked geometry, no texture or runtime animation.
+ const clockX=4.65,clockY=2.95,clockFaceZ=-4.69;
+ sphere(clockX,clockY,-4.79,.42,.42,.075,[0.17,0.25,0.34],12,8);
+ sphere(clockX,clockY,clockFaceZ,.35,.35,.035,[0.93,0.92,0.84],12,8);
+ for(let mark=0;mark<12;mark++){
+  const angle=mark*Math.PI/6,mx=clockX+Math.cos(angle)*.285,my=clockY+Math.sin(angle)*.285;
+  sphere(mx,my,clockFaceZ+.035,.018,.018,.012,[0.24,0.31,0.37],6,4);
+ }
+ // Fixed 10:10 hands are decorative geometry, not a live clock reading.
+ segment([clockX,clockY,clockFaceZ+.045],[clockX-.13,clockY+.13,clockFaceZ+.045],.022,[0.17,0.25,0.34],7);
+ segment([clockX,clockY,clockFaceZ+.05],[clockX+.21,clockY+.19,clockFaceZ+.05],.014,[0.17,0.25,0.34],7);
+ sphere(clockX,clockY,clockFaceZ+.06,.035,.035,.018,[0.82,0.55,0.24],7,4);
  // Floor planks and rugs.
  for(let i=-5;i<6;i++)box(i*.98,-.005,0,.018,.012,9.6,[0.72,0.65,0.55]);
  box(0,.025,1.7,9,.05,3.2,[0.31,0.38,0.43]);
@@ -220,16 +232,19 @@ function buildScene(workers,roomName=""){
   sphere(x+.14,.30,z+.665,.035,.035,.018,[0.24,0.82,0.72],6,4);
   box(x+.12,.20,z+.665,.06,.035,.018,[0.76,0.82,0.86]);
   box(x,1.65,z-.36,1.12,.78,.14,metal);box(x,1.65,z-.265,.98,.62,.025,screen);
-  // Animated code rows live inside the monitor surface; they scroll without textures or external assets.
+  // Compact editor chrome makes each animated display read as a real work interface.
   const monitorStart=positions.length;
+  box(x,1.92,z-.245,.76,.028,.012,[0.16,0.23,0.30]);
+  box(x-.405,1.63,z-.245,.07,.43,.012,[0.12,0.62,0.66]);
+  // Animated code rows live inside the monitor surface; they scroll without textures or external assets.
   for(let codeRow=0;codeRow<7;codeRow++){
    const codeWidth=[.18,.31,.24,.38,.16,.28,.22][codeRow],codeY=1.86-codeRow*.075;
-   box(x-.39+codeWidth/2,codeY,z-.24,codeWidth,.025,.012,codeRow%3===0?[0.12,0.95,0.82]:[0.63,0.91,1]);
+   box(x-.27+codeWidth/2,codeY,z-.24,codeWidth,.025,.012,codeRow%3===0?[0.12,0.95,0.82]:[0.63,0.91,1]);
   }
   const monitorEnd=positions.length;
   box(x,1.23,z-.36,.14,.12,.14,metal);box(x,.99,z-.36,.68,.08,.35,metal);
-  box(x,.97,z+.08,.72,.035,.26,[0.18,0.22,0.27]);for(let k=0;k<10;k++)box(x-.31+k*.069,.995,z+.08,.035,.012,.19,[0.66,0.72,0.76]);
-  sphere(x+.62,.99,z+.12,.11,.06,.14,metal,8,5);
+  box(x,.97,z+.08,.72,.035,.26,[0.18,0.22,0.27]);for(let row=0;row<2;row++)for(let key=0;key<5;key++)box(x-.21+key*.105,.995,z+.015+row*.13,.075,.012,.065,[0.72,0.77,0.80]);
+  sphere(x+.62,.99,z+.12,.11,.06,.14,metal,8,5);box(x+.62,1.052,z+.12,.014,.006,.035,[0.12,0.16,0.20]);
   // Chair, cushion, back, stem and five-foot base.
   box(x,.78,z+1.55,.9,.16,.78,chair);box(x,1.3,z+1.88,.86,1.05,.16,chair);cyl(x,.38,z+1.55,.09,.58,metal);
   // Padded armrests and upright supports give the task chair a more complete silhouette.

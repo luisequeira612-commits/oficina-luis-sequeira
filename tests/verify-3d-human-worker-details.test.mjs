@@ -10,15 +10,15 @@ test("3D workers keep the approved minifigure construction",()=>{
  assert.ok(renderer.includes("taperBox(x,1.29"));
  assert.ok(renderer.includes("taperBox(x,1.30"));
  assert.match(renderer,/workerRanges.push/);
- assert.match(renderer,/for(let sx=-5;sx<=5;sx+=1.25)/);
+ assert.ok(renderer.includes("for(let sx=-5;sx<=5;sx+=1.25)"));
 });
 test("worker animation separates head arms and typing hands",()=>{
  assert.match(renderer,/const headStart=positions.length/);
  assert.match(renderer,/const handsStart=positions.length/);
  assert.match(renderer,/headStart,headEnd,armsStart,armsEnd,handsStart,handsEnd/);
- assert.match(renderer,/Math.abs(Math.sin(seconds*16+worker.index))*.055/);
- assert.match(renderer,/worker.headStart+1/);
- assert.match(renderer,/worker.handsStart+1/);
+ assert.ok(renderer.includes("Math.abs(Math.sin(seconds*16+worker.index))*.055"));
+ assert.ok(renderer.includes("worker.headStart+1"));
+ assert.ok(renderer.includes("worker.handsStart+1"));
  assert.match(renderer,/prefers-reduced-motion/);
  assert.match(renderer,/worker.state==="st-s"/);
  assert.match(renderer,/worker.state==="st-f"/);
@@ -26,19 +26,19 @@ test("worker animation separates head arms and typing hands",()=>{
 test("shared overview preserves worker ranges",()=>{
  assert.match(renderer,/const allWorkers=rooms.flatMap/);
  assert.match(renderer,/const workerRanges=scene.workerRanges/);
- assert.match(renderer,/workerRanges,count:positions.length/3/);
+ assert.match(renderer,/workerRanges,count:positions.length\/3/);
 });
 test("camera remains bounded and deliberate",()=>{
- assert.match(renderer,/target[0]=clamp(target[0]-dx*.018,-4.8,4.8)/);
- assert.match(renderer,/target[2]=clamp(target[2]+dy*.018,-7.5,7.5)/);
- assert.match(renderer,/theta=clamp(theta+.14,-.35,1.78)/);
+ assert.match(renderer,/target\[0\]=clamp\(target\[0\]-dx\*\.018,-4\.8,4\.8\)/);
+ assert.match(renderer,/target\[2\]=clamp\(target\[2\]\+dy\*\.018,-7\.5,7\.5\)/);
+ assert.ok(renderer.includes("theta=clamp(theta+.14,-.35,1.78)"));
  assert.match(renderer,/Centrar oficina/);
 });
 test("minifigures keep face prints hands and glossy finish",()=>{
  assert.match(renderer,/faceCanvas.width=64;faceCanvas.height=48/);
- assert.match(renderer,/printFaceCanvas(x,z,index,skin)/);
- assert.match(renderer,/const segment=(a,b,r,color,seg=8)/);
- assert.match(renderer,/pow(max(dot(reflect(-keyLight,n),viewDir),0.0),48.0)*0.28/);
+ assert.ok(renderer.includes("const printFaceCanvas=(x,z,index,skin)=>"));
+ assert.ok(renderer.includes("const segment=(a,b,r,color,seg=8)=>"));
+ assert.ok(renderer.includes("pow(max(dot(reflect(-keyLight,n),viewDir),0.0),48.0)*0.28"));
 });
 test("3D worker activity is seated and route-free",()=>{
  assert.doesNotMatch(renderer,/function sampleRoute/);
@@ -46,11 +46,21 @@ test("3D worker activity is seated and route-free",()=>{
  assert.match(renderer,/worker.renderX=worker.x;worker.renderZ=worker.z/);
  assert.match(renderer,/monitorShift/);
 });
+test("workstation monitors have compact editor chrome above animated code rows",()=>{
+ assert.ok(renderer.includes("Compact editor chrome makes each animated display read as a real work interface."));
+ assert.ok(renderer.includes("box(x,1.92,z-.245,.76,.028,.012,[0.16,0.23,0.30])"));
+ assert.ok(renderer.includes("box(x-.405,1.63,z-.245,.07,.43,.012,[0.12,0.62,0.66])"));
+ assert.ok(renderer.includes("x-.27+codeWidth/2"));
+});
+test("workstation keyboard has a compact two-row key layout and mouse wheel",()=>{
+ assert.ok(renderer.includes("for(let row=0;row<2;row++)for(let key=0;key<5;key++)"));
+ assert.ok(renderer.includes("box(x+.62,1.052,z+.12,.014,.006,.035"));
+});
 test("FPS meter remains measured and cache versions are current",()=>{
  assert.match(renderer,/className="office-3d-fps"/);
- assert.match(renderer,/fpsFrames++/);
- assert.match(renderer,/fpsFrames*1000/Math.max(1,timestamp-fpsWindowStart)/);
+ assert.ok(renderer.includes("fpsFrames++"));
+ assert.ok(renderer.includes("fpsFrames*1000/Math.max(1,timestamp-fpsWindowStart)"));
  assert.match(styles,/\.office-3d-fps\{[^}]*z-index:10/);
- assert.match(page,/office-view\.css\?v=49/);
- assert.match(page,/office-3d\.js\?v=67/);
+ assert.match(page,/office-view\.css\?v=50/);
+ assert.match(page,/office-3d\.js\?v=70/);
 });

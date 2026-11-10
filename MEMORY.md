@@ -635,3 +635,86 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Validación final [42895621448](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42895621448): validate y deploy success. La suite completa de Node pasó en validate; GitHub Pages publicó el commit de código/pruebas `b6fd0791da547eede61a083cb21fd0dc32802add`.
 - El cambio de movimiento queda desplegado, pero la nueva ruta y el giro aún necesitan confirmación visual de Luis en el Tecno Pova 4. Los 30 FPS confirmados corresponden a la versión anterior; no atribuir esa medición a esta nueva versión hasta que se vuelva a comprobar en el dispositivo.
 - Fuente: GitHub Actions run 42895621448 y confirmación del usuario sobre 30 FPS en la versión anterior, 2026-11-10.
+
+
+## Estado sentado coherente con actividad real de GitHub — 10 de noviembre de 2026
+
+- La animación 3D mantiene a los empleados sentados: la actividad real de GitHub Actions se refleja con el estado de trabajo y la animación de teclado, sin desplazar el personaje fuera del escritorio.
+- Se eliminó la clase obsoleta `is-walking` del puente de actividad de GitHub, que ya no correspondía al diseño sentado.
+- Se amplió `tests/verify-3d-idle-walk.test.mjs` para comprobar que una ejecución real activa `st-w` y nunca introduce el estado de caminar.
+- No se modifican repositorios vinculados, localStorage, esquema, dependencias, APIs, backend ni presupuesto. Las animaciones siguen siendo simulaciones visuales; la ejecución de GitHub Actions es la señal real.
+- Fuente: cambios y pruebas del PR de corrección, 2026-11-10.
+
+
+### Corrección de CI en PR #44 — 10 de noviembre de 2026
+
+- La primera ejecución [42898945765](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42898945765) falló por comprobaciones heredadas que aún esperaban coordenadas de caminata, y por expresiones regulares inválidas o desactualizadas en las pruebas. No indicó un error de sintaxis en los archivos de aplicación.
+- Se actualizaron las pruebas de trabajadores humanos, animación en reposo, actividad, planta abierta y rutas de descanso para comprobar la postura sentada y la cámara/selección existentes.
+- La nueva ejecución para el head actualizado todavía no aparece en los resultados consultados; PR #44 sigue abierto y sin fusionar. No declarar CI aprobado hasta confirmarlo.
+
+
+## Detalle de reloj mural en la oficina 3D — 10 de noviembre de 2026
+
+- Se añade un reloj analógico decorativo a la pared del fondo, construido con la geometría compartida del renderer WebGL2. Incluye marco, esfera, doce marcas y manecillas fijas a las 10:10.
+- La hora es solo un elemento decorativo fijo; no se presenta como hora local ni como dato en vivo.
+- Se mantiene el buffer compartido; no se añaden texturas, dependencias, animaciones, APIs, almacenamiento ni servicios de pago.
+- Se invalida la caché de office-3d.js a v68 y se añade tests/verify-3d-office-wall-clock.test.mjs.
+- Fuente: cambio del renderer y prueba de regresión, 2026-11-10. Requiere CI y comprobación visual en el Tecno Pova 4.
+
+
+## PR #46 — trabajadores sentados y detalle de reloj mural (10 de noviembre de 2026)
+
+- PR #46 reúne el cambio de coherencia de actividad real con trabajadores sentados y el reloj mural decorativo en un solo cambio basado en main. PR #44 se cerró como supersedido, sin fusionarse por separado; PR #45 se cerró como intento apilado sustituido.
+- La validación de la corrección de trabajadores había pasado previamente en [42900787830](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42900787830): 92/92 pruebas, cero fallos. PR #46 necesita su propia ejecución completa contra main.
+- No fusionar sin autorización; el modo de autonomía continúa en review.
+
+
+## PR #47 — consolidación y validación final (10 de noviembre de 2026)
+
+- PR vigente: [#47](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/47), base main. Reúne la corrección de actividad sentada y el reloj mural decorativo.
+- Primera CI [42901154869](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42901154869): una única prueba todavía esperaba caché v67; se actualizó la aserción a v68.
+- Validación final [42901434888](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42901434888): validate success, 93/93 pruebas, cero fallos. Deploy se omitió correctamente en pull_request.
+- Sin merge ni publicación: autonomía review. Pendiente revisión visual/FPS en Tecno Pova 4.
+
+
+## Ajuste ambiental ligero de la oficina 3D — 10 de noviembre de 2026
+
+- Sobre la rama del PR #47 se añadió profundidad ambiental al fondo de la vista: dos halos radiales suaves (frío y cálido) y una viñeta interior inferior.
+- Es un cambio exclusivamente CSS; no añade geometría WebGL, filtros por píxel, animaciones, bucles, dependencias, almacenamiento ni peticiones de red.
+- Se versionó la importación de `office-3d-atmosphere.css?v=2` y la hoja principal `office-view.css?v=50` para evitar caché obsoleta.
+- Se añadió `tests/verify-3d-office-atmosphere.test.mjs` para comprobar capas ambientales, caché y ausencia de keyframes.
+- Estado: añadido al PR #47. La ejecución [42902364325](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42902364325) terminó con validate success y chequeo de contenido success; deploy se omitió correctamente en pull_request. No afirmar mejora visual ni impacto FPS hasta revisar en Tecno Pova 4.
+- Fuente: código, prueba añadida y commits de la rama `feat/office-seated-clock-main`, 2026-11-10.
+
+
+### Corrección de pruebas de caché del ajuste ambiental — 10 de noviembre de 2026
+
+- La primera CI posterior al ajuste ambiental [42902144982](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42902144982) detectó aserciones heredadas que todavía esperaban `office-view.css?v=49` y la importación ambiental sin versión. La sintaxis JavaScript pasó; falló el conjunto de invariantes por esas expectativas antiguas.
+- Se actualizaron las pruebas `verify-3d-atmosphere`, `verify-3d-human-worker-details` y `verify-nine-worker-open-plan` para exigir las nuevas referencias versionadas (`office-view.css?v=50` y `office-3d-atmosphere.css?v=2`).
+- No se revirtió el cambio CSS ni se alteró el motor WebGL. La nueva CI debe confirmar el resultado final.
+
+
+## Detalle de periféricos en los puestos 3D — 10 de noviembre de 2026
+
+- Se refinó el teclado de cada estación: las diez teclas que antes se representaban como barras largas ahora forman dos filas compactas de cinco teclas. Se añadió una pequeña rueda central visible en el ratón.
+- Se reutiliza el mismo número de cajas de teclas por puesto (10); el único incremento geométrico es una pieza pequeña por ratón. No hay texturas, nuevos materiales, animaciones, draw calls, dependencias, APIs, backend ni cambios de almacenamiento.
+- Renderer actualizado a `assets/office-3d.js?v=69`. Pruebas actualizadas para el teclado, rueda del ratón y versión de caché; prueba del reloj también exige v69.
+- Cambio en PR #47, rama `feat/office-seated-clock-main`. La ejecución [42902848275](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42902848275) terminó con validate success y chequeo de contenido success; deploy se omitió correctamente en pull_request.
+- La inspección en el Tecno Pova 4 sigue pendiente; no afirmar impacto FPS ni legibilidad visual definitiva sin la prueba en dispositivo.
+- Fuente: renderer, HTML, pruebas y commits de la rama, 2026-11-10.
+
+
+## Interfaz compacta de monitores en PR #47 — 10 de noviembre de 2026
+
+- Se refinó el área de pantalla de cada estación con una barra superior oscura y una barra lateral turquesa; las siete líneas de código animadas se desplazaron para dejar espacio a la interfaz.
+- Son dos primitivas geométricas adicionales por monitor (18 en la oficina de nueve puestos), dentro del mismo buffer compartido y del único draw call existente. No se añadieron texturas, materiales, animaciones ni dependencias.
+- Caché del renderer actualizada a `office-3d.js?v=70`; pruebas de monitores, teclado, ratón y reloj actualizadas.
+- Cambio añadido al PR #47. La CI de este nuevo head debe pasar antes de cualquier merge. La legibilidad y los FPS aún requieren confirmación física en el Tecno Pova 4.
+- Fuente: renderer y pruebas del PR #47, 2026-11-10.
+
+
+### Corrección de expectativa de caché de monitores — 10 de noviembre de 2026
+
+- La primera CI de la interfaz compacta de monitores [42903400038](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42903400038) pasó la comprobación de sintaxis JavaScript y falló en una aserción heredada que todavía esperaba `office-3d.js?v=69`.
+- Se actualizó esa expresión regular en `tests/verify-3d-human-worker-details.test.mjs` para exigir v70. No se revirtió el código del renderer.
+- Se debe revisar el resultado de la nueva CI del head corregido antes de fusionar.

@@ -61,7 +61,7 @@ test("direct employee selection highlights the worker in the actual WebGL scene"
 
 
 test("the deployed HTML requests the fresh stylesheet that positions floating 3D nameplates", () => {
-  assert.match(html, /office-view\.css\?v=49/);
+  assert.match(html, /office-view\.css\?v=50/);
   assert.match(css, /\.office-worker-tags\{position:absolute/);
   assert.match(css, /\.office-worker-tag\{position:absolute/);
   assert.match(renderer, /container\.appendChild\(workerTags\)/);
@@ -71,7 +71,7 @@ test("the deployed HTML requests the fresh stylesheet that positions floating 3D
 test("employee labels fit the camera viewport and the three status colors have distinct meanings",()=>{assert.match(renderer,/is-your-turn/);assert.match(renderer,/placed\.some/);assert.match(renderer,/button\.className="office-project-chip"/);assert.match(renderer,/button\.textContent=room\.name/);assert.match(css,/office-worker-tag\.is-your-turn/)});
 
 
-test("mobile office HUD exposes the project sheet, employee selection and legend",()=>{assert.match(view,/office-project-sheet/);assert.match(view,/office-employee-card/);assert.match(view,/office-state-legend/);assert.match(css,/office-tycoon-top/);assert.match(css,/office-roster-avatar/);assert.match(html,/office-view\.css\?v=49/);assert.match(renderer,/const taperBox=/)});
+test("mobile office HUD exposes the project sheet, employee selection and legend",()=>{assert.match(view,/office-project-sheet/);assert.match(view,/office-employee-card/);assert.match(view,/office-state-legend/);assert.match(css,/office-tycoon-top/);assert.match(css,/office-roster-avatar/);assert.match(html,/office-view\.css\?v=50/);assert.match(renderer,/const taperBox=/)});
 
 test("obsolete large project card grid is removed from runtime layers",()=>{
  assert.doesNotMatch(html,/office-map|office-tile/);
@@ -83,7 +83,7 @@ test("obsolete large project card grid is removed from runtime layers",()=>{
 test("mobile nameplates use compact type and follow the moving worker",()=>{
  assert.match(css,/\.office-worker-tag\{min-height:18px;max-width:86px;padding:2px 5px/);
  assert.match(css,/font-size:11px;line-height:1;transform:translate\(-50%,-100%\)/);
- assert.match(renderer,/worker\.renderX=worker\.x\+walkX;worker\.renderZ=worker\.z\+walkZ/);
+ assert.match(renderer,/worker\.renderX=worker\.x;worker\.renderZ=worker\.z/);
  assert.match(renderer,/const x=worker\.renderX\?\?worker\.x,y=2\.82/);
  assert.match(renderer,/is-resting/);
 });

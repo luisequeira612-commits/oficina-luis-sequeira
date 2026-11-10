@@ -6,7 +6,7 @@ const viewCss = readFileSync(new URL("../assets/office-view.css", import.meta.ur
 const atmosphereCss = readFileSync(new URL("../assets/office-3d-atmosphere.css", import.meta.url), "utf8");
 
 test("connected 3D overview receives a lightweight visual finish", () => {
-  assert.ok(viewCss.startsWith('@import url("./office-3d-atmosphere.css");'), "atmosphere stylesheet loads before the existing rules");
+  assert.ok(viewCss.startsWith('@import url("./office-3d-atmosphere.css?v=2");'), "atmosphere stylesheet loads before the existing rules");
   assert.match(atmosphereCss, /\.office-3d-overview::before/, "subtle floor-grid overlay is present");
   assert.match(atmosphereCss, /VISTA 3D · EXPLORABLE/, "the scene is clearly labelled as an explorable 3D view");
   assert.match(atmosphereCss, /counter\(room,decimal-leading-zero\)/, "room navigation has ordered visual markers");
