@@ -14,7 +14,8 @@ if(!rooms||!map||!dialog||!scene)return;
 function openRoom(card){
  selectedCard=card;
  const name=card.querySelector(".room-title")?.textContent?.trim()||"Proyecto";
- const roles=Array.from(card.querySelectorAll(".agent-role")).map(el=>el.textContent.trim());
+ const agents=Array.from(card.querySelectorAll(".ag"));
+ const roles=agents.map(agent=>agent.querySelector(".agent-role")?.textContent?.trim()||"Puesto");
  const repoStatus=card.querySelector(".repo-status")?.textContent?.trim()||"Sin estado de repositorio disponible";
  title.textContent=name;
  caption.textContent=roles.length?roles.length+" puestos de trabajo en esta habitación":"Habitación lista para incorporar puestos de trabajo";
@@ -33,6 +34,8 @@ function openRoom(card){
    const screen=document.createElement("div");screen.className="room-screen";
    const chair=document.createElement("div");chair.className="room-chair";
    const label=document.createElement("span");label.className="room-station-label";label.textContent=role;
+   const avatar=agents[index]?.querySelector(".human-worker");
+   if(avatar){const person=avatar.cloneNode(true);person.classList.add("room-worker-avatar");station.appendChild(person)}
    station.append(chair,desk,screen,label);station.style.setProperty("--station-index",String(index));furniture.appendChild(station);
   });
  }else{
