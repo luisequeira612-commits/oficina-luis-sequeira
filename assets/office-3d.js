@@ -229,7 +229,7 @@ function buildOfficeScene(rooms){
   for(let i=0;i<scene.positionLength;i+=3){const x=scene.basePositions[i],y=scene.basePositions[i+1],z=scene.basePositions[i+2];positions.push((flip?-x:x)+xCenter,y,(flip?-z:z)+zCenter)}
   for(let i=scene.positionLength;i<scene.positionLength+scene.normalLength;i+=3){normals.push(flip?-scene.data[i]:scene.data[i],scene.data[i+1],flip?-scene.data[i+2]:scene.data[i+2])}
   for(let i=scene.positionLength+scene.normalLength;i<scene.data.length;i++)colors.push(scene.data[i]);
-  scene.workerRanges.forEach(worker=>workerRanges.push({...worker,start:worker.start+posStart,end:worker.end+posStart,armsStart:worker.armsStart+posStart,armsEnd:worker.armsEnd+posStart,index:worker.index+workerOffset}));
+  scene.workerRanges.forEach(worker=>workerRanges.push({...worker,start:worker.start+posStart,end:worker.end+posStart,headStart:worker.headStart+posStart,headEnd:worker.headEnd+posStart,armsStart:worker.armsStart+posStart,armsEnd:worker.armsEnd+posStart,handsStart:worker.handsStart+posStart,handsEnd:worker.handsEnd+posStart,index:worker.index+workerOffset}));
   workerOffset+=(rooms[index].workers||[]).length;
  });
  // Give each project room a distinct entrance facing the shared corridor.
