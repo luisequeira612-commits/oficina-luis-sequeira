@@ -170,7 +170,7 @@ test("real 3D room prototype uses WebGL2 locally and preserves the CSS fallback"
   assert.ok(renderer.includes("function buildOfficeScene(rooms)"), "builds a multi-room 3D office");
   assert.ok(renderer.includes("Low partitions and project accent rails"), "connects team zones in one shared room");
   assert.ok(renderer.includes("const allWorkers=rooms.flatMap"), "combines all project teams into one shared office");
-  assert.ok(renderer.includes("baseRadius=overviewMode?15:13"), "uses a closer camera for the single shared office");
+  assert.ok(renderer.includes("baseRadius=overviewMode?18:13"), "uses a closer camera for the single shared office");
   assert.ok(renderer.includes("office-3d-room-nav"), "provides direct entry controls for each 3D room");
 });
 
