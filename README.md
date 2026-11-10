@@ -11,7 +11,7 @@ Abre `index.html` en un navegador o publica el repositorio con GitHub Pages.
 - Los estados animados de los personajes siguen siendo una simulación local y no se guardan.
 - Cada proyecto puede vincularse a un repositorio público con el formato `usuario/repositorio`.
 - La Oficina consulta la última ejecución de GitHub Actions mediante la API pública de GitHub y permite actualizarla manualmente.
-- Las tarjetas iniciales apuntan a Bahasa Studio, Capi Aventuras y Tema Nova Launcher. Puedes cambiar o desconectar cualquiera.
+- Las tarjetas iniciales de Canal de YouTube y Tema Nova Launcher apuntan a sus repositorios conocidos. App Guardi queda sin vincular hasta que indiques su repositorio. Puedes cambiar o desconectar cualquiera.
 - La información local permanece en el dispositivo y navegador donde se creó.
 
 ## Integración con GitHub
