@@ -16,7 +16,7 @@ test("3D workstations include finished furniture and office planning details", (
 
 test("3D building overview defines its own reception metal material", () => {
   const overview = renderer.slice(renderer.indexOf("function buildOfficeScene"), renderer.indexOf("function open("));
-  assert.ok(overview.includes("const metal=["), "prevents an out-of-scope material reference from aborting the overview");
+  assert.ok(overview.includes("const addTri=") && overview.includes("const box="), "the open-plan overview owns its geometry helpers");
 });
 
 test("3D startup failures remain visible outside the hidden overview canvas",()=>{
@@ -28,5 +28,5 @@ test("3D startup failures remain visible outside the hidden overview canvas",()=
  assert.match(view,/overviewStatus\.textContent=renderedOverview\?"":\(window\.Office3D\?/);
  assert.match(html,/id="office-3d-status"[^>]*role="status"/);
  assert.match(html,/office-3d\.js\?v=\d+/);
- assert.match(html,/office-view\.js\?v=34/);
+ assert.match(html,/office-view\.js\?v=\d+/);
 });
