@@ -388,3 +388,15 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Importante: una página GitHub Pages estática no puede escribir cambios de vuelta a <code>data/*.json</code> del repositorio de forma anónima. «Nuevo proyecto» sigue guardándose en localStorage; no se fingió una escritura al repositorio. Para escritura real haría falta autenticación/permiso de GitHub o un servicio intermediario, que queda fuera de las restricciones actuales.
 - Prueba añadida: <code>tests/verify-editable-office-data.test.mjs</code>.
 - Commits de esta etapa: <code>b704e478</code> (GitHub + commits), <code>333c721a</code>, <code>f8996fe4</code>, <code>859f4fe4</code> (datos), <code>fc2da1e2</code> (carga de datos), <code>ce0085fd</code> (historial), <code>94f9a6db</code> (tests).
+
+
+## D — asignación por empleado, historial y estado offline — 10 de noviembre de 2026
+
+- <code>assets/github-live.js</code> deja de pintar el estado de GitHub sobre todos los empleados de una sala: cada ejecución activa (<code>queued</code>/<code>in_progress</code>) se asigna determinísticamente a un solo empleado de <code>employeeIds</code>, y la asignación se conserva en la caché independiente <code>oficina-luis-sequeira-github-cache-v1</code> mediante <code>runAssignments</code>.
+- Al detectar nuevas ejecuciones completadas se guarda un historial local acotado de hasta 12 entradas, con runId, nombre, conclusión, fecha y agente asignado. La ficha de empleado sigue mostrando como máximo tres actividades recientes y ahora filtra por el empleado que corresponde a la ejecución.
+- La consulta de commits <code>commits?per_page=5</code> se ejecuta tanto tras una respuesta nueva de Actions como tras una validación <code>304</code>; conserva su ETag independiente. Esto corrige el hueco anterior donde un 304 de Actions impedía actualizar/validar el historial de commits en ese ciclo.
+- Cuando el navegador está offline se muestra «Sin conexión a GitHub. Se conserva la última información disponible.»; no se presenta la caché como actividad recién consultada.
+- No cambia <code>oficina-luis-sequeira-v1</code>, no añade backend, autenticación, dependencias ni permisos de escritura. «Nuevo proyecto» continúa siendo local en una instalación estática; no puede escribir anónimamente en <code>data/*.json</code> del repositorio.
+- Pruebas: <code>tests/verify-editable-office-data.test.mjs</code> cubre asignación, historial, offline y 304+commits. <code>tests/verify-3d-worker-activity.test.mjs</code> se ajustó a la implementación actual de rutas acotadas (<code>sampleRoute</code>).
+- El workflow disparado por el commit <code>db7f0aaa6b961c83e61506635885e51b9e807111</code> falló por una aserción regresiva antigua sobre <code>st-r</code>, no por esta integración D; se corrigió en <code>c6957193c79290676751c7b097813d5abf702798</code>. El siguiente workflow, run <code>42845703644</code>, está en cola al registrar esta memoria y aún no se debe declarar Pages publicado.
+- Fuente: inspección de <code>assets/github-live.js</code>, pruebas y workflows GitHub Actions, 2026-11-10.
