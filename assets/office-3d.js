@@ -185,6 +185,39 @@ function buildOfficeScene(rooms){
   const box=(x,y,z,w,h,d,color)=>{const x0=x-w/2,x1=x+w/2,y0=y-h/2,y1=y+h/2,z0=z-d/2,z1=z+d/2;quad([x0,y1,z1],[x1,y1,z1],[x1,y1,z0],[x0,y1,z0],color);quad([x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1],color);quad([x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1],color);quad([x1,y0,z0],[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],color);quad([x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0],color);quad([x1,y0,z1],[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],color)};
   box(0,.025,0,2.5,.12,rows*10.4,[0.40,0.46,0.51]);
   for(let row=0;row<rows;row++){const z=(row-(rows-1)/2)*10.4;box(-1.22,.12,z,.16,.18,1.8,[0.72,0.58,0.39]);box(1.22,.12,z,.16,.18,1.8,[0.72,0.58,0.39]);box(0,3.55,z,1.4,.08,.55,[0.88,0.79,0.55])}
+  // A widened entrance atrium terminates the corridor with a staffed-looking reception counter.
+  const foyerZ=(rows-1)*5.2+6.8;
+  box(0,.015,foyerZ,8.4,.12,5.8,[0.52,0.58,0.62]);
+  box(0,.09,foyerZ,7.9,.045,5.35,[0.69,0.65,0.57]);
+  for(let tile=-3;tile<=3;tile++)box(tile*1.08,.118,foyerZ,.018,.012,5.1,[0.82,0.79,0.72]);
+  box(0,.04,foyerZ-2.35,5.4,.08,.55,[0.20,0.34,0.43]);
+  // Reception desk, stone counter, front panels and a visible terminal.
+  box(0,.62,foyerZ-1.35,3.55,1.08,.92,[0.24,0.34,0.41]);
+  box(0,1.20,foyerZ-1.35,3.82,.16,1.08,[0.72,0.76,0.77]);
+  box(0,.62,foyerZ-.875,2.95,.62,.035,[0.31,0.48,0.55]);
+  box(0,1.48,foyerZ-1.58,.92,.58,.12,metal);
+  box(0,1.48,foyerZ-1.505,.78,.42,.025,[0.18,0.65,0.78]);
+  box(0,1.48,foyerZ-1.48,.58,.025,.012,[0.72,0.94,0.98]);
+  // Tall welcome wall and a suspended wayfinding sign.
+  box(0,2.05,foyerZ-3.02,4.8,2.9,.18,[0.28,0.38,0.46]);
+  box(0,2.05,foyerZ-2.91,4.48,2.58,.06,[0.78,0.83,0.85]);
+  box(0,2.88,foyerZ-2.86,3.8,.16,.035,[0.20,0.48,0.62]);
+  box(0,2.20,foyerZ-2.85,2.6,.08,.035,[0.42,0.51,0.57]);
+  box(0,3.62,foyerZ-.1,4.4,.42,.16,[0.18,0.27,0.34]);
+  box(0,3.62,foyerZ-.005,4.08,.24,.045,[0.24,0.55,0.68]);
+  // Entrance portal and paired visitor seating create a clear public-facing threshold.
+  for(const side of [-1,1]){
+   box(side*3.35,1.62,foyerZ+2.10,.22,3.24,.22,[0.22,0.30,0.37]);
+   box(side*3.35,3.24,foyerZ+2.10,.22,.22,4.8,[0.22,0.30,0.37]);
+   box(side*2.25,.48,foyerZ+.55,1.45,.18,.62,[0.25,0.36,0.44]);
+   box(side*2.25,.88,foyerZ+.78,1.45,.68,.18,[0.20,0.31,0.39]);
+   box(side*2.25,.16,foyerZ+.55,.12,.30,.12,metal);
+   box(side*3.55,.38,foyerZ-1.0,.48,.62,.48,[0.42,.26,.17]);
+   for(let leaf=0;leaf<5;leaf++)box(side*3.55+Math.cos(leaf*1.26)*.20,.83+(leaf%2)*.12,foyerZ-1.0+Math.sin(leaf*1.26)*.20,.14,.58,.14,[0.17,0.43,0.27]);
+  }
+  // Ceiling canopy and warm downlights visually frame the entrance without external textures.
+  box(0,3.88,foyerZ+.65,8.0,.16,5.2,[0.34,0.42,0.48]);
+  for(const lightX of [-2.6,0,2.6]){box(lightX,3.77,foyerZ+.65,.68,.045,.68,[0.96,.91,.75]);box(lightX,3.70,foyerZ+.65,.30,.08,.30,[1,.88,.58])}
  }
  const basePositions=new Float32Array(positions),data=new Float32Array(positions.length+normals.length+colors.length);
  data.set(positions,0);data.set(normals,positions.length);data.set(colors,positions.length+normals.length);

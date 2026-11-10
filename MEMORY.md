@@ -177,3 +177,11 @@
 - Fuente: cambios del renderer y validación automatizada del repositorio, 2026-11-10.
 
 - PR [#21](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/21) fusionado mediante squash; commit de merge `048479b6aec0d775f1e49a0e1c224946b75c0a7e`. CI [42784290104](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42784290104): validate success; deploy omitido correctamente en el evento pull_request. El despliegue posterior al merge no se ha verificado.
+
+
+## PR #22 — recepción y atrio de entrada 3D — 10 de noviembre de 2026
+- La vista general añade un atrio al final del pasillo central, con plataforma ensanchada, mostrador de recepción, terminal/monitor visible, muro de bienvenida y señalización, portal de entrada, asientos de visitantes, jardineras y marquesina con luminarias.
+- Los elementos son geometría procedural del renderer WebGL 2 existente. La recepción es una representación visual; no implica que exista un recepcionista/agente real.
+- No cambia datos de proyectos/personajes, estados, cámara, localStorage ni esquemas persistentes. No se añaden dependencias, texturas, modelos, CDN, APIs, backend ni servicios de pago. Se conserva la alternativa CSS.
+- Prueba nueva: `tests/verify-3d-office-reception.test.mjs`. Compatibilidad/rendimiento en el Tecno Pova 4 y despliegue Pages posterior al merge pendientes de confirmación.
+- Fuente: cambios del renderer y pruebas del repositorio, 2026-11-10.
