@@ -263,3 +263,11 @@
 - Corrección: el indicador «Datos de hace X min» usa `fetchedAt`, la edad del cuerpo de datos guardado; el indicador «En vivo» / «Desactualizado» sigue usando `checkedAt`, que se actualiza también tras una validación 304. Así, una respuesta 304 no hace parecer que los datos se descargaron de nuevo.
 - CI del PR [42793640562](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42793640562): validate success. Workflow Pages post-merge [42793689070](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42793689070): validate success; deploy pendiente al registrar esta nota.
 - Fuente: PR #31 y prueba `tests/verify-github-actions-live.test.mjs`, 2026-11-10.
+
+
+## PR #33 — distinguir ejecuciones en cola de trabajo activo — 10 de noviembre de 2026
+
+- Corrección de precisión de estados: `queued` ahora se presenta como «En cola» y usa la pose de espera; únicamente `in_progress` se muestra como «Trabajando» y activa la animación de tecleo.
+- Los repositorios con cualquiera de los dos estados siguen teniendo prioridad de sondeo rápido (60 s). El resumen global incluye proyectos en cola y no los cuenta como trabajo iniciado.
+- Cambios limitados al módulo de GitHub Actions, prueba de regresión, README y MEMORY; sin cambios al esquema de proyectos, almacenamiento, API, tokens, servidor ni dependencias.
+- Fuente: revisión de la lógica de estados y requisito de precisión de la interfaz, 2026-11-10.
