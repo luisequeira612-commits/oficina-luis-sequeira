@@ -240,8 +240,8 @@ function buildScene(workers,roomName=""){
   }
   const monitorEnd=positions.length;
   box(x,1.23,z-.36,.14,.12,.14,metal);box(x,.99,z-.36,.68,.08,.35,metal);
-  box(x,.97,z+.08,.72,.035,.26,[0.18,0.22,0.27]);for(let k=0;k<10;k++)box(x-.31+k*.069,.995,z+.08,.035,.012,.19,[0.66,0.72,0.76]);
-  sphere(x+.62,.99,z+.12,.11,.06,.14,metal,8,5);
+  box(x,.97,z+.08,.72,.035,.26,[0.18,0.22,0.27]);for(let row=0;row<2;row++)for(let key=0;key<5;key++)box(x-.21+key*.105,.995,z+.015+row*.13,.075,.012,.065,[0.72,0.77,0.80]);
+  sphere(x+.62,.99,z+.12,.11,.06,.14,metal,8,5);box(x+.62,1.052,z+.12,.014,.006,.035,[0.12,0.16,0.20]);
   // Chair, cushion, back, stem and five-foot base.
   box(x,.78,z+1.55,.9,.16,.78,chair);box(x,1.3,z+1.88,.86,1.05,.16,chair);cyl(x,.38,z+1.55,.09,.58,metal);
   // Padded armrests and upright supports give the task chair a more complete silhouette.
