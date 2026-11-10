@@ -193,3 +193,11 @@
 - Los nuevos elementos se generan con primitivas del renderer WebGL 2, sin modelos, texturas, dependencias, APIs, backend ni servicios de pago. Los estados siguen siendo simulación local.
 - Se añade prueba de regresión para los detalles faciales y de vestuario. Pendiente validar legibilidad y rendimiento en el Tecno Pova 4 real.
 - Fuente: cambios del renderer y pruebas del repositorio, 2026-11-10.
+
+
+## PR #24 — acabado arquitectónico interior 3D — 10 de noviembre de 2026
+- Añadidos pilares de esquina con basamento/capitel, vigas superiores, zócalos continuos y bastidores verticales de pared para dar escala y profundidad a las habitaciones.
+- Un marco fino delimita el área de trabajo respecto a la zona lounge sin cerrar la vista de corte ni bloquear los puestos.
+- Geometría procedural del renderer WebGL 2. Sin modelos, texturas, dependencias, API, backend ni servicios de pago. Sin cambios a personajes, estados, cámara, localStorage o esquemas persistentes.
+- Prueba de regresión verifica los elementos arquitectónicos. La legibilidad visual, Pages y el rendimiento en el Tecno Pova 4 siguen pendientes de prueba real.
+- Fuente: PR y CI del repositorio, 2026-11-10.
