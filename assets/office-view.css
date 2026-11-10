@@ -123,7 +123,7 @@ body.office-game-active .office-3d-controls .office-3d-hint{max-width:55%}
 .office-worker-tag-state{flex:none;width:7px;height:7px;border-radius:50%;background:#94A3B8;box-shadow:0 0 0 2px #FFFFFF}
 .office-worker-tag.is-working .office-worker-tag-state{background:#16A34A}
 .office-worker-tag.is-success .office-worker-tag-state{background:#0EA5E9}
-.office-worker-tag.is-failure .office-worker-tag-state{background:#DC2626}
+.office-worker-tag.is-failure .office-worker-tag-state,.office-worker-tag.is-your-turn .office-worker-tag-state{background:#DC2626}
 .office-worker-tag.is-waiting .office-worker-tag-state{background:#D69E2E}
 .office-worker-tag:focus-visible{outline:3px solid #F5D58B;outline-offset:2px}
 .room-station.is-selected-worker .room-worker-avatar{filter:drop-shadow(0 0 7px #F4C95D);outline:2px solid #F4C95D;outline-offset:3px;border-radius:8px}
