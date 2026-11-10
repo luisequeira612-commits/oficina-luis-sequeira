@@ -13,7 +13,7 @@ function at(t){return new Date(t).toLocaleTimeString("es-NI",{hour:"2-digit",min
 function entry(room){return room.repository?cache[room.repository]:null}
 function active(e){return (e?.runs||[]).find(x=>x.status==="in_progress"||x.status==="queued")||null}
 function latest(e){return (e?.runs||[])[0]||null}
-function state(e){const a=active(e),r=latest(e);if(a)return "working";if(!r||r.status!=="completed")return "rest";if(["failure","timed_out","action_required"].includes(r.conclusion))return "failure";if(r.conclusion==="success"&&now()-new Date(r.updated_at||r.created_at).getTime()<7000)return "success";return "rest"}
+function state(e){const a=active(e),r=latest(e);if(a)return "working";if(!r||r.status!=="completed")return "rest";if(["failure","timed_out","action_required"].includes(r.conclusion))return "failure";if(r.conclusion==="success"&&(e.celebrateUntil||0)>now())return "success";return "rest"}
 function freshness(e){if(e?.error)return "No se pudo obtener";if(!e?.checkedAt)return "Consultando…";return now()-e.checkedAt<=STALE?"En vivo":"Desactualizado (hace "+mins(e.checkedAt)+" min)"}
 function paintRoom(room){
  const card=Array.from(document.querySelectorAll(".room[data-room-id]")).find(x=>x.dataset.roomId===room.id);if(!card)return;
@@ -28,7 +28,7 @@ function paintRoom(room){
   else if(s==="success")status.textContent="Éxito · "+(r.name||r.display_title||"GitHub Actions");
   else if(s==="failure")status.textContent="Falló · "+(r.name||r.display_title||"GitHub Actions");
   else status.textContent=r?"Sin ejecuciones activas · última: "+(r.name||r.display_title||"GitHub Actions"):"Sin ejecuciones recientes. Descansando.";
-  if(e?.checkedAt&&now()-e.checkedAt>STALE&&!e.error)status.textContent+=" · Datos de hace "+mins(e.checkedAt)+" min";
+  if(e?.checkedAt)status.textContent+=" · Datos de hace "+mins(e.checkedAt)+" min";
  }
  if(bubble){bubble.hidden=!a;bubble.textContent=a?(a.name||a.display_title||"GitHub Actions"):""}
  if(button){const wait=Math.max(0,(manualAt.get(room.id)||0)-now());button.disabled=wait>0||busy||now()<ratePause||now()<backoff;button.textContent=wait?"Espera "+Math.ceil(wait/1000)+" s":"Actualizar"}
@@ -48,7 +48,7 @@ function paintRoom(room){
 function paintSummary(){
  const linked=rooms.filter(x=>validRepo(x.repository)),states=linked.map(x=>state(entry(x))),working=states.filter(x=>x==="working").length,success=states.filter(x=>x==="success").length,failure=states.filter(x=>x==="failure").length;
  const el=document.getElementById("summary-text");if(!el)return;
- if(!linked.length||states.every(x=>x==="rest"))el.textContent="Todos descansan por ahora.";
+ if(!linked.length)el.textContent="Conecta repositorios de GitHub para ver actividad real.";else if(states.every(x=>x==="rest"))el.textContent="Todos descansan por ahora.";
  else{const parts=[];if(working)parts.push(working+" "+(working===1?"proyecto trabajando":"proyectos trabajando"));if(success)parts.push(success+" "+(success===1?"éxito reciente":"éxitos recientes"));if(failure)parts.push(failure+" "+(failure===1?"proyecto con fallo":"proyectos con fallos"));el.textContent=parts.join(" · ")+"."}
 }
 function paintActivity(){
@@ -111,7 +111,9 @@ async function request(room){
   else if(!response.ok)throw new Error("GitHub respondió con el error "+response.status+".");
   else{
    const data=await response.json();if(!Array.isArray(data.workflow_runs))throw new Error("Respuesta de GitHub no válida.");
-   e.runs=data.workflow_runs.slice(0,5);e.etag=response.headers.get("ETag")||e.etag||"";e.checkedAt=now();e.fetchedAt=now();delete e.error;
+   const previousId=e.runs?.[0]?.id;e.runs=data.workflow_runs.slice(0,5);const newest=e.runs[0];
+   if(newest&&newest.id!==previousId&&newest.status==="completed"&&newest.conclusion==="success")e.celebrateUntil=now()+7000;
+   e.etag=response.headers.get("ETag")||e.etag||"";e.checkedAt=now();e.fetchedAt=now();delete e.error;
    cache[room.repository]=e;save();backoffCount=0;backoff=0;
   }
  }catch(error){e.error=error?.message||"No se pudo obtener información de GitHub.";cache[room.repository]=e;save()}
@@ -140,7 +142,7 @@ function sync(next){
 function refresh(roomId){
  const room=rooms.find(x=>x.id===roomId);if(!room||!validRepo(room.repository)||document.visibilityState==="hidden")return;
  const allowed=manualAt.get(roomId)||0;if(now()<allowed||now()<ratePause||now()<backoff)return;
- manualAt.set(roomId,now()+MANUAL_GAP);due.set(room.repository,now());schedule(Math.max(0,GLOBAL_GAP-(now()-lastRequest)));
+ manualAt.set(roomId,now()+MANUAL_GAP);due.set(room.repository,now());setTimeout(paint,MANUAL_GAP+50);schedule(Math.max(0,GLOBAL_GAP-(now()-lastRequest)));
 }
 function visible(){
  if(document.visibilityState==="hidden"){if(timer)clearTimeout(timer);timer=0;return}
