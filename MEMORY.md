@@ -807,3 +807,14 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Solo cambia presentación y prueba; no modifica datos, persistencia, renderer, cámara, dependencias, APIs, backend ni servicios de pago.
 - PR [#54](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/54) fusionado mediante squash en `a7df0dfac779969f8a0cd44e7892ded9146020af`. La primera CI [42915575007](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42915575007) detectó una expectativa heredada de «0 humanos»; se actualizó la prueba. El head final `703578ce6bc80a678ee6a334ebe06efc325e62c2` pasó CI en [42915644607](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42915644607): sintaxis, 102 pruebas e invariantes de contenido success. Deploy omitido correctamente en pull_request; la publicación Pages posterior al merge queda pendiente de verificación.
 - Fuente: inspección del encabezado HTML y de `renderMap()`, 2026-11-10.
+
+
+## PR #55 — pausar el renderer 3D cuando la página está oculta (10 de noviembre de 2026)
+
+- El bucle WebGL deja de solicitar frames mientras `document.hidden` es verdadero; al volver a la pestaña, reanuda el renderizado automáticamente.
+- Evita trabajo gráfico innecesario y consumo de batería cuando el usuario cambia de aplicación o deja la pestaña en segundo plano. No altera el objetivo de 30 FPS en primer plano.
+- El listener de visibilidad se elimina durante la limpieza del renderer para evitar listeners residuales al abrir/cerrar escenas.
+- Añade cobertura estática de pausa, reanudación y limpieza en `tests/verify-3d-human-worker-details.test.mjs`; incrementa la versión de caché del renderer a v74.
+- Sin cambios en geometría, cámara, datos, almacenamiento, dependencias, APIs ni backend.
+- Rama: `perf/pause-3d-when-page-hidden`; CI pendiente.
+- Fuente: inspección del bucle `requestAnimationFrame` de `assets/office-3d.js`, 2026-11-10.
