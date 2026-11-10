@@ -150,4 +150,8 @@ test("real 3D room prototype uses WebGL2 locally and preserves the CSS fallback"
   assert.ok(officeScript.includes("room-scene-fallback-hidden"), "keeps the CSS room as a fallback");
   assert.ok(officeScript.includes("threeD._office3dCleanup()"), "stops the WebGL render loop when the room closes");
   assert.doesNotMatch(renderer, /https?:\/\//, "3D renderer has no external runtime requests");
+  assert.ok(renderer.includes("workerRanges") && renderer.includes("bufferSubData"), "animates 3D worker poses in the WebGL buffer");
+  assert.ok(renderer.includes("gl.DYNAMIC_DRAW"), "uses a dynamic GPU buffer for worker animation");
+  assert.ok(renderer.includes("prefers-reduced-motion: reduce"), "disables 3D worker motion when reduced motion is requested");
+  assert.ok(renderer.includes("rows===1?-1.55:-2.8+row*2.4"), "keeps a three-row workforce inside the room footprint");
 });

@@ -32,10 +32,11 @@ function buildScene(workers){
  // Floor planks and rugs.
  for(let i=-5;i<6;i++)box(i*.98,-.005,0,.018,.012,9.6,[0.72,0.65,0.55]);
  box(0,.025,1.7,9,.05,3.2,[0.31,0.38,0.43]);
- const count=Math.max(1,workers.length),cols=count>3?2:count;
+ const count=Math.max(1,workers.length),cols=count>3?2:count,rows=Math.ceil(count/cols),workerRanges=[];
  workers.forEach((worker,index)=>{
-  const col=index%cols,row=Math.floor(index/cols),x=(col-(cols-1)/2)*4.1,z=-1.55+row*3.3;
+  const col=index%cols,row=Math.floor(index/cols),x=(col-(cols-1)/2)*4.1,z=rows===1?-1.55:-2.8+row*2.4;
   // desk, legs, monitor, illuminated display, stand, keyboard, mouse and desktop tower.
+  sphere(x,.012,z+.28,1.5,.008,.72,[0.24,0.25,0.25],12,3);
   box(x,.92,z,2.65,.18,1.15,woodTop);for(const dx of [-1.12,1.12])for(const dz of [-.42,.42])box(x+dx,.47,z+dz,.11,.82,.11,wood);
   box(x,.28,z+.52,.5,.08,.34,metal);
   box(x,.0,z+.52,.42,.45,.28,metal);
@@ -52,28 +53,32 @@ function buildScene(workers){
   box(x-1.05,1.05,z-.38,.18,.16,.18,metal);box(x-1.05,1.38,z-.38,.08,.58,.08,metal);box(x-1.05,1.7,z-.38,.48,.16,.3,[0.82,0.68,0.38]);
   cyl(x+1.02,.34,z-.35,.24,.55,[0.45,0.25,0.15]);for(let leaf=0;leaf<5;leaf++)sphere(x+1.02+Math.cos(leaf*1.26)*.18,.78+(leaf%2)*.12,z-.35+Math.sin(leaf*1.26)*.18,.18,.36,.14,plant,7,5);
   // Seated low-poly worker: torso, head, hair, arms, legs and shoes.
-  const skin=tone[worker.tone]||tone.medium,shirt=shirts[index%shirts.length];
+  const skin=tone[worker.tone]||tone.medium,shirt=shirts[index%shirts.length],workerStart=positions.length;
   box(x,1.27,z+1.0,.62,.78,.36,shirt);sphere(x,1.98,z+.98,.34,.38,.32,skin,10,7);
   sphere(x,2.22,z+.96,.35,.17,.34,hair,9,5);
   if(worker.hair==="long"||worker.hair==="tied"){sphere(x-.29,1.86,z+.97,.11,.42,.13,hair,7,5);sphere(x+.29,1.86,z+.97,.11,.42,.13,hair,7,5)}
   if(worker.hair==="curly"){for(let curl=0;curl<5;curl++){const angle=curl*Math.PI*2/5;sphere(x+Math.cos(angle)*.25,2.28,z+.96+Math.sin(angle)*.24,.13,.13,.13,hair,6,4)}}
   sphere(x-.11,2.03,z+1.265,.035,.045,.025,[0.10,0.09,0.09],6,4);sphere(x+.11,2.03,z+1.265,.035,.045,.025,[0.10,0.09,0.09],6,4);
   sphere(x,1.91,z+1.285,.035,.025,.025,[0.43,0.22,0.18],6,4);
+  const armsStart=positions.length;
   sphere(x-.36,1.48,z+.78,.14,.34,.14,skin,8,5);sphere(x+.36,1.48,z+.78,.14,.34,.14,skin,8,5);
+  const armsEnd=positions.length;
   box(x-.2,.74,z+.72,.18,.58,.18,shirt);box(x+.2,.74,z+.72,.18,.58,.18,shirt);
   box(x-.2,.43,z+.62,.22,.14,.3,metal);box(x+.2,.43,z+.62,.22,.14,.3,metal);
   // Subtle task-state accents; animations remain clearly labelled as simulated elsewhere.
   if(worker.state==="st-w"){box(x-.22,1.16,z+.47,.2,.18,.2,skin);box(x+.22,1.16,z+.47,.2,.18,.2,skin)}
   else if(worker.state==="st-t"){sphere(x+.44,2.35,z+.95,.13,.13,.13,[0.98,.78,.25],7,5)}
   else if(worker.state==="st-a"){sphere(x,2.52,z+.96,.11,.11,.11,[0.24,.78,.88],7,5)}
+  workerRanges.push({start:workerStart,end:positions.length,armsStart,armsEnd,state:worker.state,index});
  });
  // Shared ceiling lights, wall art, bookcase and a plant at the room entrance.
  box(0,3.72,-.5,4.8,.08,.7,[0.88,0.79,0.55]);box(0,3.62,-.5,3.8,.08,.16,[1,.9,.65]);
  box(4.9,1.8,-4.82,1.2,2.8,.32,wood);for(let i=0;i<4;i++)box(4.9,1.0+i*.5,-4.6,1.0,.06,.42,[0.72,.76,.79]);
  for(let i=0;i<3;i++)box(4.9,1.25+i*.5,-4.36,.42,.35,.18,[.38,.54,.68]);
+ const basePositions=new Float32Array(positions);
  const data=new Float32Array(positions.length+normals.length+colors.length);
  data.set(positions,0);data.set(normals,positions.length);data.set(colors,positions.length+normals.length);
- return {data,count:positions.length/3,positionLength:positions.length,normalLength:normals.length};
+ return {data,basePositions,workerRanges,count:positions.length/3,positionLength:positions.length,normalLength:normals.length};
 }
 function open({container,roomName,workers=[]}){
  if(typeof container._office3dCleanup==="function")container._office3dCleanup();
@@ -82,7 +87,7 @@ function open({container,roomName,workers=[]}){
  const gl=canvas.getContext("webgl2",{alpha:false,antialias:false,powerPreference:"low-power"});
  if(!gl){const note=document.createElement("p");note.className="office-3d-error";note.textContent="Este navegador no ofrece WebGL 2 en este momento. Se muestra la vista alternativa.";container.appendChild(note);return false}
  try{
-  const p=program(gl),scene=buildScene(workers),buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,scene.data,gl.STATIC_DRAW);
+  const p=program(gl),scene=buildScene(workers),buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,scene.data,gl.DYNAMIC_DRAW);
   const stride=0,loc=(name)=>gl.getAttribLocation(p,name);gl.useProgram(p);
   const ap=loc("aPosition"),an=loc("aNormal"),ac=loc("aColor");
   gl.enableVertexAttribArray(ap);gl.vertexAttribPointer(ap,3,gl.FLOAT,false,stride,0);
@@ -100,9 +105,9 @@ function open({container,roomName,workers=[]}){
   makeButton("+","Acercar cámara",()=>{radius=clamp(radius-1,8,23)});
   makeButton("↻","Restablecer cámara",()=>{theta=.72;phi=1.08;radius=13;target=[0,1.15,0]});
   controls.append(hint,group);container.append(canvas,controls);container.classList.add("is-active");
-  const projection=mat4(),view=mat4();let raf=0,disposed=false;
-  function resize(){const rect=container.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,1.35),w=Math.max(1,Math.floor(rect.width*dpr)),h=Math.max(1,Math.floor(rect.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h)}}
-  function render(){if(disposed)return;resize();const eye=[target[0]+radius*Math.sin(phi)*Math.sin(theta),target[1]+radius*Math.cos(phi),target[2]+radius*Math.sin(phi)*Math.cos(theta)];perspective(projection,.72,canvas.width/canvas.height,.1,80);lookAt(view,eye,target,[0,1,0]);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.uniformMatrix4fv(up,false,projection);gl.uniformMatrix4fv(uv,false,view);gl.drawArrays(gl.TRIANGLES,0,scene.count);raf=requestAnimationFrame(render)}
+  const projection=mat4(),view=mat4();let raf=0,disposed=false,lastFrame=0;const reducedMotion=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function resize(){const rect=container.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,1.15),w=Math.max(1,Math.floor(rect.width*dpr)),h=Math.max(1,Math.floor(rect.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h)}}
+  function render(timestamp=0){if(disposed)return;if(timestamp-lastFrame<32){raf=requestAnimationFrame(render);return}lastFrame=timestamp;resize();if(!reducedMotion){const seconds=timestamp*.001;scene.workerRanges.forEach(worker=>{let bob=0,arms=0;if(worker.state==="st-w"){bob=Math.sin(seconds*7+worker.index)*.025;arms=Math.sin(seconds*12+worker.index)*.055}else if(worker.state==="st-t"){bob=Math.sin(seconds*2+worker.index)*.014;arms=.035}else if(worker.state==="st-a"){bob=Math.sin(seconds*1.5+worker.index)*.01;arms=Math.sin(seconds*2.5+worker.index)*.025}else{bob=Math.sin(seconds*1.2+worker.index)*.018}for(let i=worker.start+1;i<worker.end;i+=3)scene.data[i]=scene.basePositions[i]+bob;for(let i=worker.armsStart+1;i<worker.armsEnd;i+=3)scene.data[i]=scene.basePositions[i]+bob+arms});gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferSubData(gl.ARRAY_BUFFER,0,scene.data.subarray(0,scene.positionLength))}const eye=[target[0]+radius*Math.sin(phi)*Math.sin(theta),target[1]+radius*Math.cos(phi),target[2]+radius*Math.sin(phi)*Math.cos(theta)];perspective(projection,.72,canvas.width/canvas.height,.1,80);lookAt(view,eye,target,[0,1,0]);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.uniformMatrix4fv(up,false,projection);gl.uniformMatrix4fv(uv,false,view);gl.drawArrays(gl.TRIANGLES,0,scene.count);raf=requestAnimationFrame(render)}
   const pointers=new Map();let last=null,lastPinch=0;
   canvas.addEventListener("pointerdown",e=>{canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});last={x:e.clientX,y:e.clientY};if(pointers.size===2){const a=Array.from(pointers.values());lastPinch=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)}});
   canvas.addEventListener("pointermove",e=>{if(!pointers.has(e.pointerId))return;const prev=pointers.get(e.pointerId),dx=e.clientX-prev.x,dy=e.clientY-prev.y;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size>=2){const a=Array.from(pointers.values()),dist=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);if(lastPinch)radius=clamp(radius-(dist-lastPinch)*.035,8,23);lastPinch=dist;target[0]-=dx*.012;target[2]+=dy*.012}else if(last){theta-=dx*.009;phi=clamp(phi+dy*.008,.42,1.42)}last={x:e.clientX,y:e.clientY}});

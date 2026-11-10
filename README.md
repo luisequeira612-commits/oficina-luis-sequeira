@@ -26,7 +26,11 @@ El panel muestra el estado de la última ejecución y enlaza a su página en Git
 
 HTML, CSS y JavaScript sin dependencias, backend, cuentas ni claves. No incluye service worker ni manifiesto. La API pública de GitHub recibe la consulta del navegador; los proyectos y roles siguen guardándose localmente.
 
-## Oficina 3D\n\nLa primera sala 3D se dibuja localmente con WebGL 2 y geometría procedural propia: escritorio, monitor encendido, teclado, ratón, torre, silla, lámpara, accesorios y trabajadores low-poly. La cámara admite rotación táctil, desplazamiento, zoom por botones/gesto y rueda. No descarga modelos ni bibliotecas externas. Si WebGL 2 no está disponible, conserva la vista CSS anterior como alternativa. El rendimiento y la compatibilidad real deben comprobarse en el teléfono objetivo. La pose de los trabajadores 3D es estática en esta primera prueba técnica; sus animaciones tridimensionales se desarrollarán después de validar el renderizado en el dispositivo.\n\n## Fases
+## Oficina 3D
+
+La primera sala 3D se dibuja localmente con WebGL 2 y geometría procedural propia: escritorio, monitor encendido, teclado, ratón, torre, silla, lámpara, accesorios y trabajadores low-poly. La cámara admite rotación táctil, desplazamiento, zoom por botones/gesto y rueda. No descarga modelos ni bibliotecas externas. Si WebGL 2 no está disponible, conserva la vista CSS anterior como alternativa. El rendimiento y la compatibilidad real deben comprobarse en el teléfono objetivo. Los trabajadores 3D tienen movimientos low-poly sencillos según el estado simulado (trabajo, pensamiento, espera y descanso), con soporte de movimiento reducido. El render se limita aproximadamente a 30 FPS para moderar el uso de recursos móviles. La animación es visual y no representa actividad real de agentes.
+
+## Fases
 
 - **Fase A:** simulación visual local y gestión de proyectos/personajes.
 - **Fase B:** consulta de ejecuciones recientes de GitHub Actions en repositorios públicos.

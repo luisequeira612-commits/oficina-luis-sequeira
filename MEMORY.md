@@ -103,3 +103,12 @@
 - La escena obtiene roles y estados efímeros de los trabajadores ya renderizados; no cambia identidad ni datos persistidos. Se conserva localStorage `oficina-luis-sequeira-v1` sin cambios.
 - Límite: la compatibilidad WebGL 2 y el rendimiento real en el Tecno Pova 4 todavía deben probarse físicamente; no se afirmará que está validado en ese dispositivo antes de la prueba.
 - Fuente: decisión explícita del usuario en conversación, 2026-11-10; documentación oficial Three.js WebGLRenderer (WebGL 2) y Babylon.js capabilities consultada el 2026-11-10. Se opta por un renderer mínimo propio para evitar añadir dependencia/CDN a esta app estática.
+
+
+## Animación y distribución de trabajadores en la sala 3D — 10 de noviembre de 2026
+- Se amplía el prototipo WebGL 2 para que las figuras humanas low-poly tengan movimiento sutil según los estados efímeros existentes: trabajo (brazos/ritmo más activo), pensamiento, espera y descanso. El movimiento se calcula en el buffer de vértices y se limita a unos 30 FPS.
+- Se respeta `prefers-reduced-motion` desactivando los movimientos del cuerpo; la cámara continúa siendo interactiva.
+- Se ajusta la distribución de hasta seis puestos en un máximo de tres filas para que escritorios y sillas queden dentro del suelo de la habitación. Se añaden sombras de contacto geométricas sencillas bajo los puestos.
+- Se mantiene el renderer WebGL 2 propio, sin dependencias/CDN, y no se modifica `localStorage` ni el esquema de proyectos/agentes.
+- La animación sigue siendo simulación visual local, no telemetría de agentes reales. Compatibilidad y rendimiento en el Tecno Pova 4 aún pendientes de prueba física.
+- Fuente: revisión técnica del prototipo y decisión visual del usuario, 2026-11-10.
