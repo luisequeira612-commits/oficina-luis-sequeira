@@ -644,3 +644,10 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Se amplió `tests/verify-3d-idle-walk.test.mjs` para comprobar que una ejecución real activa `st-w` y nunca introduce el estado de caminar.
 - No se modifican repositorios vinculados, localStorage, esquema, dependencias, APIs, backend ni presupuesto. Las animaciones siguen siendo simulaciones visuales; la ejecución de GitHub Actions es la señal real.
 - Fuente: cambios y pruebas del PR de corrección, 2026-11-10.
+
+
+### Corrección de CI en PR #44 — 10 de noviembre de 2026
+
+- La primera ejecución [42898945765](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42898945765) falló por comprobaciones heredadas que aún esperaban coordenadas de caminata, y por expresiones regulares inválidas o desactualizadas en las pruebas. No indicó un error de sintaxis en los archivos de aplicación.
+- Se actualizaron las pruebas de trabajadores humanos, animación en reposo, actividad, planta abierta y rutas de descanso para comprobar la postura sentada y la cámara/selección existentes.
+- La nueva ejecución para el head actualizado todavía no aparece en los resultados consultados; PR #44 sigue abierto y sin fusionar. No declarar CI aprobado hasta confirmarlo.
