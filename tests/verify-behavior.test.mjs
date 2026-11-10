@@ -114,3 +114,12 @@ test("explorable room stations show the same human workers as the project cards"
   assert.ok(officeScript.includes('person.classList.add("room-worker-avatar")'), "room scene marks the decorative avatar");
   assert.ok(officeScript.includes("station.appendChild(person)"), "worker is placed at its desk");
 });
+
+test("room workers inherit the current card state and its matching human animation", () => {
+  assert.ok(officeScript.includes('find(className=>/^st-[wtar]$/.test(className))'), "room station copies the current worker state");
+  assert.ok(officeScript.includes('station.classList.add(stateClass)'), "room station exposes the copied state class");
+  const roomCss = readFileSync(new URL("../assets/office-view.css", import.meta.url), "utf8");
+  for (const state of ["st-w", "st-t", "st-a", "st-r"]) {
+    assert.ok(roomCss.includes(".room-station." + state + " .room-worker-avatar"), "missing room animation for " + state);
+  }
+});
