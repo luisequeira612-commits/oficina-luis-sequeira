@@ -281,3 +281,12 @@
 - Sin dependencias, modelos, texturas, APIs, backend ni pagos. Se preservan WebGL 2, la alternativa CSS, GitHub Actions, el esquema `oficina-luis-sequeira-v1` y la caché independiente.
 - Compatibilidad y rendimiento visual en el Tecno Pova 4 aún requieren prueba manual; CI no certifica la apariencia del dispositivo.
 - Fuente: aprobación explícita del usuario y cambios de la rama `feat/lego-tycoon-fullscreen-office`, 2026-11-10.
+
+
+## PR — microanimación Tycoon de minifiguras — 10 de noviembre de 2026
+- Se amplían las animaciones de los trabajadores brick-built sin cambiar los estados reales de GitHub Actions ni el almacenamiento persistente.
+- Cada trabajador conserva rangos independientes para piernas, torso, cabeza, brazos y manos; los estados Trabajando, Pensando, En espera, Éxito y Fallo producen micro-movimientos distintos: tecleo, balanceo, desplazamiento de cabeza, movimiento de pies y postura de fallo.
+- La animación sigue siendo presentación visual: no convierte movimientos ambientales en evidencia de ejecución real. La sincronización de estado continúa viniendo de la integración existente de GitHub Actions.
+- No se añaden dependencias, modelos, texturas, APIs, backend ni servicios de pago. Se conserva `oficina-luis-sequeira-v1` y su esquema.
+- Se añade `tests/verify-3d-worker-activity.test.mjs` para cubrir los rangos de postura y la diferenciación por estado.
+- Fuente: cambios de `assets/office-3d.js` y prueba de regresión, 2026-11-10.
