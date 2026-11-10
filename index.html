@@ -71,7 +71,7 @@ footer{max-width:1040px;margin:0 auto;padding:0 16px 24px;color:var(--muted);fon
 </head>
 <body>
 <header>
-<div><h1>Oficina de Luis Sequeira</h1><p class="office-header-subtitle">9 empleados · 0 humanos</p></div>
+<div><h1>Oficina de Luis Sequeira</h1><p class="office-header-subtitle">10 empleados · 0 humanos</p></div>
 </header>
 <main>
 <section class="summary" aria-live="polite" aria-atomic="true">
@@ -371,6 +371,18 @@ function applyMigrations(){
     });
    });
    save();localStorage.setItem(MIGRATION_KEY+"-employees","nine-named-employees-v1");
+  }
+  const balancedKey=MIGRATION_KEY+"-balanced-workforce";
+  if(localStorage.getItem(balancedKey)!=="ten-person-parity-v1"){
+   const room=rooms.find(item=>item.name==="App Guardi");
+   if(room){
+    let agent=room.agents.find(item=>item.name==="Rafael");
+    if(!agent&&room.agents.length<6){agent={id:makeId(),role:"Desarrollo",source:null};room.agents.push(agent)}
+    if(agent){
+     agent.name=agent.name||"Rafael";agent.gender=agent.gender||"man";agent.skinTone=agent.skinTone||"deep";agent.hair=agent.hair||"curly";agent.shirt=agent.shirt||"plum";
+     save();localStorage.setItem(balancedKey,"ten-person-parity-v1");
+    }
+   }
   }
  }catch(_){/* A failed migration can be retried on the next page load. */}
 }

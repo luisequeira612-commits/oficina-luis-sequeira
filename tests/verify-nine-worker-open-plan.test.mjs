@@ -8,11 +8,13 @@ const renderer = readFileSync(new URL("../assets/office-3d.js", import.meta.url)
 const view = readFileSync(new URL("../assets/office-view.js", import.meta.url), "utf8");
 const css = readFileSync(new URL("../assets/office-view.css", import.meta.url), "utf8");
 
-test("the additive employee migration creates nine named people with a 5/4 gender balance", () => {
-  for (const name of ["Valeria","Mateo","Camila","Diego","Aisha","Noah","Mei","Amir","Elena"]) {
+test("the additive employee migrations create ten named people with a 5/5 gender balance", () => {
+  for (const name of ["Valeria","Mateo","Camila","Diego","Aisha","Noah","Mei","Amir","Elena","Rafael"]) {
     assert.ok(html.includes('"'+name+'"'), "missing employee "+name);
   }
   assert.match(html, /nine-named-employees-v1/);
+  assert.match(html, /ten-person-parity-v1/);
+  assert.match(html, /balancedKey/);
   assert.match(html, /agent\.name=agent\.name\|\|name/);
   assert.match(html, /agent\.gender=agent\.gender\|\|gender/);
   assert.match(html, /STORAGE_KEY="oficina-luis-sequeira-v1"/);
@@ -100,7 +102,7 @@ test("control buttons retain zoom, rotation, home, drag and pinch",()=>{
 
 test("the office title and employee count remain visible above the scene",()=>{
  assert.ok(html.includes("<h1>Oficina de Luis Sequeira</h1>"));
- assert.ok(html.includes('<p class="office-header-subtitle">9 empleados · 0 humanos</p>'));
+ assert.ok(html.includes('<p class="office-header-subtitle">10 empleados · 0 humanos</p>'));
 });
 test("the compact help button explains touch controls and closes itself",()=>{
  assert.match(view,/help\.textContent="\?"/);
