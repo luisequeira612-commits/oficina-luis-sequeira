@@ -888,13 +888,14 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Fuente: inspección de `assets/office-3d.js` y prueba, 2026-11-10.
 
 
-## PR #62 — cachear medidas y estado DOM de etiquetas de empleados (10 de noviembre de 2026)
+## PR #62 fusionado — cachear medidas y estado DOM de etiquetas de empleados (10 de noviembre de 2026)
 
-- Rama `perf/cache-worker-nameplate-dom-state`, basada en `main` después de PR #61.
-- Las etiquetas de la vista general guardan sus dimensiones y solo las vuelven a medir al iniciar o cuando el contenedor cambia de tamaño; el render loop usa los valores cacheados en vez de consultar `offsetWidth`/`offsetHeight`.
-- Cada etiqueta conserva la referencia de su burbuja de escritura. Se eliminan búsquedas `querySelector` repetidas y las clases/visibilidad del DOM solo se actualizan cuando cambia el estado del trabajador.
-- La burbuja es absoluta y no altera el tamaño de la etiqueta. Se conserva el posicionamiento, detección de solapamientos, apariencia, estados y frecuencia de actualización de 100 ms.
-- Añade prueba de regresión para medición fuera del render loop, dimensiones cacheadas y cambios DOM condicionados al estado. Actualiza la caché del renderer a v78 y sus expectativas de prueba.
-- No cambia geometría, animaciones, cámara, resolución, persistencia, esquema, dependencias, API ni backend. El rendimiento real continúa pendiente de prueba en Tecno Pova 4.
-- Estado: cambios preparados en la rama; PR y CI aún por verificar.
-- Fuente: inspección de `assets/office-3d.js`, CSS y pruebas, 2026-11-10.
+- PR [#62](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/62) fusionado mediante squash en `7aa0d24916cc05042faa3811b80bcb509a74ced7`.
+- Rama `perf/cache-worker-nameplate-dom-state`; head final `1ae5abd5e65c3fbe316dacbe06ff3b2f01c9fbc2`.
+- Las etiquetas de la vista general guardan ancho y alto medidos al iniciar y cuando cambia el tamaño del contenedor. El render loop usa esas dimensiones cacheadas y deja de leer `offsetWidth`/`offsetHeight`.
+- Cada etiqueta conserva la referencia de su burbuja de escritura. Se elimina la búsqueda DOM repetida por fotograma de etiquetas y burbujas; las clases y la visibilidad solo se actualizan cuando cambia el estado del trabajador.
+- Se conserva el posicionamiento, colisiones, apariencia, estados y frecuencia de 100 ms. No cambia geometría, animaciones, cámara, resolución, persistencia, esquema, dependencias, APIs ni backend.
+- La primera CI [42928384148](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42928384148) detectó dos expectativas antiguas de pruebas; se ajustaron la inicialización del observer y el helper de burbujas sin reintroducir lecturas en el render loop. El head final pasó sintaxis, invariantes y contenido obligatorio en [42928676908](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42928676908). No hubo hilos de revisión pendientes.
+- `index.html` y las pruebas de caché solicitan ahora `assets/office-3d.js?v=78`. La validación/despliegue posterior al merge y la actualización de esta memoria deben verificarse antes de considerar publicada la versión final.
+- No se afirma una mejora medida de FPS; sigue pendiente la comprobación física de fluidez en Tecno Pova 4.
+- Fuente: diff de PR #62, pruebas y GitHub Actions, 2026-11-10.
