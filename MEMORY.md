@@ -899,3 +899,13 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - `index.html` y las pruebas de caché solicitan ahora `assets/office-3d.js?v=78`. La validación/despliegue posterior al merge y la actualización de esta memoria deben verificarse antes de considerar publicada la versión final.
 - No se afirma una mejora medida de FPS; sigue pendiente la comprobación física de fluidez en Tecno Pova 4.
 - Fuente: diff de PR #62, pruebas y GitHub Actions, 2026-11-10.
+
+
+## PR #63 — evitar escrituras DOM repetidas en etiquetas de empleados (10 de noviembre de 2026)
+
+- Rama `perf/skip-unchanged-nameplate-dom-writes`, basada en main después de PR #62.
+- Las etiquetas conservan su último estado visible y sus coordenadas en píxeles. El render loop solo cambia `hidden`, `left` o `top` cuando el valor realmente cambia.
+- Las coordenadas se redondean al píxel entero para evitar escrituras por variaciones subpíxel que no aportan una diferencia perceptible. El cálculo de colisiones utiliza las mismas coordenadas redondeadas.
+- Actualiza la caché del renderer a v79 y sus pruebas de regresión. No modifica apariencia base, geometría, animaciones, cámara, datos, almacenamiento, esquema, dependencias, API ni backend.
+- Estado: cambios preparados en la rama; PR y CI pendientes de verificación.
+- Fuente: inspección del render loop de `assets/office-3d.js`, 2026-11-10.

@@ -62,7 +62,7 @@ test("FPS meter remains measured and cache versions are current",()=>{
  assert.ok(renderer.includes("fpsFrames*1000/Math.max(1,timestamp-fpsWindowStart)"));
  assert.match(styles,/\.office-3d-fps\{[^}]*z-index:10/);
  assert.match(page,/office-view\.css\?v=50/);
- assert.match(page,/office-3d\.js\?v=78/);
+ assert.match(page,/office-3d\.js\?v=79/);
 });
 
 test("3D renderer pauses while the document is hidden and resumes when visible",()=>{
@@ -115,4 +115,15 @@ test("worker nameplates cache dimensions and update DOM only when worker state c
  assert.match(renderLoop,/if\(worker\.tagState!==tagState\)/);
  assert.match(renderLoop,/worker\.tagBubble\.hidden/);
  assert.match(renderer,/new ResizeObserver\(\(\)=>\{resize\(\);measureWorkerTags\(\)\}\)/);
+});
+
+
+test("worker nameplates skip unchanged visibility and pixel-position DOM writes",()=>{
+ const renderStart=renderer.indexOf("function render("),renderEnd=renderer.indexOf("const contextNote",renderStart);
+ const renderLoop=renderer.slice(renderStart,renderEnd);
+ assert.match(renderLoop,/if\(worker\.tagVisible!==visible\)\{worker\.tag\.hidden=!visible;worker\.tagVisible=visible\}/);
+ assert.match(renderLoop,/const tagLeft=Math\.round\(px\),tagTop=Math\.round\(py\)/);
+ assert.match(renderLoop,/if\(worker\.tagLeft!==tagLeft\)\{worker\.tag\.style\.left=tagLeft\+"px";worker\.tagLeft=tagLeft\}/);
+ assert.match(renderLoop,/if\(worker\.tagTop!==tagTop\)\{worker\.tag\.style\.top=tagTop\+"px";worker\.tagTop=tagTop\}/);
+ assert.match(renderer,/worker\.tagVisible=null;worker\.tagLeft=null;worker\.tagTop=null/);
 });
