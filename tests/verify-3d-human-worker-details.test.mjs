@@ -62,7 +62,7 @@ test("FPS meter remains measured and cache versions are current",()=>{
  assert.ok(renderer.includes("fpsFrames*1000/Math.max(1,timestamp-fpsWindowStart)"));
  assert.match(styles,/\.office-3d-fps\{[^}]*z-index:10/);
  assert.match(page,/office-view\.css\?v=50/);
- assert.match(page,/office-3d\.js\?v=77/);
+ assert.match(page,/office-3d\.js\?v=78/);
 });
 
 test("3D renderer pauses while the document is hidden and resumes when visible",()=>{
@@ -98,4 +98,21 @@ test("WebGL context loss shows a safe recovery message and stops rendering",()=>
  assert.match(renderer,/canvas\.removeEventListener\("webglcontextlost",onContextLost\)/);
  assert.match(renderer,/canvas\.removeEventListener\("webglcontextrestored",onContextRestored\)/);
  assert.match(renderer,/if\(!contextLost\)gl\.getExtension\("WEBGL_lose_context"\)/);
+});
+
+test("worker nameplates cache dimensions and update DOM only when worker state changes",()=>{
+ const measureStart=renderer.indexOf("function measureWorkerTags()");
+ const renderStart=renderer.indexOf("function render(");
+ const renderEnd=renderer.indexOf("const contextNote",renderStart);
+ assert.ok(measureStart>=0&&renderStart>measureStart&&renderEnd>renderStart);
+ const measurement=renderer.slice(measureStart,renderStart);
+ const renderLoop=renderer.slice(renderStart,renderEnd);
+ assert.match(measurement,/worker\.tag\.offsetWidth/);
+ assert.match(measurement,/worker\.tag\.offsetHeight/);
+ assert.doesNotMatch(renderLoop,/offsetWidth|offsetHeight|querySelector/);
+ assert.match(renderLoop,/const tw=worker\.tagWidth\|\|96/);
+ assert.match(renderLoop,/const th=worker\.tagHeight\|\|28/);
+ assert.match(renderLoop,/if\(worker\.tagState!==tagState\)/);
+ assert.match(renderLoop,/worker\.tagBubble\.hidden/);
+ assert.match(renderer,/new ResizeObserver\(\(\)=>\{resize\(\);measureWorkerTags\(\)\}\)/);
 });
