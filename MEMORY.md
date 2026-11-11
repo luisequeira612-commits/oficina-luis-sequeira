@@ -901,11 +901,13 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Fuente: diff de PR #62, pruebas y GitHub Actions, 2026-11-10.
 
 
-## PR #63 — evitar escrituras DOM repetidas en etiquetas de empleados (10 de noviembre de 2026)
+## PR #63 fusionado — evitar escrituras DOM repetidas en etiquetas de empleados (10 de noviembre de 2026)
 
-- Rama `perf/skip-unchanged-nameplate-dom-writes`, basada en main después de PR #62.
+- PR [#63](https://github.com/luisequeira612-commits/oficina-luis-sequeira/pull/63) fusionado mediante squash en `504d352333d8817c633573c873e62f94b1567023`.
+- Rama `perf/skip-unchanged-nameplate-dom-writes`; head final `525ff11ddd51541216de54ae9b2460a417b88616`.
 - Las etiquetas conservan su último estado visible y sus coordenadas en píxeles. El render loop solo cambia `hidden`, `left` o `top` cuando el valor realmente cambia.
-- Las coordenadas se redondean al píxel entero para evitar escrituras por variaciones subpíxel que no aportan una diferencia perceptible. El cálculo de colisiones utiliza las mismas coordenadas redondeadas.
-- Actualiza la caché del renderer a v79 y sus pruebas de regresión. No modifica apariencia base, geometría, animaciones, cámara, datos, almacenamiento, esquema, dependencias, API ni backend.
-- Estado: cambios preparados en la rama; PR y CI pendientes de verificación.
-- Fuente: inspección del render loop de `assets/office-3d.js`, 2026-11-10.
+- Las coordenadas proyectadas se redondean a píxeles enteros y la detección de solapamientos utiliza esas mismas coordenadas. Se evita escribir estilos por variaciones subpíxel que no aportan diferencia perceptible.
+- Añade pruebas de regresión, actualiza caché a `office-3d.js?v=79` y mantiene `MEMORY.md`. No cambia geometría, animaciones, cámara, persistencia, esquema, dependencias, APIs ni backend.
+- CI final del PR [42929113179](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42929113179) terminó en success para sintaxis, invariantes y contenido obligatorio; sin hilos de revisión pendientes.
+- La CI y el despliegue de Pages tras el merge deben verificarse; no se afirma una mejora medida de FPS. La fluidez real sigue pendiente de comprobación en Tecno Pova 4.
+- Fuente: diff de PR #63, pruebas y GitHub Actions, 2026-11-10.
