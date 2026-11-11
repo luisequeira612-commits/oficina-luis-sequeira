@@ -886,3 +886,15 @@ Nota de implementación adicional: los chips de proyecto muestran ahora solo el 
 - Añade una prueba para garantizar que el render loop no vuelva a medir el contenedor en cada frame.
 - Head final `6cd26ad5d87355febee533a87fceb90de7d98b67` pasó CI [42924407640](https://github.com/luisequeira612-commits/oficina-luis-sequeira/actions/runs/42924407640): sintaxis, invariantes y contenido obligatorio success; sin hilos ni revisiones pendientes. PR #61 fusionado mediante squash en `920e4c007d1f3219a87b8d7167ddaf147e197cf0`. La validación y publicación de main siguen en ejecución. No se afirma una mejora medida de FPS; falta prueba física en Tecno Pova 4.
 - Fuente: inspección de `assets/office-3d.js` y prueba, 2026-11-10.
+
+
+## PR #62 — cachear medidas y estado DOM de etiquetas de empleados (10 de noviembre de 2026)
+
+- Rama `perf/cache-worker-nameplate-dom-state`, basada en `main` después de PR #61.
+- Las etiquetas de la vista general guardan sus dimensiones y solo las vuelven a medir al iniciar o cuando el contenedor cambia de tamaño; el render loop usa los valores cacheados en vez de consultar `offsetWidth`/`offsetHeight`.
+- Cada etiqueta conserva la referencia de su burbuja de escritura. Se eliminan búsquedas `querySelector` repetidas y las clases/visibilidad del DOM solo se actualizan cuando cambia el estado del trabajador.
+- La burbuja es absoluta y no altera el tamaño de la etiqueta. Se conserva el posicionamiento, detección de solapamientos, apariencia, estados y frecuencia de actualización de 100 ms.
+- Añade prueba de regresión para medición fuera del render loop, dimensiones cacheadas y cambios DOM condicionados al estado. Actualiza la caché del renderer a v78 y sus expectativas de prueba.
+- No cambia geometría, animaciones, cámara, resolución, persistencia, esquema, dependencias, API ni backend. El rendimiento real continúa pendiente de prueba en Tecno Pova 4.
+- Estado: cambios preparados en la rama; PR y CI aún por verificar.
+- Fuente: inspección de `assets/office-3d.js`, CSS y pruebas, 2026-11-10.
